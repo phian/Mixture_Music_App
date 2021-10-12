@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mixture_music_app/ui/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -27,10 +28,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text("Music App"),
-      ),
-    );
+    return Home();
   }
 }
