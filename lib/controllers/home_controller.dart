@@ -1,24 +1,41 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/models/weather.dart';
+import 'package:mixture_music_app/repos/weather_repos.dart';
 
 class HomeController extends GetxController {
-  Placemark? placemark;
   var location = "".obs;
+  late Position pos;
+  WeatherService weatherService = WeatherService();
+  var currentWeather = Weather(current: null).obs;
   @override
   void onInit() async {
-    Position pos = await _determinePosition();
+    super.onInit();
+    await getWeather();
+  }
+
+  Future<void> getWeather() async {
+    pos = await _determinePosition();
+    location.value = await getLocationName();
+    currentWeather.value = await weatherService.getWeatherByPosition(
+      lat: pos.latitude,
+      lon: pos.longitude,
+    );
+  }
+
+  Future<String> getLocationName() async {
+    Placemark placemark = Placemark();
     await placemarkFromCoordinates(pos.latitude, pos.longitude)
         .then((list) => placemark = list.first);
-    if (placemark != null) {
-      if (placemark!.subAdministrativeArea != null) {
-        location.value = '${placemark!.subAdministrativeArea}, ';
-      }
-      location.value = '${placemark!.administrativeArea}';
-    } else {
-      location.value = "Unable to locate";
+
+    var _location = "";
+    if (placemark.subAdministrativeArea!.isNotEmpty) {
+      _location = '${placemark.subAdministrativeArea}, ';
     }
-    super.onInit();
+    _location += '${placemark.administrativeArea}';
+
+    return _location;
   }
 
   Future<Position> _determinePosition() async {
