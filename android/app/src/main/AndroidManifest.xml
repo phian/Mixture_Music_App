@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mixture.music.mixture_music_app">
    <application
-        android:label="mixture_music_app"
+        android:label="MixtureMusic"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

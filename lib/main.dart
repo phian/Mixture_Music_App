@@ -1,20 +1,21 @@
+// import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mixture_music_app/routing/route_generator.dart';
+import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/widgets/base_button.dart';
 
-void main() {
-  runApp(MyApp());
-}
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await Firebase.initializeApp();
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+  runApp(
+    GetMaterialApp(
       home: MyHomePage(),
-    );
-  }
+      debugShowCheckedModeBanner: false,
+      onGenerateRoute: RouteGenerator().onGenerateRoute,
+    ),
+  );
 }
 
 class MyHomePage extends StatefulWidget {
@@ -29,7 +30,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text("Music App"),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              BaseButton(
+                content: "ONBOARDING SCREEN",
+                onTap: () {
+                  Get.toNamed(AppRoutes.onBoarding);
+                },
+                margin: EdgeInsets.symmetric(horizontal: 24.0),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
