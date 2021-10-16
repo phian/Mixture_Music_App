@@ -1,7 +1,6 @@
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/routing/route_generator.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/widgets/base_button.dart';
