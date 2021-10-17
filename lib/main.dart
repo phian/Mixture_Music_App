@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/routing/route_generator.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/widgets/base_button.dart';
+import 'package:mixture_music_app/constants/theme.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,12 +16,13 @@ void main() async {
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator().onGenerateRoute,
+      theme: AppTheme.light,
     ),
   );
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  const MyHomePage({Key? key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
