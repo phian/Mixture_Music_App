@@ -8,7 +8,9 @@ class HomeController extends GetxController {
   var location = "".obs;
   late Position pos;
   WeatherService weatherService = WeatherService();
-  var currentWeather = Weather(current: null).obs;
+  final weatherResponse = Rxn<WeatherResponse>();
+  bool hasLoaded = false;
+
   @override
   void onInit() async {
     super.onInit();
@@ -18,10 +20,12 @@ class HomeController extends GetxController {
   Future<void> getWeather() async {
     pos = await _determinePosition();
     location.value = await getLocationName();
-    currentWeather.value = await weatherService.getWeatherByPosition(
+    weatherResponse.value = await weatherService.getWeatherByPosition(
       lat: pos.latitude,
       lon: pos.longitude,
     );
+    hasLoaded = true;
+    update();
   }
 
   Future<String> getLocationName() async {

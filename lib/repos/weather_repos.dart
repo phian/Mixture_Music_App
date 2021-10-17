@@ -5,13 +5,16 @@ import 'package:mixture_music_app/models/weather.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
-  Future<Weather> getWeatherByPosition({required double lat, required double lon}) async {
-    var key = 'c42df737907f4153b3364951211210';
-    var url = Uri.parse('https://api.weatherapi.com/v1/current.json?key=$key&q=$lat,$lon&aqi=no');
+  final apiKey = "ed83861dce9e7c81791c42143078dcbd";
+  Future<WeatherResponse> getWeatherByPosition({required double lat, required double lon}) async {
+    const exclude = 'minutely,hourly,alerts';
+    const units = 'metric';
+    final url = Uri.parse(
+        'https://api.openweathermap.org/data/2.5/onecall?lat=$lat&lon=$lon&exclude=$exclude&appid=$apiKey&units=$units');
     var respone = await http.get(url);
 
     Map<String, dynamic> jsonData = jsonDecode(respone.body);
     log(jsonData.toString());
-    return Weather.fromJson(jsonData);
+    return WeatherResponse.fromJson(jsonData);
   }
 }
