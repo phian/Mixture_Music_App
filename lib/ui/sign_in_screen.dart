@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/images/app_icons.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/widgets/base_button.dart';
@@ -16,6 +17,8 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final AuthController _authController = Get.put(AuthController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,7 +122,10 @@ class _SignInScreenState extends State<SignInScreen> {
                           width: 50.0,
                           height: 50.0,
                         ),
-                        onTap: () {},
+                        onTap: () async {
+                           await _authController.signInWithFacebook();
+                           var userModel = await _authController.getFacebookUSerData();
+                        },
                       ),
                       Container(
                         margin: EdgeInsets.only(left: 24.0),
@@ -132,7 +138,9 @@ class _SignInScreenState extends State<SignInScreen> {
                             width: 50.0,
                             height: 50.0,
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            _authController.signInWithGoogle();
+                          },
                         ),
                       ),
                     ],

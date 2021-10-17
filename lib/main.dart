@@ -1,4 +1,4 @@
-// import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/routing/route_generator.dart';
@@ -7,7 +7,7 @@ import 'package:mixture_music_app/widgets/base_button.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp();
+  await Firebase.initializeApp();
 
   runApp(
     GetMaterialApp(
@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
               BaseButton(
                 content: "ONBOARDING SCREEN",
                 onTap: () {
-                  Get.toNamed(AppRoutes.onBoarding);
+                  Get.offAllNamed(AppRoutes.onBoarding);
                 },
                 margin: EdgeInsets.symmetric(horizontal: 24.0),
               ),

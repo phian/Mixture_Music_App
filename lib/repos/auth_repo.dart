@@ -1,32 +1,35 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:get/get.dart';
 import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
-import 'package:mixture_music_app/repos/auth_repo.dart';
+import 'package:mixture_music_app/services/auth_service.dart';
 
-class AuthController extends GetxController {
-  AuthRepo _authRepo = AuthRepo();
+class AuthRepo {
+  AuthService _authService = AuthService();
 
   // Google
   Future<User?> signInWithGoogle() async {
     try {
-      var user = await _authRepo.signInWithGoogle();
+      var user = await _authService.signInWithGoogle();
 
-      return user;
+      if (user != null) {
+        return user;
+      }
+
+      return null;
     } catch (ex) {
       print(ex.toString());
     }
   }
 
   Future<void> googleSignOut() async {
-    await _authRepo.googleSignOut();
+    await _authService.googleSignOut();
   }
 
   // Facebook
   Future<LoginResult> signInWithFacebook() async {
     LoginResult result = LoginResult(status: LoginStatus.operationInProgress);
     try {
-      result = await _authRepo.signInWithFacebook();
+       result = await _authService.signInWithFacebook();
     } catch (ex) {
       print(ex.toString());
     }
@@ -36,16 +39,18 @@ class AuthController extends GetxController {
 
   Future<void> facebookSignOut() async {
     try {
-      await _authRepo.facebookSignOut();
+      await _authService.facebookSignOut();
     } catch (ex) {
       print(ex.toString());
     }
   }
 
   Future<FacebookUserModel> getFacebookUSerData() async {
+    Map<String, dynamic> userData = {};
     FacebookUserModel userModel = FacebookUserModel();
     try {
-      userModel = await _authRepo.getFacebookUSerData();
+      userData = await _authService.getFacebookUSerData();
+      userModel = FacebookUserModel.fromJson(userData);
     } catch (ex) {
       print(ex.toString());
     }
