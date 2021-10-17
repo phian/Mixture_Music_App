@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "905368670788",
+    "project_id": "mixturemusic-f0b97",
+    "storage_bucket": "mixturemusic-f0b97.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:905368670788:android:89109fb30e38ba944c2211",
+        "android_client_info": {
+          "package_name": "com.mixture.music.mixture_music_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "905368670788-bln102nmbqape2d8ch06775dh0h72luq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDB3DWk0lfkS6qOY7e6LWgmf3aNC7nxueE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "905368670788-bln102nmbqape2d8ch06775dh0h72luq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
