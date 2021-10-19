@@ -7,7 +7,7 @@ import 'package:mixture_music_app/repos/weather_repos.dart';
 class HomeController extends GetxController {
   var location = "".obs;
   late Position pos;
-  WeatherService weatherService = WeatherService();
+  WeatherRepo weatherService = WeatherRepo();
   final weatherResponse = Rxn<WeatherResponse>();
   bool hasLoaded = false;
 
