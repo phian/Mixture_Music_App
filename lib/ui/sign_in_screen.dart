@@ -77,7 +77,9 @@ class _SignInScreenState extends State<SignInScreen> {
               const Expanded(child: SizedBox()),
               BaseButton(
                 content: "SIGN IN",
-                onTap: () {},
+                onTap: () {
+                  Get.toNamed(AppRoutes.main);
+                },
               ),
               const Expanded(child: SizedBox()),
               Row(
