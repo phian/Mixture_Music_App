@@ -6,6 +6,7 @@ import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/images/app_icons.dart';
 import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/ui/home/home.dart';
 import 'package:mixture_music_app/widgets/base_button.dart';
 import 'package:mixture_music_app/widgets/base_textfield.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
@@ -77,7 +78,9 @@ class _SignInScreenState extends State<SignInScreen> {
               const Expanded(child: SizedBox()),
               BaseButton(
                 content: "SIGN IN",
-                onTap: () {},
+                onTap: () {
+                  Get.to(() => Home());
+                },
               ),
               const Expanded(child: SizedBox()),
               Row(
@@ -123,8 +126,8 @@ class _SignInScreenState extends State<SignInScreen> {
                           height: 50.0,
                         ),
                         onTap: () async {
-                           await _authController.signInWithFacebook();
-                           var userModel = await _authController.getFacebookUSerData();
+                          await _authController.signInWithFacebook();
+                          var userModel = await _authController.getFacebookUSerData();
                         },
                       ),
                       Container(
