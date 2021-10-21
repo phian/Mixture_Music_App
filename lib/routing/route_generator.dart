@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/forgot_password.dart';
+import 'package:mixture_music_app/ui/home/home.dart';
 import 'package:mixture_music_app/ui/sign_in_screen.dart';
 import 'package:mixture_music_app/ui/onboarding_screen.dart';
 import 'package:mixture_music_app/ui/sign_up_screen.dart';
@@ -27,6 +28,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => ForgotPasswordScreen());
       case AppRoutes.signUp:
         return MaterialPageRoute(builder: (_) => SignUpScreen());
+      case AppRoutes.main:
+        return MaterialPageRoute(builder: (_) => Home());
       default:
         throw RouteException("Route not found");
     }
