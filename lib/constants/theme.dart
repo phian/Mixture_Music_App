@@ -14,6 +14,7 @@ class AppTheme {
     colorScheme: const ColorScheme.light().copyWith(
       primary: const Color(0xFF489AB4),
     ),
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(selectedItemColor: primaryColor),
   );
 
   static final ThemeData dark = ThemeData(

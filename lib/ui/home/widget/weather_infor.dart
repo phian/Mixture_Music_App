@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/models/weather.dart';
-import 'package:weather_icons/weather_icons.dart';
 import 'package:intl/intl.dart';
+import 'package:weather_icons/weather_icons.dart';
 
 import '../../../constants/theme.dart';
+import '../../../models/weather.dart';
 
 class WeatherInfor extends StatelessWidget {
   const WeatherInfor({
@@ -23,15 +23,13 @@ class WeatherInfor extends StatelessWidget {
           current: weatherResponse.current,
           location: location,
         ),
-        SizedBox(height: 10),
         SizedBox(
           height: 240,
           child: ListView(
             physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            padding: const EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.all(16),
             scrollDirection: Axis.horizontal,
             children: [
-              SizedBox(width: 16),
               CurrentWeather(
                 current: weatherResponse.current,
               ),
@@ -44,7 +42,6 @@ class WeatherInfor extends StatelessWidget {
               DailyWeather(
                 daily: weatherResponse.daily[1],
               ),
-              SizedBox(width: 16),
             ],
           ),
         ),
@@ -225,7 +222,7 @@ class LocationInfo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -237,12 +234,12 @@ class LocationInfo extends StatelessWidget {
             'In $location',
             style: AppTheme.h5,
           ),
-          SizedBox(height: 15),
+          SizedBox(height: 16),
           Row(
             children: [
               Container(
                 height: 4,
-                width: 60,
+                width: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
                   color: AppTheme.primaryColor,

@@ -44,6 +44,7 @@ dependencies:
   geocoding: ^2.0.1
   weather_icons: ^3.0.0
   intl: ^0.17.0
+  miniplayer: ^1.0.1
 
 dev_dependencies:
   flutter_test:
