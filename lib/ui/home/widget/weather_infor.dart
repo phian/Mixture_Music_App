@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../constants/app_colors.dart';
+import '../../../constants/app_text_style.dart';
 import 'package:weather_icons/weather_icons.dart';
 
-import '../../../constants/theme.dart';
 import '../../../models/weather.dart';
 
 class WeatherInfor extends StatelessWidget {
@@ -69,12 +70,12 @@ class DailyWeather extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 3,
+            spreadRadius: 4,
+            blurRadius: 4,
             offset: Offset(3, 3),
           ),
         ],
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
@@ -82,7 +83,7 @@ class DailyWeather extends StatelessWidget {
         children: [
           Text(
             isToday ? 'Today:' : 'Tomorrow:',
-            style: AppTheme.caption,
+            style: Theme.of(context).textTheme.caption,
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +92,7 @@ class DailyWeather extends StatelessWidget {
                 DateFormat('MMM d').format(
                   DateTime.fromMillisecondsSinceEpoch(daily.dt * 1000),
                 ),
-                style: AppTheme.subText,
+                style: Theme.of(context).textTheme.subtitle1,
               ),
               Spacer(),
               BoxedIcon(
@@ -100,12 +101,14 @@ class DailyWeather extends StatelessWidget {
                   fallback: WeatherIcons.na,
                 ),
                 size: 36,
+                // TODO: sửa theo theme
+                color: AppColors.captionTextColor,
               ),
             ],
           ),
           Text(
             daily.weather[0].description,
-            style: AppTheme.subText,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
           Spacer(),
           Align(
@@ -114,7 +117,8 @@ class DailyWeather extends StatelessWidget {
               '${daily.temp.max.round()}°',
               style: TextStyle(
                 fontSize: 30,
-                color: AppTheme.brightGrey,
+                // TODO: sửa theo theme
+                color: AppColors.captionTextColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -125,7 +129,8 @@ class DailyWeather extends StatelessWidget {
               '${daily.temp.min.round()}°',
               style: TextStyle(
                 fontSize: 30,
-                color: AppTheme.subTextColor,
+                // TODO: sửa theo theme
+                color: AppColors.subTextColor,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -153,12 +158,12 @@ class CurrentWeather extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 2,
+            spreadRadius: 3,
             blurRadius: 3,
             offset: Offset(3, 3),
           ),
         ],
-        color: Theme.of(context).colorScheme.background,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(4),
       ),
       child: Column(
@@ -167,7 +172,7 @@ class CurrentWeather extends StatelessWidget {
         children: [
           Text(
             'Right Now:',
-            style: AppTheme.caption,
+            style: Theme.of(context).textTheme.caption,
           ),
           Row(
             children: [
@@ -177,31 +182,33 @@ class CurrentWeather extends StatelessWidget {
                   fallback: WeatherIcons.na,
                 ),
                 size: 70,
-                color: AppTheme.brightGrey,
+                // TODO: sửa theo theme
+                color: AppColors.captionTextColor,
               ),
               Spacer(),
               Text(
                 '${current.temp.round()}°',
                 style: TextStyle(
-                  fontFamily: AppTheme.fontName,
+                  fontFamily: AppTextStyles.fontName,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  color: AppTheme.brightGrey,
+                  // TODO: sửa theo theme
+                  color: AppColors.captionTextColor,
                 ),
               ),
             ],
           ),
           Text(
             'Pressure: ${current.pressure} hPa',
-            style: AppTheme.subText,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
           Text(
             'Humidity: ${current.humidity}%',
-            style: AppTheme.subText,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
           Text(
             'Wind: ${current.windSpeed} mps',
-            style: AppTheme.subText,
+            style: Theme.of(context).textTheme.subtitle1,
           ),
         ],
       ),
@@ -228,11 +235,11 @@ class LocationInfo extends StatelessWidget {
         children: [
           Text(
             current.weather[0].description,
-            style: AppTheme.h4,
+            style: Theme.of(context).textTheme.headline4,
           ),
           Text(
             'In $location',
-            style: AppTheme.h5,
+            style: Theme.of(context).textTheme.headline5,
           ),
           SizedBox(height: 16),
           Row(
@@ -242,16 +249,16 @@ class LocationInfo extends StatelessWidget {
                 width: 80,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
-                  color: AppTheme.primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
               ),
               SizedBox(width: 5),
               Container(
-                height: 4,
-                width: 4,
+                height: 3,
+                width: 3,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(2),
-                  color: AppTheme.primaryColor,
+                  color: Theme.of(context).primaryColor,
                 ),
               )
             ],

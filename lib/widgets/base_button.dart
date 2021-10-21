@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import '../constants/app_colors.dart';
+import 'inkwell_wrapper.dart';
 
 class BaseButton extends StatelessWidget {
   final String content;

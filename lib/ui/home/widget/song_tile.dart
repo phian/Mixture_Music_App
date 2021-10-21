@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../constants/app_colors.dart';
 
-import '../../../constants/theme.dart';
 
 class SongTile extends StatelessWidget {
   const SongTile({
@@ -35,21 +35,12 @@ class SongTile extends StatelessWidget {
                 Text(
                   'Trời hôm nay nhiều mây cực',
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16,
-                    color: AppTheme.brightGrey,
-                  ),
+                  style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 16),
                 ),
                 Text(
                   'Đen Vâu',
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    fontFamily: AppTheme.fontName,
-                    fontSize: 14,
-                    color: AppTheme.subTextColor,
-                  ),
+                  style: Theme.of(context).textTheme.subtitle1,
                 ),
               ],
             ),
@@ -57,8 +48,16 @@ class SongTile extends StatelessWidget {
           SizedBox(
             width: 16,
           ),
-          if (isPlaying) Icon(Icons.play_arrow, color: AppTheme.primaryColor),
-          Icon(Icons.more_horiz, color: AppTheme.subTextColor),
+          if (isPlaying)
+            Icon(
+              Icons.play_arrow,
+              color: Theme.of(context).primaryColor,
+            ),
+          Icon(
+            Icons.more_horiz,
+            //TODO: sửa theo theme
+            color: AppColors.subTextColor,
+          ),
         ],
       ),
     );

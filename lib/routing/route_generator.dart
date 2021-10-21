@@ -1,12 +1,12 @@
 
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/routing/routes.dart';
-import 'package:mixture_music_app/ui/forgot_password.dart';
-import 'package:mixture_music_app/ui/home/home.dart';
-import 'package:mixture_music_app/ui/sign_in_screen.dart';
-import 'package:mixture_music_app/ui/onboarding_screen.dart';
-import 'package:mixture_music_app/ui/sign_up_screen.dart';
-import 'package:mixture_music_app/utils/route_exception.dart';
+import 'routes.dart';
+import '../ui/forgot_password.dart';
+import '../ui/home/home.dart';
+import '../ui/sign_in_screen.dart';
+import '../ui/onboarding_screen.dart';
+import '../ui/sign_up_screen.dart';
+import '../utils/route_exception.dart';
 
 class RouteGenerator {
   static RouteGenerator? _instance;

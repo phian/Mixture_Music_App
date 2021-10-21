@@ -1,8 +1,8 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/models/weather.dart';
-import 'package:mixture_music_app/repos/weather_repos.dart';
+import '../models/weather.dart';
+import '../repos/weather_repos.dart';
 
 class HomeController extends GetxController {
   var location = "".obs;

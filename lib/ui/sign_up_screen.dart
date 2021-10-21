@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/enums/enums.dart';
-import 'package:mixture_music_app/widgets/base_button.dart';
-import 'package:mixture_music_app/widgets/base_textfield.dart';
-import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import '../constants/app_colors.dart';
+import '../constants/enums/enums.dart';
+import '../widgets/base_button.dart';
+import '../widgets/base_textfield.dart';
+import '../widgets/inkwell_wrapper.dart';
 
 class SignUpScreen extends StatefulWidget {
   @override

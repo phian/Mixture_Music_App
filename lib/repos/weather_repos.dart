@@ -1,5 +1,5 @@
-import 'package:mixture_music_app/models/weather.dart';
-import 'package:mixture_music_app/services/weather_service.dart';
+import '../models/weather.dart';
+import '../services/weather_service.dart';
 
 class WeatherRepo {
   WeatherService _weatherService = WeatherService();

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:mixture_music_app/models/weather.dart';
+import '../models/weather.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService {

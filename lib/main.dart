@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/routing/route_generator.dart';
-import 'package:mixture_music_app/routing/routes.dart';
-import 'package:mixture_music_app/widgets/base_button.dart';
-import 'package:mixture_music_app/constants/theme.dart';
-
+import 'routing/route_generator.dart';
+import 'routing/routes.dart';
+import 'widgets/base_button.dart';
+import 'constants/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +15,7 @@ void main() async {
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator().onGenerateRoute,
-      theme: AppTheme.light,
+      theme: AppThemes.lightCoolTheme,
     ),
   );
 }

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/theme.dart';
-import 'package:mixture_music_app/ui/home/home.dart';
-import 'package:mixture_music_app/ui/library_screen.dart';
-import 'package:mixture_music_app/ui/search_screen.dart';
+import 'home/home.dart';
+import 'library_screen.dart';
+import 'search_screen.dart';
 import 'package:miniplayer/miniplayer.dart';
 
 class NavScreen extends StatefulWidget {
@@ -52,8 +51,10 @@ class _NavScreenState extends State<NavScreen> {
                       //progress bar
                       LinearProgressIndicator(
                         value: 0.6,
-                        valueColor: AlwaysStoppedAnimation<Color>(AppTheme.primaryColor),
-                        backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          Theme.of(context).primaryColor,
+                        ),
+                        backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
                       ),
                       Expanded(
                         child: Padding(
@@ -76,11 +77,10 @@ class _NavScreenState extends State<NavScreen> {
                                     Text(
                                       'Trời hôm nay nhiều mây cực',
                                       overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppTheme.brightGrey,
-                                      ),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .caption!
+                                          .copyWith(fontSize: 14),
                                     ),
                                     Text(
                                       'Sơn Tùng MTP',
@@ -97,7 +97,7 @@ class _NavScreenState extends State<NavScreen> {
                                 onPressed: () {},
                                 icon: Icon(
                                   Icons.pause,
-                                  color: AppTheme.primaryColor,
+                                  color: Theme.of(context).primaryColor,
                                 ),
                               ),
                               IconButton(

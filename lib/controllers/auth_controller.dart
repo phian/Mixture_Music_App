@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
-import 'package:mixture_music_app/repos/auth_repo.dart';
+import '../models/facebook/facebook_user_model.dart';
+import '../repos/auth_repo.dart';
 
 class AuthController extends GetxController {
   AuthRepo _authRepo = AuthRepo();

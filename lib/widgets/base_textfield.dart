@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/enums/enums.dart';
+import '../constants/app_colors.dart';
+import '../constants/enums/enums.dart';
 
 class BaseTextField extends StatefulWidget {
   final TextFieldType textFieldType;

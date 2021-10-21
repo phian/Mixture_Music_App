@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
-import 'package:mixture_music_app/services/auth_service.dart';
+import '../models/facebook/facebook_user_model.dart';
+import '../services/auth_service.dart';
 
 class AuthRepo {
   AuthService _authService = AuthService();
