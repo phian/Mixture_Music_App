@@ -5,11 +5,10 @@ import '../../../constants/app_colors.dart';
 class PlaylistHeader extends StatelessWidget {
   const PlaylistHeader({
     Key? key,
-    required List<String> listImage,
-  })  : _listImage = listImage,
-        super(key: key);
+    required this.coverImageUrl,
+  });
 
-  final List<String> _listImage;
+  final List<String> coverImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +41,7 @@ class PlaylistHeader extends StatelessWidget {
                     ),
                     itemCount: 4,
                     itemBuilder: (context, index) => Image.network(
-                      _listImage[index],
+                      coverImageUrl[index],
                     ),
                   ),
                 ),

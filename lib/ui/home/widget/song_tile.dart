@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../../models/song_model.dart';
 import '../../../constants/app_colors.dart';
-
 
 class SongTile extends StatelessWidget {
   const SongTile({
     Key? key,
-    required this.imageUrl,
+    required this.songModel,
     this.isPlaying = false,
   }) : super(key: key);
 
-  final String imageUrl;
+
   final bool isPlaying;
+  final SongModel songModel;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class SongTile extends StatelessWidget {
             width: 50,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(5),
-              child: Image.network(imageUrl),
+              child: Image.network(songModel.coverImageUrl),
             ),
           ),
           SizedBox(width: 16),
@@ -33,12 +34,12 @@ class SongTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Trời hôm nay nhiều mây cực',
+                  songModel.tilte,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 16),
                 ),
                 Text(
-                  'Đen Vâu',
+                  songModel.singer,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.subtitle1,
                 ),

@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+import '../ui/nav_screen.dart';
 import 'routes.dart';
 import '../ui/forgot_password.dart';
 import '../ui/home/home.dart';
@@ -19,7 +19,7 @@ class RouteGenerator {
   }
 
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
-    switch(settings.name) {
+    switch (settings.name) {
       case AppRoutes.onBoarding:
         return MaterialPageRoute(builder: (_) => OnboardingScreen());
       case AppRoutes.signIn:
@@ -30,6 +30,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => SignUpScreen());
       case AppRoutes.main:
         return MaterialPageRoute(builder: (_) => Home());
+      case AppRoutes.navigationScreen:
+        return MaterialPageRoute(builder: (_) => NavScreen());
       default:
         throw RouteException("Route not found");
     }

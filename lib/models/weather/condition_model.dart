@@ -1,43 +1,5 @@
-class WeatherResponse {
-  WeatherResponse({
-    required this.current,
-    required this.daily,
-  });
-  late final Current current;
-  late final List<Daily> daily;
-
-  WeatherResponse.fromJson(Map<String, dynamic> json) {
-    current = Current.fromJson(json['current']);
-    daily = List.from(json['daily']).map((e) => Daily.fromJson(e)).toList();
-  }
-}
-
-class Current {
-  Current({
-    required this.temp,
-    required this.pressure,
-    required this.humidity,
-    required this.windSpeed,
-    required this.weather,
-  });
-
-  late final double temp;
-  late final int pressure;
-  late final int humidity;
-  late final double windSpeed;
-  late final List<Weather> weather;
-
-  Current.fromJson(Map<String, dynamic> json) {
-    temp = double.parse(json['temp'].toString());
-    pressure = json['pressure'];
-    humidity = json['humidity'];
-    windSpeed = json['wind_speed'];
-    weather = List.from(json['weather']).map((e) => Weather.fromJson(e)).toList();
-  }
-}
-
-class Weather {
-  Weather({
+class Condition {
+  Condition({
     required this.id,
     required this.main,
     required this.description,
@@ -49,7 +11,7 @@ class Weather {
   late final String icon;
   late final String iconCode;
 
-  Weather.fromJson(Map<String, dynamic> json) {
+  Condition.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     main = json['main'];
     description = capitalize(json['description']);
@@ -74,37 +36,6 @@ class Weather {
     }
 
     return 'wi-' + weatherIconMap[code];
-  }
-}
-
-class Daily {
-  Daily({
-    required this.dt,
-    required this.temp,
-    required this.weather,
-  });
-  late final int dt;
-  late final Temp temp;
-  late final List<Weather> weather;
-
-  Daily.fromJson(Map<String, dynamic> json) {
-    dt = json['dt'];
-    temp = Temp.fromJson(json['temp']);
-    weather = List.from(json['weather']).map((e) => Weather.fromJson(e)).toList();
-  }
-}
-
-class Temp {
-  Temp({
-    required this.min,
-    required this.max,
-  });
-  late final double min;
-  late final double max;
-
-  Temp.fromJson(Map<String, dynamic> json) {
-    min = double.parse(json['min'].toString());
-    max = double.parse(json['max'].toString());
   }
 }
 

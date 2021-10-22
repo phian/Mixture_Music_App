@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import '../models/weather.dart';
 import 'package:http/http.dart' as http;
 
 class WeatherService {
   final apiKey = "ed83861dce9e7c81791c42143078dcbd";
-  Future<WeatherResponse> getWeatherByPosition({required double lat, required double lon}) async {
+
+  Future<Map<String, dynamic>> getWeatherByPosition(
+      {required double lat, required double lon}) async {
     const exclude = 'minutely,hourly,alerts';
     const units = 'metric';
     final url = Uri.parse(
@@ -15,6 +16,6 @@ class WeatherService {
 
     Map<String, dynamic> jsonData = jsonDecode(respone.body);
     log(jsonData.toString());
-    return WeatherResponse.fromJson(jsonData);
+    return jsonData;
   }
 }

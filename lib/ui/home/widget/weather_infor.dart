@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../../models/weather/current_weather_model.dart';
+import '../../../models/weather/daily_weather_model.dart';
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_style.dart';
 import 'package:weather_icons/weather_icons.dart';
 
-import '../../../models/weather.dart';
+import '../../../models/weather/weather_model.dart';
 
 class WeatherInfor extends StatelessWidget {
   const WeatherInfor({
@@ -13,14 +15,14 @@ class WeatherInfor extends StatelessWidget {
     required this.location,
   }) : super(key: key);
 
-  final WeatherResponse weatherResponse;
+  final WeatherModel weatherResponse;
   final String location;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        LocationInfo(
+        LocationInfor(
           current: weatherResponse.current,
           location: location,
         ),
@@ -59,7 +61,7 @@ class DailyWeather extends StatelessWidget {
   }) : super(key: key);
 
   final isToday;
-  final Daily daily;
+  final DailyWeatherModel daily;
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +149,7 @@ class CurrentWeather extends StatelessWidget {
     required this.current,
   }) : super(key: key);
 
-  final Current current;
+  final CurrentWeatherModel current;
 
   @override
   Widget build(BuildContext context) {
@@ -216,14 +218,14 @@ class CurrentWeather extends StatelessWidget {
   }
 }
 
-class LocationInfo extends StatelessWidget {
-  const LocationInfo({
+class LocationInfor extends StatelessWidget {
+  const LocationInfor({
     Key? key,
     required this.current,
     required this.location,
   }) : super(key: key);
 
-  final Current current;
+  final CurrentWeatherModel current;
   final String location;
 
   @override

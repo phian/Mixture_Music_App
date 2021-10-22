@@ -1,10 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import 'constants/app_theme.dart';
 import 'routing/route_generator.dart';
 import 'routing/routes.dart';
 import 'widgets/base_button.dart';
-import 'constants/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

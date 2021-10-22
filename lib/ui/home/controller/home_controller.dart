@@ -1,28 +1,34 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import '../models/weather.dart';
-import '../repos/weather_repos.dart';
+import '../../../controllers/weather_controller.dart';
+
+import '../../../models/weather/weather_model.dart';
+
+
 
 class HomeController extends GetxController {
   var location = "".obs;
-  late Position pos;
-  WeatherRepo weatherService = WeatherRepo();
-  final weatherResponse = Rxn<WeatherResponse>();
+  var weatherModel = Rxn<WeatherModel>();
+
+
+  late Position _pos;
+  WeatherController _weatherController = WeatherController();
+  
   bool hasLoaded = false;
 
   @override
   void onInit() async {
     super.onInit();
-    await getWeather();
+    await getLocationAndWeather();
   }
 
-  Future<void> getWeather() async {
-    pos = await _determinePosition();
+  Future<void> getLocationAndWeather() async {
+    _pos = await _determinePosition();
     location.value = await getLocationName();
-    weatherResponse.value = await weatherService.getWeatherByPosition(
-      lat: pos.latitude,
-      lon: pos.longitude,
+    weatherModel.value = await _weatherController.getWeatherByPosition(
+      lat: _pos.latitude,
+      lon: _pos.longitude,
     );
     hasLoaded = true;
     update();
@@ -30,7 +36,7 @@ class HomeController extends GetxController {
 
   Future<String> getLocationName() async {
     Placemark placemark = Placemark();
-    await placemarkFromCoordinates(pos.latitude, pos.longitude)
+    await placemarkFromCoordinates(_pos.latitude, _pos.longitude)
         .then((list) => placemark = list.first);
 
     var _location = "";

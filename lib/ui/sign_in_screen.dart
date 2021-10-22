@@ -6,8 +6,6 @@ import '../constants/enums/enums.dart';
 import '../controllers/auth_controller.dart';
 import '../images/app_icons.dart';
 import '../routing/routes.dart';
-
-import 'nav_screen.dart';
 import '../widgets/base_button.dart';
 import '../widgets/base_textfield.dart';
 import '../widgets/inkwell_wrapper.dart';
@@ -80,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
               BaseButton(
                 content: "SIGN IN",
                 onTap: () {
-                  Get.to(() => NavScreen());
+                  Get.toNamed(AppRoutes.navigationScreen);
                 },
               ),
               const Expanded(child: SizedBox()),
