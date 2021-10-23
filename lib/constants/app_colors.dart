@@ -17,4 +17,24 @@ class AppColors {
   static const transparent = Colors.transparent;
 
   static const backgroundColor = Color(0xFF0B0B1F);
+
+  // =============================================
+
+  // primary color: màu dựa theo nhiệt độ, có thể đổi theo thời tiết nếu tìm được màu hợp lí
+  // <6 : 0xFF163E72
+  static const darkBlue = Color(0xFF163E72);
+  // 6 - 17 : 0xFF4680C0
+  static const coolBlue = Color(0xFF4680C0);
+  // 18 - 25 : 0xFFF38B54
+  static const fadedOrange = Color(0xFFF38B54);
+  // >25 : 0xFFF6B235
+  static const orange = Color(0xFFF6B235);
+
+  // static const lightBackgroundColor = Colors.white;
+
+  // static const darkBackgroundColor = Colors.black;
+
+  static const captionTextColor = Color(0xFF334449);
+
+  static const subTextColor = Color(0xFFA0ABB3);
 }

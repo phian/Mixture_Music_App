@@ -1,4 +1,4 @@
-import 'package:mixture_music_app/models/facebook/facebook_user_picture_model.dart';
+import 'facebook_user_picture_model.dart';
 
 class FacebookUserModel {
 /*

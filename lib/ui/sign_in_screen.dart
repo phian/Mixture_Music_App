@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/enums/enums.dart';
-import 'package:mixture_music_app/controllers/auth_controller.dart';
-import 'package:mixture_music_app/images/app_icons.dart';
-import 'package:mixture_music_app/routing/routes.dart';
-
-import 'package:mixture_music_app/ui/nav_screen.dart';
-import 'package:mixture_music_app/widgets/base_button.dart';
-import 'package:mixture_music_app/widgets/base_textfield.dart';
-import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
-import 'package:mixture_music_app/widgets/sign_in_button.dart';
+import '../constants/app_colors.dart';
+import '../constants/enums/enums.dart';
+import '../controllers/auth_controller.dart';
+import '../images/app_icons.dart';
+import '../routing/routes.dart';
+import '../widgets/base_button.dart';
+import '../widgets/base_textfield.dart';
+import '../widgets/inkwell_wrapper.dart';
+import '../widgets/sign_in_button.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
@@ -80,7 +78,7 @@ class _SignInScreenState extends State<SignInScreen> {
               BaseButton(
                 content: "SIGN IN",
                 onTap: () {
-                  Get.to(() => NavScreen());
+                  Get.toNamed(AppRoutes.navigationScreen);
                 },
               ),
               const Expanded(child: SizedBox()),

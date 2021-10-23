@@ -1,16 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import '../../../constants/theme.dart';
+import '../../../constants/app_colors.dart';
 
 class PlaylistHeader extends StatelessWidget {
   const PlaylistHeader({
     Key? key,
-    required List<String> listImage,
-  })  : _listImage = listImage,
-        super(key: key);
+    required this.coverImageUrl,
+  });
 
-  final List<String> _listImage;
+  final List<String> coverImageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +41,7 @@ class PlaylistHeader extends StatelessWidget {
                     ),
                     itemCount: 4,
                     itemBuilder: (context, index) => Image.network(
-                      _listImage[index],
+                      coverImageUrl[index],
                     ),
                   ),
                 ),
@@ -52,7 +50,7 @@ class PlaylistHeader extends StatelessWidget {
                 height: 40,
                 width: 40,
                 decoration: BoxDecoration(
-                  color: AppTheme.brightGrey,
+                  color: AppColors.captionTextColor,
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -69,11 +67,11 @@ class PlaylistHeader extends StatelessWidget {
               children: [
                 Text(
                   "Today's Playlist",
-                  style: AppTheme.h4.copyWith(fontSize: 24),
+                  style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24),
                 ),
                 Text(
                   'Created based on weather',
-                  style: AppTheme.subText.copyWith(fontSize: 16),
+                  style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 16),
                 ),
                 Row(
                   children: [
@@ -83,7 +81,7 @@ class PlaylistHeader extends StatelessWidget {
                         'Save',
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppTheme.primaryColor,
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -96,7 +94,7 @@ class PlaylistHeader extends StatelessWidget {
                         'Share',
                         style: TextStyle(
                           fontSize: 16,
-                          color: AppTheme.primaryColor,
+                          color: Theme.of(context).primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
