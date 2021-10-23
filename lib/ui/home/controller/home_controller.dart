@@ -5,16 +5,14 @@ import '../../../controllers/weather_controller.dart';
 
 import '../../../models/weather/weather_model.dart';
 
-
-
 class HomeController extends GetxController {
   var location = "".obs;
   var weatherModel = Rxn<WeatherModel>();
-
+  var playingSongIndex = Rxn<int>();
 
   late Position _pos;
   WeatherController _weatherController = WeatherController();
-  
+
   bool hasLoaded = false;
 
   @override

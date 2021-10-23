@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:miniplayer/miniplayer.dart';
+import 'package:mixture_music_app/models/song_model.dart';
 
-class MiniPlayer extends StatelessWidget {
-  const MiniPlayer({
+class MiniMusicPlayer extends StatelessWidget {
+  const MiniMusicPlayer({
     Key? key,
-    required double playerMinHeight,
+    required this.playerMinHeight,
     required this.selectedSong,
-  }) : _playerMinHeight = playerMinHeight, super(key: key);
+  }) : super(key: key);
 
-  final double _playerMinHeight;
-  final int? selectedSong;
+  final double playerMinHeight;
+  final SongModel? selectedSong;
 
   @override
   Widget build(BuildContext context) {
     return Miniplayer(
-      minHeight: _playerMinHeight,
+      minHeight: playerMinHeight,
       maxHeight: MediaQuery.of(context).size.height,
       builder: (height, percentage) {
         if (selectedSong == null) {
@@ -37,7 +38,7 @@ class MiniPlayer extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Image.network(
-                      'https://i.scdn.co/image/ab6761610000e5ebc48716f91b7bf3016f5b6fbe',
+                      selectedSong!.coverImageUrl,
                       width: 45,
                       height: 45,
                       fit: BoxFit.cover,
@@ -49,15 +50,12 @@ class MiniPlayer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'Trời hôm nay nhiều mây cực',
+                            selectedSong!.tilte,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context)
-                                .textTheme
-                                .caption!
-                                .copyWith(fontSize: 14),
+                            style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
                           ),
                           Text(
-                            'Sơn Tùng MTP',
+                            selectedSong!.artist,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                               fontSize: 14,
@@ -75,7 +73,9 @@ class MiniPlayer extends StatelessWidget {
                       ),
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        
+                      },
                       icon: Icon(
                         Icons.clear,
                       ),

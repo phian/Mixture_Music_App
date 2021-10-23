@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:mixture_music_app/models/song_model.dart';
 
-import 'home/home.dart';
-import 'library_screen.dart';
-import 'player_screen.dart';
-import 'search_screen.dart';
+import '../home.dart';
+import '../../library_screen.dart';
+import 'widget/mini_music_player.dart';
+import '../../search_screen.dart';
 
 class NavScreen extends StatefulWidget {
   const NavScreen({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class NavScreen extends StatefulWidget {
 class _NavScreenState extends State<NavScreen> {
   static const double _playerMinHeight = 60;
   int _selectedIndex = 0;
-  int? selectedSong;
+  SongModel? selectedSong;
 
   final _screen = [
     Home(),
@@ -41,7 +42,7 @@ class _NavScreenState extends State<NavScreen> {
           ..add(
             Offstage(
               offstage: selectedSong == null,
-              child: MiniPlayer(playerMinHeight: _playerMinHeight, selectedSong: selectedSong),
+              child: MiniMusicPlayer(playerMinHeight: _playerMinHeight, selectedSong: selectedSong),
             ),
           ),
       ),
