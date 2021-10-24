@@ -14,6 +14,7 @@ class AppThemes {
     colorScheme: ColorScheme.light().copyWith(
       secondary: AppColors.captionTextColor,
     ),
+    hintColor: AppColors.hintColor
   );
 
   static final baseDarkTheme = ThemeData(
@@ -24,6 +25,7 @@ class AppThemes {
     colorScheme: ColorScheme.dark().copyWith(
       secondary: AppColors.captionTextColor,
     ),
+    hintColor: AppColors.darkHintColor,
   );
 
   static final lightColdTheme = baseLightTheme.copyWith(

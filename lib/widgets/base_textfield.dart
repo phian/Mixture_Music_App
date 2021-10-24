@@ -34,7 +34,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
       controller: _controller,
       obscureText: _isObscureText,
       style: const TextStyle(
-        color: AppColors.white,
+        //color: AppColors.white,
         fontSize: 20.0,
       ),
       decoration: InputDecoration(
@@ -43,7 +43,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
             ? IconButton(
                 icon: Icon(
                   _isObscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                  color: AppColors.white,
+                  //color: AppColors.white,
                 ),
                 onPressed: () {
                   setState(() {
@@ -57,12 +57,11 @@ class _BaseTextFieldState extends State<BaseTextField> {
         border: _textFieldBorder(),
         hintText: widget.hintText ?? _getHintText(),
         hintStyle: const TextStyle(
-          color: AppColors.white,
+          //color: AppColors.white,
           fontSize: 18.0,
           fontWeight: FontWeight.w300,
         ),
       ),
-      cursorColor: AppColors.white,
       keyboardType: _getKeyboardType(),
     );
   }
@@ -70,11 +69,11 @@ class _BaseTextFieldState extends State<BaseTextField> {
   Widget _getPrefixIcon() {
     switch (widget.textFieldType) {
       case TextFieldType.name:
-        return Icon(Icons.account_circle_outlined, color: AppColors.white);
+        return Icon(Icons.account_circle_outlined);
       case TextFieldType.email:
-        return Icon(Icons.email_outlined, color: AppColors.white);
+        return Icon(Icons.email_outlined);
       case TextFieldType.password:
-        return Icon(Icons.lock_outlined, color: AppColors.white);
+        return Icon(Icons.lock_outlined);
     }
   }
 
@@ -93,7 +92,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
     return UnderlineInputBorder(
         borderSide: BorderSide(
       width: 0.5,
-      color: AppColors.white,
+      //color: AppColors.white,
     ));
   }
 

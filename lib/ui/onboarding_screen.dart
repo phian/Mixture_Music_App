@@ -11,7 +11,7 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.c0B0B1F,
+      //backgroundColor: AppColors.c0B0B1F,
       appBar: const BaseAppBar(),
       body: Stack(
         children: [
@@ -37,31 +37,29 @@ class OnboardingScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "MUSIC PLAYER",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.0,
-                        color: AppColors.cEF01A0,
-                      ),
+                      style: Theme.of(context).textTheme.caption!.copyWith(
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16.0,
+                            color: Theme.of(context).primaryColor,
+                          ),
                     ),
                     const SizedBox(height: 18.0),
-                    const Text(
+                    Text(
                       "WELCOME TO MIXTURE MUSIC APP",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 30.0,
-                        color: AppColors.white,
-                      ),
+                      style: Theme.of(context).textTheme.caption!.copyWith(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 30.0,
+                            color: AppColors.black,
+                          ),
                     ),
                     const SizedBox(height: 24.0),
-                    const Text(
+                    Text(
                       "Newest songs around the world",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.0,
-                        color: AppColors.white,
-                      ),
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                            fontSize: 16,
+                          ),
                     ),
                     const SizedBox(height: 64.0),
                     BaseButton(

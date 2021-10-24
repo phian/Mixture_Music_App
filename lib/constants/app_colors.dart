@@ -38,9 +38,13 @@ class AppColors {
 
   static const subTextColor = Color(0xFFA0ABB3);
 
+  static const hintColor = Color(0xFFA0ABB3);
+
   // dark theme color
 
-  static const darkCaptionTextColor = Color(0xFF334449);
+  static const darkCaptionTextColor = Colors.white;
 
   static const darkSubTextColor = Color(0xFFA0ABB3);
+
+  static const darkHintColor = Color(0xFFA0ABB3);
 }

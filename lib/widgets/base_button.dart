@@ -29,7 +29,7 @@ class BaseButton extends StatelessWidget {
       margin: margin,
       constraints: constraints,
       child: InkWellWrapper(
-        color: buttonColor ?? AppColors.cE30098,
+        color: buttonColor ?? Theme.of(context).primaryColor,
         borderRadius: buttonRadius,
         onTap: onTap,
         child: Container(

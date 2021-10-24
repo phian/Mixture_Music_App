@@ -22,7 +22,7 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      //backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -31,13 +31,11 @@ class _SignInScreenState extends State<SignInScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-              const Text(
+              Text(
                 "SIGN IN",
-                style: TextStyle(
-                  fontSize: 40.0,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
+                style: Theme.of(context).textTheme.headline4!.copyWith(
+                      fontSize: 40,
+                    ),
               ),
               const SizedBox(height: 64.0),
               BaseTextField(
@@ -66,7 +64,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.white,
+                            //color: AppColors.white,
                           ),
                         ),
                       ),
@@ -158,7 +156,7 @@ class _SignInScreenState extends State<SignInScreen> {
                       style: const TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w400,
-                        color: AppColors.white,
+                        //color: AppColors.white,
                       ),
                     ),
                     InkWellWrapper(
@@ -168,18 +166,16 @@ class _SignInScreenState extends State<SignInScreen> {
                       color: AppColors.transparent,
                       child: Container(
                         padding: EdgeInsets.all(4.0),
-                        child: RichText(
-                          text: TextSpan(
-                            style: const TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.cEF01A0,
-                            ),
-                            text: "Sign Up",
+                        child: Text(
+                          "Sign Up",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

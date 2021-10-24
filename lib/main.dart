@@ -16,7 +16,7 @@ void main() async {
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator().onGenerateRoute,
-      theme: AppThemes.lightCoolTheme,
+      theme: AppThemes.darkCoolTheme,
     ),
   );
 }

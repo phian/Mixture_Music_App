@@ -9,7 +9,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
+      //backgroundColor: AppColors.backgroundColor,
       appBar: BaseAppBar(),
       body: SingleChildScrollView(
         child: Container(
@@ -18,13 +18,11 @@ class ForgotPasswordScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text(
+              Text(
                 "Forgot Password?",
-                style: const TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: AppColors.white,
-                ),
+                style: Theme.of(context).textTheme.headline4!.copyWith(
+                      fontSize: 30,
+                    ),
               ),
               const SizedBox(height: 32.0),
               const Text(
@@ -32,7 +30,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 style: const TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w300,
-                  color: AppColors.white,
+                  //color: AppColors.white,
                 ),
               ),
               const SizedBox(height: 32.0),
