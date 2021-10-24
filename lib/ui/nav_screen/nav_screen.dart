@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/models/song_model.dart';
 
-import '../home.dart';
-import '../../library_screen.dart';
+import '../../models/song_model.dart';
+import '../home/home.dart';
+import '../library_screen.dart';
+import '../search_screen.dart';
 import 'widget/mini_music_player.dart';
-import '../../search_screen.dart';
 
 class NavScreen extends StatefulWidget {
   const NavScreen({Key? key}) : super(key: key);

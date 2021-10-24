@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../models/song_model.dart';
-import '../../../constants/app_colors.dart';
 
 class SongTile extends StatelessWidget {
   const SongTile({
@@ -58,11 +57,6 @@ class SongTile extends StatelessWidget {
                 Icons.play_arrow,
                 color: Theme.of(context).primaryColor,
               ),
-            Icon(
-              Icons.more_horiz,
-              //TODO: sửa theo theme
-              color: AppColors.subTextColor,
-            ),
           ],
         ),
       ),

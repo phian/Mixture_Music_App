@@ -1,6 +1,7 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/constants/app_theme.dart';
 import '../../../controllers/weather_controller.dart';
 
 import '../../../models/weather/weather_model.dart';
@@ -29,7 +30,21 @@ class HomeController extends GetxController {
       lon: _pos.longitude,
     );
     hasLoaded = true;
+    setTheme();
     update();
+  }
+
+  void setTheme() {
+    var temp = weatherModel.value!.current.temp;
+    if (temp <= 5) {
+      //Get.changeTheme(isDarkMode ? AppThemes.darkColdTheme : AppThemes.lightColdTheme);
+      Get.changeTheme(AppThemes.lightColdTheme);
+    } else if (temp > 5 && temp <= 17) {
+      Get.changeTheme(AppThemes.lightCoolTheme);
+    } else if (temp > 17 && temp <= 25) {
+      Get.changeTheme(AppThemes.lightWarmTheme);
+    } else
+      Get.changeTheme(AppThemes.lightHotTheme);
   }
 
   Future<String> getLocationName() async {

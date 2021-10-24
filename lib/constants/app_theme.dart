@@ -11,6 +11,9 @@ class AppThemes {
     fontFamily: AppTextStyles.fontName,
     //scaffoldBackgroundColor: lightBackgroundColor,
     textTheme: AppTextStyles.lightTextTheme,
+    colorScheme: ColorScheme.light().copyWith(
+      secondary: AppColors.captionTextColor,
+    ),
   );
 
   static final baseDarkTheme = ThemeData(
@@ -18,6 +21,9 @@ class AppThemes {
     fontFamily: AppTextStyles.fontName,
     //scaffoldBackgroundColor: darkBackgroundColor,
     textTheme: AppTextStyles.darkTextTheme,
+    colorScheme: ColorScheme.dark().copyWith(
+      secondary: AppColors.captionTextColor,
+    ),
   );
 
   static final lightColdTheme = baseLightTheme.copyWith(

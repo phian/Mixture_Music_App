@@ -37,4 +37,10 @@ class AppColors {
   static const captionTextColor = Color(0xFF334449);
 
   static const subTextColor = Color(0xFFA0ABB3);
+
+  // dark theme color
+
+  static const darkCaptionTextColor = Color(0xFF334449);
+
+  static const darkSubTextColor = Color(0xFFA0ABB3);
 }

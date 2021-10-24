@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../ui/home/nav_screen/nav_screen.dart';
+import 'package:mixture_music_app/ui/nav_screen/nav_screen.dart';
 import 'routes.dart';
 import '../ui/forgot_password.dart';
 import '../ui/home/home.dart';

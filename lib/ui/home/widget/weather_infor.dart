@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import '../../../models/weather/current_weather_model.dart';
-import '../../../models/weather/daily_weather_model.dart';
-import '../../../constants/app_colors.dart';
-import '../../../constants/app_text_style.dart';
 import 'package:weather_icons/weather_icons.dart';
 
+import '../../../constants/app_text_style.dart';
+import '../../../models/weather/current_weather_model.dart';
+import '../../../models/weather/daily_weather_model.dart';
 import '../../../models/weather/weather_model.dart';
 
 class WeatherInfor extends StatelessWidget {
@@ -103,8 +102,7 @@ class DailyWeather extends StatelessWidget {
                   fallback: WeatherIcons.na,
                 ),
                 size: 36,
-                // TODO: sửa theo theme
-                color: AppColors.captionTextColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ],
           ),
@@ -119,8 +117,7 @@ class DailyWeather extends StatelessWidget {
               '${daily.temp.max.round()}°',
               style: TextStyle(
                 fontSize: 30,
-                // TODO: sửa theo theme
-                color: AppColors.captionTextColor,
+                color: Theme.of(context).colorScheme.secondary,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -129,12 +126,10 @@ class DailyWeather extends StatelessWidget {
             alignment: Alignment.topRight,
             child: Text(
               '${daily.temp.min.round()}°',
-              style: TextStyle(
-                fontSize: 30,
-                // TODO: sửa theo theme
-                color: AppColors.subTextColor,
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ),
         ],
@@ -184,8 +179,7 @@ class CurrentWeather extends StatelessWidget {
                   fallback: WeatherIcons.na,
                 ),
                 size: 70,
-                // TODO: sửa theo theme
-                color: AppColors.captionTextColor,
+                color: Theme.of(context).colorScheme.secondary,
               ),
               Spacer(),
               Text(
@@ -194,8 +188,7 @@ class CurrentWeather extends StatelessWidget {
                   fontFamily: AppTextStyles.fontName,
                   fontSize: 62,
                   fontWeight: FontWeight.bold,
-                  // TODO: sửa theo theme
-                  color: AppColors.captionTextColor,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
             ],
