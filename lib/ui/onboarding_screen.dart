@@ -11,70 +11,72 @@ class OnboardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: AppColors.c0B0B1F,
-      appBar: const BaseAppBar(),
-      body: Stack(
-        children: [
-          CarouselSlider(
-            options: CarouselOptions(
-              autoPlay: true,
-              aspectRatio: 2.0,
-              enlargeCenterPage: true,
-              height: MediaQuery.of(context).size.height * 0.45,
-            ),
-            items: [
-              Container(
-                color: Colors.red,
+      body: Container(
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        child: Stack(
+          children: [
+            CarouselSlider(
+              options: CarouselOptions(
+                autoPlay: true,
+                aspectRatio: 2.0,
+                enlargeCenterPage: true,
+                height: MediaQuery.of(context).size.height * 0.5,
               ),
-            ],
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "MUSIC PLAYER",
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontWeight: FontWeight.w400,
-                            fontSize: 16.0,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    ),
-                    const SizedBox(height: 18.0),
-                    Text(
-                      "WELCOME TO MIXTURE MUSIC APP",
-                      style: Theme.of(context).textTheme.caption!.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 30.0,
-                            color: AppColors.black,
-                          ),
-                    ),
-                    const SizedBox(height: 24.0),
-                    Text(
-                      "Newest songs around the world",
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                            fontSize: 16,
-                          ),
-                    ),
-                    const SizedBox(height: 64.0),
-                    BaseButton(
-                      content: "GET STARTED",
-                      onTap: () {
-                        Get.toNamed(AppRoutes.signIn);
-                      },
-                    ),
-                    const SizedBox(height: 32.0),
-                  ],
+              items: [
+                Container(
+                  color: Colors.red,
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "MUSIC PLAYER",
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 16.0,
+                              color: Theme.of(context).primaryColor,
+                            ),
+                      ),
+                      const SizedBox(height: 18.0),
+                      Text(
+                        "WELCOME TO MIXTURE MUSIC APP",
+                        style: Theme.of(context).textTheme.caption!.copyWith(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 30.0,
+                              color: AppColors.white,
+                            ),
+                      ),
+                      const SizedBox(height: 24.0),
+                      Text(
+                        "Newest songs around the world",
+                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                              fontSize: 16,
+                          color: AppColors.white,
+                            ),
+                      ),
+                      const SizedBox(height: 64.0),
+                      BaseButton(
+                        content: "GET STARTED",
+                        onTap: () {
+                          Get.toNamed(AppRoutes.signIn);
+                        },
+                      ),
+                      const SizedBox(height: 32.0),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }

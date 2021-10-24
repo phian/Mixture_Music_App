@@ -8,3 +8,8 @@ enum TextFieldType {
   email,
   password,
 }
+
+enum ViewType {
+  grid,
+  list,
+}
