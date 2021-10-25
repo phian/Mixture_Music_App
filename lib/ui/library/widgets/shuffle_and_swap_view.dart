@@ -66,8 +66,10 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
                     _isList = !_isList;
                     if (_isList) {
                       _aniController!.reverse();
+                      widget.onSwapViewTap?.call(ViewType.list);
                     } else {
                       _aniController!.forward();
+                      widget.onSwapViewTap?.call(ViewType.grid);
                     }
                   });
                 }

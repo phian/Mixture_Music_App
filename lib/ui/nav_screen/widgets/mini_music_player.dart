@@ -50,7 +50,7 @@ class MiniMusicPlayer extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            selectedSong!.tilte,
+                            selectedSong!.title,
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
                           ),

@@ -2,17 +2,18 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/constants/app_constants.dart';
 
 import '../constants/app_colors.dart';
 import '../routing/routes.dart';
 import '../widgets/base_button.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnBoardingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
+        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 16.0),
         child: Stack(
           children: [
             CarouselSlider(
@@ -23,9 +24,13 @@ class OnboardingScreen extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 0.5,
               ),
               items: [
-                Container(
-                  color: Colors.red,
-                ),
+                ...List.generate(
+                  listSong.length,
+                  (index) => Image.network(
+                    listSong[index].coverImageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                )
               ],
             ),
             Align(
@@ -58,8 +63,8 @@ class OnboardingScreen extends StatelessWidget {
                       Text(
                         "Newest songs around the world",
                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                              fontSize: 16,
-                          color: AppColors.white,
+                          fontSize: 16,
+                              color: AppColors.white,
                             ),
                       ),
                       const SizedBox(height: 64.0),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../models/song_model.dart';
 
 class SongTile extends StatelessWidget {
@@ -37,7 +38,7 @@ class SongTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    songModel.tilte,
+                    songModel.title,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 16),
                   ),
