@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+
 import '../constants/app_colors.dart';
 import '../constants/enums/enums.dart';
 import '../controllers/auth_controller.dart';
@@ -22,7 +23,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: AppColors.backgroundColor,
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -76,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
               BaseButton(
                 content: "SIGN IN",
                 onTap: () {
-                  Get.toNamed(AppRoutes.navigationScreen);
+                  Get.offAllNamed(AppRoutes.navigationScreen);
                 },
               ),
               const Expanded(child: SizedBox()),

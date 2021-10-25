@@ -1,12 +1,12 @@
 class SongModel {
   final int id;
-  final String tilte;
+  final String title;
   final String artist;
   final String coverImageUrl;
 
-  SongModel({
+  const SongModel({
     required this.id,
-    required this.tilte,
+    required this.title,
     required this.artist,
     required this.coverImageUrl,
   });
