@@ -2,7 +2,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../constants/app_colors.dart';
+
 import '../routing/routes.dart';
 import '../widgets/base_app_bar.dart';
 import '../widgets/base_button.dart';
@@ -51,7 +51,6 @@ class OnboardingScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.caption!.copyWith(
                             fontWeight: FontWeight.w600,
                             fontSize: 30.0,
-                            color: AppColors.black,
                           ),
                     ),
                     const SizedBox(height: 24.0),

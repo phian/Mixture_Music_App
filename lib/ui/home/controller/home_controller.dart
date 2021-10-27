@@ -1,7 +1,7 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_theme.dart';
+import '../../../constants/app_theme.dart';
 import '../../../controllers/weather_controller.dart';
 
 import '../../../models/weather/weather_model.dart';

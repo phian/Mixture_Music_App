@@ -2,6 +2,9 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../constants/app_constants.dart';
+
+import '../player_screen/controller/music_player_controller.dart';
 
 import '../../models/song_model.dart';
 import 'controller/home_controller.dart';
@@ -10,16 +13,16 @@ import 'widget/refresh_indicator.dart';
 import 'widget/song_tile.dart';
 import 'widget/weather_infor.dart';
 
-
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
 
   final controller = Get.put(HomeController());
+  final musicController = Get.put(MusicPlayerController());
 
   final _listSong = [
     SongModel(
       id: 01,
-      tilte: 'Trời hôm nay nhiều mây cực',
+      tilte: 'Trời hôm nay nhiều mây cực cực cực cực cực cực cực cực',
       artist: 'Đen Vâu',
       coverImageUrl:
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
@@ -147,6 +150,7 @@ class Home extends StatelessWidget {
                         isPlaying: index == controller.playingSongIndex.value ? true : false,
                         onTap: () {
                           controller.playingSongIndex.value = index;
+                          musicController.setSong(_listSong[index]);
                         },
                       ),
                     );
@@ -156,6 +160,13 @@ class Home extends StatelessWidget {
                     thickness: 0.5,
                   ),
                 ),
+                Obx(
+                  () => musicController.selectedSong.value != null
+                      ? SizedBox(
+                          height: AppConstants.playerMinHeight,
+                        )
+                      : SizedBox.shrink(),
+                ),
               ],
             ),
           ),
@@ -164,4 +175,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-

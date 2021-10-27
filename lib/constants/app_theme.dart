@@ -14,8 +14,10 @@ class AppThemes {
     colorScheme: ColorScheme.light().copyWith(
       secondary: AppColors.captionTextColor,
     ),
-    hintColor: AppColors.hintColor
+    hintColor: AppColors.hintColor,
   );
+
+  
 
   static final baseDarkTheme = ThemeData(
     brightness: Brightness.dark,

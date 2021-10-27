@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mixture_music_app/routing/routes.dart';
 
-import '../../models/song_model.dart';
+import '../player_screen/controller/music_player_controller.dart';
+
 import '../home/home.dart';
 import '../library_screen.dart';
+
 import '../search_screen.dart';
 import 'widget/mini_music_player.dart';
 
@@ -14,9 +18,7 @@ class NavScreen extends StatefulWidget {
 }
 
 class _NavScreenState extends State<NavScreen> {
-  static const double _playerMinHeight = 60;
-  int _selectedIndex = 0;
-  SongModel? selectedSong;
+  int selectedScreenIndex = 0;
 
   final _screen = [
     Home(),
@@ -24,34 +26,48 @@ class _NavScreenState extends State<NavScreen> {
     LibraryScreen(),
   ];
 
+  final musicController = Get.put(MusicPlayerController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: _screen
-            .asMap()
-            .map((i, screen) => MapEntry(
-                  i,
-                  Offstage(
-                    offstage: _selectedIndex != i,
-                    child: screen,
+      body: Obx(
+        () => Stack(
+          children: _screen
+              .asMap()
+              .map((i, screen) => MapEntry(
+                    i,
+                    Offstage(
+                      offstage: selectedScreenIndex != i,
+                      child: screen,
+                    ),
+                  ))
+              .values
+              .toList()
+            ..add(
+              Offstage(
+                offstage: musicController.selectedSong.value == null,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: MiniMusicPlayer(
+                    song: musicController.selectedSong.value,
+                    onTap: () {
+                      Get.toNamed(AppRoutes.musicPlayerScreen);
+                    },
                   ),
-                ))
-            .values
-            .toList()
-          ..add(
-            Offstage(
-              offstage: selectedSong == null,
-              child: MiniMusicPlayer(playerMinHeight: _playerMinHeight, selectedSong: selectedSong),
+                ),
+              ),
             ),
-          ),
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: _selectedIndex,
-        onTap: (i) => setState(() {
-          _selectedIndex = i;
-        }),
+        currentIndex: selectedScreenIndex,
+        onTap: (index) {
+          setState(() {
+            selectedScreenIndex = index;
+          });
+        },
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),

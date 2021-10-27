@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../constants/app_colors.dart';
 import '../constants/enums/enums.dart';
 
 class BaseTextField extends StatefulWidget {
@@ -62,6 +61,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
           fontWeight: FontWeight.w300,
         ),
       ),
+      
       keyboardType: _getKeyboardType(),
     );
   }
