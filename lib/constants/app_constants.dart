@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/models/song_model.dart';
 
@@ -6,19 +8,46 @@ class AppConstants {
 }
 
 const libraryTitle = [
-  "All",
-  "Favourites",
-  "Playlists",
-  "Albums",
-  "Artists",
+  'All',
+  'Favourites',
+  'Playlists',
+  'Albums',
+  'Artists',
+];
+
+const accountScreenGridData = [
+  'Bài hát',
+  'Upload',
+  'MV',
+  'On Device',
+  'Album',
+  'Artists',
+];
+
+const accountScreenGridIcon = [
+  Icons.library_music,
+  Icons.upload,
+  Icons.music_video,
+  Icons.download,
+  Icons.album,
+  Icons.account_circle,
+];
+
+const accountScreenIconColors = [
+  AppColors.cA808F8,
+  AppColors.c417DFF,
+  AppColors.cFE8238,
+  AppColors.c434CE5,
+  AppColors.cFF4C4E,
+  AppColors.c0791FD,
 ];
 
 final libraryExampleModels = [
   LibraryModel(
     imageUrl:
-        "https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg",
-    libraryTitle: "Trời hôm nay nhiều mây cực",
-    librarySubTitle: "Đen vâu",
+        'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+    libraryTitle: 'Trời hôm nay nigh mây cực',
+    librarySubTitle: 'Đen vâu',
     isFavourite: true,
   ),
   LibraryModel(
@@ -49,7 +78,7 @@ final libraryExampleModels = [
   ),
 ];
 
-final listSong = [
+const listSong = [
   SongModel(
     id: 01,
     title: 'Trời hôm nay nhiều mây cực',

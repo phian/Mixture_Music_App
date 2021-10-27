@@ -27,7 +27,7 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
     super.initState();
     _aniController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
     );
   }
 
@@ -40,7 +40,7 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
           onTap: widget.onShuffleTap,
           color: AppColors.transparent,
           child: Container(
-            padding: EdgeInsets.all(4.0),
+            padding: const EdgeInsets.all(4.0),
             child: Row(
               children: [
                 const Icon(
@@ -48,7 +48,7 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
                 ),
                 const SizedBox(width: 4.0),
                 Text(
-                  "Shuffle",
+                  'Shuffle',
                   style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
                     color: AppColors.black,
                     fontWeight: FontWeight.bold,

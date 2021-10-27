@@ -8,6 +8,8 @@ import '../widgets/base_textfield.dart';
 import '../widgets/inkwell_wrapper.dart';
 
 class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({Key? key}) : super(key: key);
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -22,14 +24,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
         children: [
           SingleChildScrollView(
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 24.0),
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
                   const Text(
-                    "SIGN UP",
+                    'SIGN UP',
                     style: TextStyle(
                       fontSize: 40.0,
                       fontWeight: FontWeight.bold,
@@ -56,7 +58,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   ),
                   const SizedBox(height: 64.0),
                   BaseButton(
-                    content: "SIGN UP",
+                    content: 'SIGN UP',
                     onTap: () {},
                   ),
                 ],
@@ -68,9 +70,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Don't have an account? ",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w400,
                     color: AppColors.white,
@@ -82,15 +84,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   },
                   color: AppColors.transparent,
                   child: Container(
-                    padding: EdgeInsets.all(4.0),
+                    padding: const EdgeInsets.all(4.0),
                     child: RichText(
-                      text: TextSpan(
-                        style: const TextStyle(
+                      text: const TextSpan(
+                        style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.w400,
                           color: AppColors.cEF01A0,
                         ),
-                        text: "Sign In",
+                        text: 'Sign In',
                       ),
                     ),
                   ),

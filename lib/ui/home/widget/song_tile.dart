@@ -31,7 +31,7 @@ class SongTile extends StatelessWidget {
                 child: Image.network(songModel.coverImageUrl),
               ),
             ),
-            SizedBox(width: 16),
+            const SizedBox(width: 16),
             Expanded(
               flex: 4,
               child: Column(
@@ -40,7 +40,10 @@ class SongTile extends StatelessWidget {
                   Text(
                     songModel.title,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 16),
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption!
+                        .copyWith(fontSize: 16),
                   ),
                   Text(
                     songModel.artist,
@@ -50,9 +53,7 @@ class SongTile extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(
-              width: 16,
-            ),
+            const SizedBox(width: 16),
             if (isPlaying)
               Icon(
                 Icons.play_arrow,

@@ -40,7 +40,7 @@ class AuthService {
         }
       } catch (e) {
         // handle the error here
-        throw e;
+        rethrow;
       }
     }
 

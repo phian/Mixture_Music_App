@@ -1,12 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../../constants/app_colors.dart';
 
 class PlaylistHeader extends StatelessWidget {
   const PlaylistHeader({
     Key? key,
     required this.coverImageUrl,
-  });
+  }) : super(key: key);
 
   final List<String> coverImageUrl;
 
@@ -29,14 +30,15 @@ class PlaylistHeader extends StatelessWidget {
                       color: Colors.grey.withOpacity(0.3),
                       spreadRadius: 3,
                       blurRadius: 3,
-                      offset: Offset(2, 2),
+                      offset: const Offset(2, 2),
                     ),
                   ],
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(5),
                   child: GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                     ),
                     itemCount: 4,
@@ -49,11 +51,11 @@ class PlaylistHeader extends StatelessWidget {
               Container(
                 height: 40,
                 width: 40,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.captionTextColor,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
+                child: const Icon(
                   Icons.leaderboard,
                   color: Colors.white,
                 ),
@@ -87,7 +89,7 @@ class PlaylistHeader extends StatelessWidget {
                       ),
                       onPressed: () {},
                     ),
-                    SizedBox(width: 30),
+                    const SizedBox(width: 30),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       child: Text(

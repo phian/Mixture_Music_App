@@ -10,7 +10,7 @@ class LoadingContainer extends StatelessWidget {
   final Color? highlightColor;
   final Color? loadingColor;
 
-  LoadingContainer({
+  const LoadingContainer({
     Key? key,
     this.shape = BoxShape.rectangle,
     this.borderRadius,

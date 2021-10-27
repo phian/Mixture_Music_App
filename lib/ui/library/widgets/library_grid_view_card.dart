@@ -5,7 +5,7 @@ import 'package:mixture_music_app/ui/library/widgets/loading_container.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 
 class LibraryGridViewCard extends StatelessWidget {
-  LibraryGridViewCard({
+  const LibraryGridViewCard({
     Key? key,
     required this.libraryModel,
     this.titleStyle,
@@ -44,9 +44,10 @@ class LibraryGridViewCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30.0),
                 ),
         ),
-        SizedBox(height: 16.0),
+        const SizedBox(height: 16.0),
         Container(
-          constraints: BoxConstraints(maxWidth: MediaQuery.of(context).size.width * 0.25),
+          constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * 0.25),
           child: Text(
             libraryModel.libraryTitle ?? "Library's title",
             style: titleStyle ??

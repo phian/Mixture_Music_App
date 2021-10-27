@@ -13,6 +13,8 @@ import '../widgets/inkwell_wrapper.dart';
 import '../widgets/sign_in_button.dart';
 
 class SignInScreen extends StatefulWidget {
+  const SignInScreen({Key? key}) : super(key: key);
+
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -25,14 +27,14 @@ class _SignInScreenState extends State<SignInScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
           height: MediaQuery.of(context).size.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               Text(
-                "SIGN IN",
+                'SIGN IN',
                 style: Theme.of(context).textTheme.headline4!.copyWith(
                       fontSize: 40,
                     ),
@@ -58,9 +60,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       },
                       color: AppColors.transparent,
                       child: Container(
-                        padding: EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: const Text(
-                          "Forgot password?",
+                          'Forgot password?',
                           style: TextStyle(
                             fontSize: 20.0,
                             fontWeight: FontWeight.w600,
@@ -74,7 +76,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               const Expanded(child: SizedBox()),
               BaseButton(
-                content: "SIGN IN",
+                content: 'SIGN IN',
                 onTap: () {
                   Get.offAllNamed(AppRoutes.navigationScreen);
                 },
@@ -89,10 +91,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const Expanded(
-                    child: const Text(
-                      "Or connect with",
+                    child: Text(
+                      'Or connect with',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 14.0,
                         fontWeight: FontWeight.w400,
                         color: AppColors.white,
@@ -109,7 +111,7 @@ class _SignInScreenState extends State<SignInScreen> {
               ),
               Expanded(
                 child: Container(
-                  margin: EdgeInsets.only(top: 16.0),
+                  margin: const EdgeInsets.only(top: 16.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -128,7 +130,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 24.0),
+                        margin: const EdgeInsets.only(left: 24.0),
                         child: SignInButton(
                           signInType: SignInType.google,
                           buttonColor: AppColors.white,
@@ -151,9 +153,9 @@ class _SignInScreenState extends State<SignInScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       "Don't have an account? ",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.w400,
                         //color: AppColors.white,
@@ -165,9 +167,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       },
                       color: AppColors.transparent,
                       child: Container(
-                        padding: EdgeInsets.all(4.0),
+                        padding: const EdgeInsets.all(4.0),
                         child: Text(
-                          "Sign Up",
+                          'Sign Up',
                           style: TextStyle(
                             fontSize: 18.0,
                             fontWeight: FontWeight.w400,

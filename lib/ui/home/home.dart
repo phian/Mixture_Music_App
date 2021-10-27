@@ -3,10 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
+
 import '../../constants/app_constants.dart';
-
 import '../player_screen/controller/music_player_controller.dart';
-
 import 'controller/home_controller.dart';
 import 'widget/playlist_header.dart';
 import 'widget/refresh_indicator.dart';
@@ -39,27 +38,31 @@ class Home extends StatelessWidget {
             await controller.getLocationAndWeather();
           },
           child: SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics()),
             child: Column(
               children: [
                 GetBuilder<HomeController>(
                   builder: (c) {
-                    if (c.hasLoaded)
-                      return WeatherInfor(
+                    if (c.hasLoaded) {
+                      return WeatherInfo(
                         weatherResponse: c.weatherModel.value!,
                         location: c.location.value,
                       );
-                    return SizedBox.shrink();
+                    }
+                    return const SizedBox.shrink();
                   },
                 ),
-                SizedBox(height: 16),
-                Divider(
+                const SizedBox(height: 16),
+                const Divider(
                   indent: 16,
                   thickness: 0.5,
                   height: 16,
                 ),
-                PlaylistHeader(coverImageUrl: listSong.map((e) => e.coverImageUrl).toList()),
-                Divider(
+                PlaylistHeader(
+                    coverImageUrl:
+                        listSong.map((e) => e.coverImageUrl).toList()),
+                const Divider(
                   indent: 16,
                   endIndent: 16,
                   thickness: 0.5,
@@ -67,14 +70,17 @@ class Home extends StatelessWidget {
                 ),
                 ListView.separated(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  physics: const NeverScrollableScrollPhysics(),
+                  padding:
+                      const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                   itemCount: listSong.length,
                   itemBuilder: (context, index) {
                     return Obx(
                       () => SongTile(
                         songModel: listSong[index],
-                        isPlaying: index == controller.playingSongIndex.value ? true : false,
+                        isPlaying: index == controller.playingSongIndex.value
+                            ? true
+                            : false,
                         onTap: () {
                           controller.playingSongIndex.value = index;
                           musicController.setSong(listSong[index]);
@@ -82,17 +88,17 @@ class Home extends StatelessWidget {
                       ),
                     );
                   },
-                  separatorBuilder: (context, index) => Divider(
+                  separatorBuilder: (context, index) => const Divider(
                     height: 16,
                     thickness: 0.5,
                   ),
                 ),
                 Obx(
-                  () => musicController.selectedSong.value != null
-                      ? SizedBox(
+                      () => musicController.selectedSong.value != null
+                      ? const SizedBox(
                           height: AppConstants.playerMinHeight,
                         )
-                      : SizedBox.shrink(),
+                      : const SizedBox.shrink(),
                 ),
               ],
             ),
