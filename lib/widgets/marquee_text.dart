@@ -7,13 +7,11 @@ class MarqueeText extends StatelessWidget {
     Key? key,
     this.style,
     this.horizontalPadding,
-    this.textAlign,
   }) : super(key: key);
 
   final String text;
   final double? horizontalPadding;
   final TextStyle? style;
-  final Alignment? textAlign;
 
   @override
   Widget build(BuildContext context) {
