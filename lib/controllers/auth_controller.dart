@@ -6,7 +6,7 @@ import '../models/facebook/facebook_user_model.dart';
 import '../repos/auth_repo.dart';
 
 class AuthController extends GetxController {
-  AuthRepo _authRepo = AuthRepo();
+  final AuthRepo _authRepo = AuthRepo();
 
   // Google
   Future<User?> signInWithGoogle() async {

@@ -7,8 +7,8 @@ import '../../../models/weather/current_weather_model.dart';
 import '../../../models/weather/daily_weather_model.dart';
 import '../../../models/weather/weather_model.dart';
 
-class WeatherInfor extends StatelessWidget {
-  const WeatherInfor({
+class WeatherInfo extends StatelessWidget {
+  const WeatherInfo({
     Key? key,
     required this.weatherResponse,
     required this.location,
@@ -28,19 +28,20 @@ class WeatherInfor extends StatelessWidget {
         SizedBox(
           height: 240,
           child: ListView(
-            physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+            physics: const AlwaysScrollableScrollPhysics(
+                parent: BouncingScrollPhysics()),
             padding: const EdgeInsets.all(16),
             scrollDirection: Axis.horizontal,
             children: [
               CurrentWeather(
                 current: weatherResponse.current,
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               DailyWeather(
                 isToday: true,
                 daily: weatherResponse.daily[0],
               ),
-              SizedBox(width: 16),
+              const SizedBox(width: 16),
               DailyWeather(
                 daily: weatherResponse.daily[1],
               ),
@@ -59,7 +60,7 @@ class DailyWeather extends StatelessWidget {
     this.isToday = false,
   }) : super(key: key);
 
-  final isToday;
+  final bool isToday;
   final DailyWeatherModel daily;
 
   @override
@@ -73,7 +74,7 @@ class DailyWeather extends StatelessWidget {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 4,
             blurRadius: 4,
-            offset: Offset(3, 3),
+            offset: const Offset(3, 3),
           ),
         ],
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -95,7 +96,7 @@ class DailyWeather extends StatelessWidget {
                 ),
                 style: Theme.of(context).textTheme.subtitle1,
               ),
-              Spacer(),
+              const Spacer(),
               BoxedIcon(
                 WeatherIcons.fromString(
                   daily.weather[0].getIconName(),
@@ -110,7 +111,7 @@ class DailyWeather extends StatelessWidget {
             daily.weather[0].description,
             style: Theme.of(context).textTheme.subtitle1,
           ),
-          Spacer(),
+          const Spacer(),
           Align(
             alignment: Alignment.topRight,
             child: Text(
@@ -157,7 +158,7 @@ class CurrentWeather extends StatelessWidget {
             color: Colors.grey.withOpacity(0.2),
             spreadRadius: 3,
             blurRadius: 3,
-            offset: Offset(3, 3),
+            offset: const Offset(3, 3),
           ),
         ],
         color: Theme.of(context).scaffoldBackgroundColor,
@@ -181,7 +182,7 @@ class CurrentWeather extends StatelessWidget {
                 size: 70,
                 color: Theme.of(context).colorScheme.secondary,
               ),
-              Spacer(),
+              const Spacer(),
               Text(
                 '${current.temp.round()}°',
                 style: TextStyle(
@@ -236,7 +237,7 @@ class LocationInfor extends StatelessWidget {
             'In $location',
             style: Theme.of(context).textTheme.headline5,
           ),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Row(
             children: [
               Container(
@@ -247,7 +248,7 @@ class LocationInfor extends StatelessWidget {
                   color: Theme.of(context).primaryColor,
                 ),
               ),
-              SizedBox(width: 5),
+              const SizedBox(width: 5),
               Container(
                 height: 3,
                 width: 3,

@@ -14,6 +14,7 @@ class BaseButton extends StatelessWidget {
   final TextStyle? contentStyle;
 
   const BaseButton({
+    Key? key,
     required this.content,
     this.margin,
     this.constraints,
@@ -22,7 +23,7 @@ class BaseButton extends StatelessWidget {
     this.onTap,
     this.contentPadding,
     this.contentStyle,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +35,12 @@ class BaseButton extends StatelessWidget {
         borderRadius: buttonRadius,
         onTap: onTap,
         child: Container(
-          padding: contentPadding ?? EdgeInsets.symmetric(vertical: 16.0),
+          padding: contentPadding ?? const EdgeInsets.symmetric(vertical: 16.0),
           alignment: Alignment.center,
           child: Text(
             content,
             style: contentStyle ??
-                TextStyle(
+                const TextStyle(
                   fontSize: 25.0,
                   fontWeight: FontWeight.bold,
                   color: AppColors.white,

@@ -36,7 +36,8 @@ class _MusicControlButtonState extends State<MusicControlButton> {
         CupertinoButton(
           child: Icon(
             Icons.shuffle,
-            color: isShuffe ? theme.colorScheme.onBackground : theme.disabledColor,
+            color:
+                isShuffe ? theme.colorScheme.onBackground : theme.disabledColor,
           ),
           onPressed: () {
             setState(() {
@@ -45,7 +46,7 @@ class _MusicControlButtonState extends State<MusicControlButton> {
             widget.onShuffe(isShuffe);
           },
         ),
-        Spacer(),
+        const Spacer(),
         CupertinoButton(
           child: Icon(
             Icons.skip_previous,
@@ -60,7 +61,7 @@ class _MusicControlButtonState extends State<MusicControlButton> {
             size: 45,
             color: Colors.white,
           ),
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           borderRadius: BorderRadius.circular(1000),
           color: theme.primaryColor,
           onPressed: () {
@@ -83,11 +84,12 @@ class _MusicControlButtonState extends State<MusicControlButton> {
           ),
           onPressed: widget.onNext,
         ),
-        Spacer(),
+        const Spacer(),
         CupertinoButton(
           child: Icon(
             Icons.loop,
-            color: isLoop ? theme.colorScheme.onBackground : theme.disabledColor,
+            color:
+                isLoop ? theme.colorScheme.onBackground : theme.disabledColor,
           ),
           onPressed: () {
             setState(() {

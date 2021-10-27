@@ -7,7 +7,7 @@ import 'package:mixture_music_app/ui/library/widgets/loading_container.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 
 class LibraryListViewCard extends StatefulWidget {
-  LibraryListViewCard({
+  const LibraryListViewCard({
     Key? key,
     required this.libraryModel,
     this.onTap,
@@ -41,7 +41,7 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
       color: widget.cardColor ?? AppColors.black12,
       borderRadius: widget.borderRadius,
       child: Container(
-        padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
         child: Row(
           children: [
             widget.libraryModel.imageUrl != null
@@ -61,7 +61,7 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
                     borderRadius: BorderRadius.circular(20.0),
                     loadingColor: widget.loadingColor,
                   ),
-            SizedBox(width: 16.0),
+            const SizedBox(width: 16.0),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +83,7 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
                           borderRadius: BorderRadius.circular(20.0),
                           loadingColor: widget.loadingColor,
                         ),
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   widget.libraryModel.librarySubTitle != null
                       ? Text(
                           widget.libraryModel.librarySubTitle!,
@@ -95,29 +95,32 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
                         )
                       : LoadingContainer(
                           baseColor: Colors.grey.shade300,
-                          highlightColor: Colors.grey.shade100,
-                          width: MediaQuery.of(context).size.width * 0.2,
-                          height: 12.0,
-                          borderRadius: BorderRadius.circular(20.0),
-                          loadingColor: widget.loadingColor,
-                        ),
+                    highlightColor: Colors.grey.shade100,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width * 0.2,
+                    height: 12.0,
+                    borderRadius: BorderRadius.circular(20.0),
+                    loadingColor: widget.loadingColor,
+                  ),
                 ],
               ),
             ),
-            SizedBox(width: 8.0),
+            const SizedBox(width: 8.0),
             widget.libraryModel.isFavourite != null
                 ? LikeButton(
-                    size: 30.0,
-                    isLiked: _isLiked,
-                    onTap: _onLikeButtonTapped,
-                    animationDuration: Duration(milliseconds: 500),
-                    likeBuilder: (bool isLiked) {
-                      return Icon(
-                        Icons.favorite,
-                        color: isLiked ? AppColors.cEF01A0 : AppColors.white,
-                        size: 30.0,
-                      );
-                    },
+              size: 30.0,
+              isLiked: _isLiked,
+              onTap: _onLikeButtonTapped,
+              animationDuration: const Duration(milliseconds: 500),
+              likeBuilder: (bool isLiked) {
+                return Icon(
+                  Icons.favorite,
+                  color: isLiked ? AppColors.cEF01A0 : AppColors.white,
+                  size: 30.0,
+                );
+              },
                   )
                 : LoadingContainer(
                     baseColor: Colors.grey.shade300,

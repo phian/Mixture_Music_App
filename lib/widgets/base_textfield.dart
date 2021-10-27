@@ -8,10 +8,11 @@ class BaseTextField extends StatefulWidget {
   final String? hintText;
 
   const BaseTextField({
+    Key? key,
     required this.textFieldType,
     required this.onChanged,
     this.hintText,
-  });
+  }) : super(key: key);
 
   @override
   _BaseTextFieldState createState() => _BaseTextFieldState();
@@ -42,7 +43,9 @@ class _BaseTextFieldState extends State<BaseTextField> {
         suffixIcon: widget.textFieldType == TextFieldType.password
             ? IconButton(
                 icon: Icon(
-                  _isObscureText ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  _isObscureText
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   //color: AppColors.white,
                 ),
                 onPressed: () {
@@ -51,7 +54,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
                   });
                 },
               )
-            : SizedBox(),
+            : const SizedBox(),
         enabledBorder: _textFieldBorder(),
         focusedBorder: _textFieldBorder(),
         border: _textFieldBorder(),
@@ -62,7 +65,6 @@ class _BaseTextFieldState extends State<BaseTextField> {
           fontWeight: FontWeight.w300,
         ),
       ),
-      
       keyboardType: _getKeyboardType(),
     );
   }
@@ -70,11 +72,11 @@ class _BaseTextFieldState extends State<BaseTextField> {
   Widget _getPrefixIcon() {
     switch (widget.textFieldType) {
       case TextFieldType.name:
-        return Icon(Icons.account_circle_outlined);
+        return const Icon(Icons.account_circle_outlined);
       case TextFieldType.email:
-        return Icon(Icons.email_outlined);
+        return const Icon(Icons.email_outlined);
       case TextFieldType.password:
-        return Icon(Icons.lock_outlined);
+        return const Icon(Icons.lock_outlined);
     }
   }
 
@@ -90,21 +92,22 @@ class _BaseTextFieldState extends State<BaseTextField> {
   }
 
   UnderlineInputBorder _textFieldBorder() {
-    return UnderlineInputBorder(
-        borderSide: BorderSide(
-      width: 0.5,
-      //color: AppColors.white,
-    ));
+    return const UnderlineInputBorder(
+      borderSide: BorderSide(
+        width: 0.5,
+        //color: AppColors.white,
+      ),
+    );
   }
 
   String _getHintText() {
     switch (widget.textFieldType) {
       case TextFieldType.name:
-        return "Name";
+        return 'Name';
       case TextFieldType.email:
-        return "E-Mail";
+        return 'E-Mail';
       case TextFieldType.password:
-        return "Password";
+        return 'Password';
     }
   }
 }

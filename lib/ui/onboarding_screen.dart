@@ -5,16 +5,18 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 
 import '../constants/app_colors.dart';
-
 import '../routing/routes.dart';
 import '../widgets/base_button.dart';
 
 class OnBoardingScreen extends StatelessWidget {
+  const OnBoardingScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(top: MediaQuery.of(context).padding.top + 16.0),
+        padding:
+            EdgeInsets.only(top: MediaQuery.of(context).padding.top + 16.0),
         child: Stack(
           children: [
             CarouselSlider(
@@ -27,7 +29,7 @@ class OnBoardingScreen extends StatelessWidget {
               items: [
                 ...List.generate(
                   listSong.length,
-                  (index) => Image.network(
+                      (index) => Image.network(
                     listSong[index].coverImageUrl,
                     fit: BoxFit.cover,
                   ),
@@ -37,14 +39,14 @@ class OnBoardingScreen extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "MUSIC PLAYER",
+                        'MUSIC PLAYER',
                         style: Theme.of(context).textTheme.caption!.copyWith(
                               fontWeight: FontWeight.w400,
                               fontSize: 16.0,
@@ -53,7 +55,7 @@ class OnBoardingScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 18.0),
                       Text(
-                        "WELCOME TO MIXTURE MUSIC APP",
+                        'WELCOME TO MIXTURE MUSIC APP',
                         style: Theme.of(context).textTheme.caption!.copyWith(
                               fontWeight: FontWeight.w600,
                               fontSize: 30.0,
@@ -62,15 +64,15 @@ class OnBoardingScreen extends StatelessWidget {
                       ),
                       const SizedBox(height: 24.0),
                       Text(
-                        "Newest songs around the world",
+                        'Newest songs around the world',
                         style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          fontSize: 16,
+                              fontSize: 16,
                               color: AppColors.white,
                             ),
                       ),
                       const SizedBox(height: 64.0),
                       BaseButton(
-                        content: "GET STARTED",
+                        content: 'GET STARTED',
                         onTap: () {
                           Get.toNamed(AppRoutes.signIn);
                         },

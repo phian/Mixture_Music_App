@@ -30,19 +30,21 @@ class FacebookUserModel {
   });
 
   FacebookUserModel.fromJson(Map<String, dynamic> json) {
-    id = int.parse(json["id"]);
-    name = json["name"];
-    email = json["email"];
-    picture = (json["picture"] != null) ? FacebookUserPictureModel.fromJson(json["picture"]) : null;
+    id = int.parse(json['id']);
+    name = json['name'];
+    email = json['email'];
+    picture = (json['picture'] != null)
+        ? FacebookUserPictureModel.fromJson(json['picture'])
+        : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data["id"] = id;
-    data["name"] = name;
-    data["email"] = email;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['name'] = name;
+    data['email'] = email;
     if (picture != null) {
-      data["picture"] = picture?.toJson();
+      data['picture'] = picture?.toJson();
     }
     return data;
   }

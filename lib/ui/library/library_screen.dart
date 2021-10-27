@@ -40,22 +40,23 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   children: [
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          "Your Library",
-                          style: AppTextStyles.lightTextTheme.headline4?.copyWith(
+                          'Your Library',
+                          style:
+                              AppTextStyles.lightTextTheme.headline4?.copyWith(
                             fontSize: 30.0,
                             color: AppColors.black,
                           ),
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: Icon(Icons.refresh),
+                          icon: const Icon(Icons.refresh),
                         )
                       ],
                     ),
@@ -67,13 +68,15 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                           print(index);
                         },
                         isScrollable: true,
-                        physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                        physics: const AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics()),
                         tabs: List.generate(
                           libraryTitle.length,
                           (index) => Tab(
                             icon: Text(
                               libraryTitle[index],
-                              style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
+                              style: AppTextStyles.lightTextTheme.subtitle1
+                                  ?.copyWith(
                                 color: AppColors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
@@ -83,7 +86,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                         ),
                       ),
                     ),
-                    SizedBox(height: 24.0),
+                    const SizedBox(height: 24.0),
                     ShuffleAndSwapView(
                       onShuffleTap: () {},
                       onSwapViewTap: (viewType) {
@@ -107,7 +110,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                   children: List.generate(
                     5,
                     (index) => Container(
-                      margin: EdgeInsets.only(
+                      margin: const EdgeInsets.only(
                         left: 16.0,
                         right: 16.0,
                       ),
@@ -121,7 +124,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                             ),
                           );
                         },
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         child: _viewType == ViewType.list
                             ? _LibraryListView(libraries: libraryExampleModels)
                             : _LibraryGridView(
@@ -155,7 +158,7 @@ class _LibraryListView extends StatelessWidget {
             ...List.generate(
               libraries.length,
               (index) => Container(
-                margin: EdgeInsets.only(top: 16.0),
+                margin: const EdgeInsets.only(top: 16.0),
                 child: LibraryListViewCard(
                   libraryModel: libraries[index],
                   onTap: () {},
@@ -163,7 +166,7 @@ class _LibraryListView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: kBottomNavigationBarHeight + 32.0),
+            const SizedBox(height: kBottomNavigationBarHeight + 32.0),
           ],
         ),
       ),
@@ -191,7 +194,7 @@ class _LibraryGridView extends StatelessWidget {
                 ...List.generate(
                   libraries.length,
                   (index) => Container(
-                    margin: EdgeInsets.only(top: 16.0),
+                    margin: const EdgeInsets.only(top: 16.0),
                     child: LibraryGridViewCard(
                       libraryModel: libraries[index],
                       onTap: () {},
@@ -201,7 +204,7 @@ class _LibraryGridView extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: kBottomNavigationBarHeight + 32.0),
+            const SizedBox(height: kBottomNavigationBarHeight + 32.0),
           ],
         ),
       ),

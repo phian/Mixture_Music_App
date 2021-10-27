@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/ui/library/library_screen.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/models/facebook/facebook_user_picture_model.dart';
 import 'package:mixture_music_app/routing/routes.dart';
-
-import '../player_screen/controller/music_player_controller.dart';
+import 'package:mixture_music_app/ui/library/library_screen.dart';
+import 'package:mixture_music_app/ui/personal_screen/personal_screen.dart';
 
 import '../home/home.dart';
-
-
+import '../player_screen/controller/music_player_controller.dart';
 import '../search_screen.dart';
 import 'widgets/mini_music_player.dart';
 
@@ -23,8 +23,19 @@ class _NavScreenState extends State<NavScreen> {
 
   final _screen = [
     Home(),
-    SearchScreen(),
-    LibraryScreen(),
+    const SearchScreen(),
+    const LibraryScreen(),
+    PersonalScreen(
+      userModel: FacebookUserModel(
+        id: 1,
+        name: 'Đen Vâu',
+        email: 'denvau@gmail.com',
+        picture: FacebookUserPictureModel(
+          url: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/'
+              'avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+        ),
+      ),
+    ),
   ];
 
   final musicController = Get.put(MusicPlayerController());
@@ -69,7 +80,7 @@ class _NavScreenState extends State<NavScreen> {
             selectedScreenIndex = index;
           });
         },
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home_outlined),
             activeIcon: Icon(Icons.home),
@@ -84,6 +95,11 @@ class _NavScreenState extends State<NavScreen> {
             icon: Icon(Icons.library_music_outlined),
             activeIcon: Icon(Icons.library_music),
             label: 'Library',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.account_circle_outlined),
+            activeIcon: Icon(Icons.account_circle),
+            label: 'Personal',
           ),
         ],
       ),

@@ -5,7 +5,7 @@ import '../models/facebook/facebook_user_model.dart';
 import '../services/auth_service.dart';
 
 class AuthRepo {
-  AuthService _authService = AuthService();
+  final AuthService _authService = AuthService();
 
   // Google
   Future<User?> signInWithGoogle() async {

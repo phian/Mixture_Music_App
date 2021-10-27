@@ -11,7 +11,7 @@ class AppThemes {
     fontFamily: AppTextStyles.fontName,
     //scaffoldBackgroundColor: lightBackgroundColor,
     textTheme: AppTextStyles.lightTextTheme,
-    colorScheme: ColorScheme.light().copyWith(
+    colorScheme: const ColorScheme.light().copyWith(
       secondary: AppColors.captionTextColor,
     ),
     hintColor: AppColors.hintColor,
@@ -24,7 +24,7 @@ class AppThemes {
     fontFamily: AppTextStyles.fontName,
     //scaffoldBackgroundColor: darkBackgroundColor,
     textTheme: AppTextStyles.darkTextTheme,
-    colorScheme: ColorScheme.dark().copyWith(
+    colorScheme: const ColorScheme.dark().copyWith(
       secondary: AppColors.captionTextColor,
     ),
     hintColor: AppColors.darkHintColor,
@@ -32,56 +32,56 @@ class AppThemes {
 
   static final lightColdTheme = baseLightTheme.copyWith(
     primaryColor: AppColors.darkBlue,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.darkBlue,
     ),
   );
 
   static final lightCoolTheme = baseLightTheme.copyWith(
     primaryColor: AppColors.coolBlue,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.coolBlue,
     ),
   );
 
   static final lightWarmTheme = baseLightTheme.copyWith(
     primaryColor: AppColors.fadedOrange,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.fadedOrange,
     ),
   );
 
   static final lightHotTheme = baseLightTheme.copyWith(
     primaryColor: AppColors.orange,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.orange,
     ),
   );
 
   static final darkColdTheme = baseDarkTheme.copyWith(
     primaryColor: AppColors.darkBlue,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.darkBlue,
     ),
   );
 
   static final darkCoolTheme = baseDarkTheme.copyWith(
     primaryColor: AppColors.coolBlue,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.coolBlue,
     ),
   );
 
   static final darkWarmTheme = baseDarkTheme.copyWith(
     primaryColor: AppColors.fadedOrange,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.fadedOrange,
     ),
   );
 
   static final darkHotTheme = baseDarkTheme.copyWith(
     primaryColor: AppColors.orange,
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: AppColors.orange,
     ),
   );

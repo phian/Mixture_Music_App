@@ -1,18 +1,18 @@
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+
 import '../../../constants/app_theme.dart';
 import '../../../controllers/weather_controller.dart';
-
 import '../../../models/weather/weather_model.dart';
 
 class HomeController extends GetxController {
-  var location = "".obs;
+  var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
   var playingSongIndex = Rxn<int>();
 
   late Position _pos;
-  WeatherController _weatherController = WeatherController();
+  final WeatherController _weatherController = WeatherController();
 
   bool hasLoaded = false;
 
@@ -43,8 +43,9 @@ class HomeController extends GetxController {
       Get.changeTheme(AppThemes.lightCoolTheme);
     } else if (temp > 17 && temp <= 25) {
       Get.changeTheme(AppThemes.lightWarmTheme);
-    } else
+    } else {
       Get.changeTheme(AppThemes.lightHotTheme);
+    }
   }
 
   Future<String> getLocationName() async {
@@ -52,7 +53,7 @@ class HomeController extends GetxController {
     await placemarkFromCoordinates(_pos.latitude, _pos.longitude)
         .then((list) => placemark = list.first);
 
-    var _location = "";
+    var _location = '';
     if (placemark.subAdministrativeArea!.isNotEmpty) {
       _location = '${placemark.subAdministrativeArea}, ';
     }

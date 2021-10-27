@@ -16,7 +16,7 @@ class MiniMusicPlayer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (song == null) {
-      return SizedBox.shrink();
+      return const SizedBox.shrink();
     }
     return GestureDetector(
       onTap: onTap,
@@ -41,7 +41,7 @@ class MiniMusicPlayer extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Hero(
-                        tag: "Artwork",
+                        tag: 'Artwork',
                         child: Image.network(
                           song!.coverImageUrl,
                           width: 45,
@@ -49,7 +49,7 @@ class MiniMusicPlayer extends StatelessWidget {
                           fit: BoxFit.cover,
                         ),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: 16),
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -58,7 +58,10 @@ class MiniMusicPlayer extends StatelessWidget {
                             MarqueeText(
                               song!.title,
                               //overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption!
+                                  .copyWith(fontSize: 14),
                             ),
                             MarqueeText(
                               song!.artist,

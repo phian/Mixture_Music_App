@@ -48,4 +48,12 @@ class AppColors {
   static const darkSubTextColor = Color(0xFFA0ABB3);
 
   static const darkHintColor = Color(0xFFA0ABB3);
+
+  // Account screen grid icon's colors
+  static const cA808F8 = Color(0xFFA808F8);
+  static const c417DFF = Color(0xFF417DFF);
+  static const cFE8238 = Color(0xFFFE8238);
+  static const c434CE5 = Color(0xFF434CE5);
+  static const cFF4C4E = Color(0xFFFF4C4E);
+  static const c0791FD = Color(0xFF0791FD);
 }

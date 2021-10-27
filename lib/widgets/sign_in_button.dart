@@ -9,12 +9,13 @@ class SignInButton extends StatelessWidget {
   final Widget child;
   final void Function()? onTap;
 
-  SignInButton({
+  const SignInButton({
+    Key? key,
     required this.signInType,
     required this.buttonColor,
     required this.child,
     this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
