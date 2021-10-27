@@ -21,7 +21,6 @@ void main() async {
       home: SplashScreen(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator().onGenerateRoute,
-      theme: AppThemes.lightCoolTheme,
     ),
   );
 }

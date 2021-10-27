@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/images/app_images.dart';
 import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/ui/home/controller/home_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -11,13 +12,16 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  final controller = Get.put(HomeController());
   @override
   void initState() {
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 500), () {
-      Get.offAllNamed(AppRoutes.navigationScreen);
-    });
+    fetchData().then((value) => Get.offAllNamed(AppRoutes.navigationScreen));
+  }
+
+  Future<void> fetchData() async {
+    await controller.getLocationAndWeather();
   }
 
   @override
