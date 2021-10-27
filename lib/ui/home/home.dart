@@ -3,6 +3,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
+import '../../constants/app_constants.dart';
+
+import '../player_screen/controller/music_player_controller.dart';
 
 import 'controller/home_controller.dart';
 import 'widget/playlist_header.dart';
@@ -10,11 +13,11 @@ import 'widget/refresh_indicator.dart';
 import 'widget/song_tile.dart';
 import 'widget/weather_infor.dart';
 
-
 class Home extends StatelessWidget {
   Home({Key? key}) : super(key: key);
 
   final controller = Get.put(HomeController());
+  final musicController = Get.put(MusicPlayerController());
 
   @override
   Widget build(BuildContext context) {
@@ -74,6 +77,7 @@ class Home extends StatelessWidget {
                         isPlaying: index == controller.playingSongIndex.value ? true : false,
                         onTap: () {
                           controller.playingSongIndex.value = index;
+                          musicController.setSong(listSong[index]);
                         },
                       ),
                     );
@@ -83,6 +87,13 @@ class Home extends StatelessWidget {
                     thickness: 0.5,
                   ),
                 ),
+                Obx(
+                  () => musicController.selectedSong.value != null
+                      ? SizedBox(
+                          height: AppConstants.playerMinHeight,
+                        )
+                      : SizedBox.shrink(),
+                ),
               ],
             ),
           ),
@@ -91,4 +102,3 @@ class Home extends StatelessWidget {
     );
   }
 }
-

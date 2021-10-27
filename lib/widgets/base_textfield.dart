@@ -62,6 +62,7 @@ class _BaseTextFieldState extends State<BaseTextField> {
           fontWeight: FontWeight.w300,
         ),
       ),
+      
       keyboardType: _getKeyboardType(),
     );
   }

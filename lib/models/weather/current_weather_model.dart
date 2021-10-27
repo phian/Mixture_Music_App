@@ -19,7 +19,7 @@ class CurrentWeatherModel {
     temp = double.parse(json['temp'].toString());
     pressure = json['pressure'];
     humidity = json['humidity'];
-    windSpeed = json['wind_speed'];
+    windSpeed = double.parse(json['wind_speed'].toString());
     weather = List.from(json['weather']).map((e) => Condition.fromJson(e)).toList();
   }
 }

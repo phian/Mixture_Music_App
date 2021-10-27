@@ -6,4 +6,5 @@ class AppRoutes {
   static const signUp = "$signIn/sign_up";
   static const forgotPassword = "$signIn/forgot_password";
   static const navigationScreen = "/navigation_screen";
+  static const musicPlayerScreen = "/play_screen";
 }
