@@ -98,12 +98,6 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                   ],
                 ),
               ),
-              // LibraryGridViewCard(
-              //   libraryModel: LibraryModel(
-              //     imageUrl: "https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg",
-              //     libraryTitle: "Trời hôm nay nhiều mây cực",
-              //   ),
-              // ),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,
