@@ -3,8 +3,10 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/app_text_style.dart';
 import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/ui/personal_screen/view/mix_music_view.dart';
+import 'package:mixture_music_app/ui/personal_screen/view/playlist_view.dart';
+import 'package:mixture_music_app/ui/personal_screen/view/recent_activity_view.dart';
 import 'package:mixture_music_app/ui/personal_screen/widgets/grid_card.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/playlist_card.dart';
 import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
 
 class PersonalScreen extends StatefulWidget {
@@ -29,18 +31,27 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + 16.0,
-                left: 16.0,
-              ),
-              child: Text(
-                'Personal Info',
-                style: AppTextStyles.lightTextTheme.headline4?.copyWith(
-                  fontSize: 30.0,
-                  color: AppColors.black,
+            SizedBox(height: MediaQuery.of(context).padding.top + 16.0),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Text(
+                      'Personal Info',
+                      textAlign: TextAlign.left,
+                      style: AppTextStyles.lightTextTheme.headline4?.copyWith(
+                        fontSize: 30.0,
+                        color: AppColors.black,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(Icons.settings_outlined),
+                ),
+              ],
             ),
             const SizedBox(height: 24.0),
             Container(
@@ -173,34 +184,13 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
               children: [
                 ...List.generate(
                   3,
-                  (index) => Column(
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 24.0),
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Text(
-                          'Suggested playlist',
-                          style: AppTextStyles.lightTextTheme.headline5?.copyWith(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                      ...List.generate(
-                        personalSuggestPlaylists.length,
-                        (index) => PlaylistCard(
-                          playlist: personalSuggestPlaylists[index],
-                          onTap: () {},
-                          hasFavourite: true,
-                          onFavouriteTap: () {},
-                        ),
-                      ),
-                      const SizedBox(height: 16.0),
-                    ],
-                  ),
+                  (index) => index == 0
+                      ? PlaylistView(
+                          suggestedPlaylist: personalSuggestPlaylists,
+                        )
+                      : index == 1
+                          ? const MixMusicView()
+                          : const RecentActivityView(),
                 ),
               ],
             ),
