@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 
+import '../../../constants/app_colors.dart';
 import '../../../constants/app_theme.dart';
 import '../../../controllers/weather_controller.dart';
 import '../../../models/weather/weather_model.dart';
@@ -36,16 +38,20 @@ class HomeController extends GetxController {
 
   void setTheme() {
     var temp = weatherModel.value!.current.temp;
+    ThemeData theme;
+    bool isDarkMode = false;
+
     if (temp <= 5) {
-      //Get.changeTheme(isDarkMode ? AppThemes.darkColdTheme : AppThemes.lightColdTheme);
-      Get.changeTheme(AppThemes.lightColdTheme);
+      theme = AppThemes.buildTheme(AppColors.darkBlue, isDarkMode);
     } else if (temp > 5 && temp <= 17) {
-      Get.changeTheme(AppThemes.lightCoolTheme);
+      theme = AppThemes.buildTheme(AppColors.coolBlue, isDarkMode);
     } else if (temp > 17 && temp <= 25) {
-      Get.changeTheme(AppThemes.lightWarmTheme);
+      theme = AppThemes.buildTheme(AppColors.fadedOrange, isDarkMode);
     } else {
-      Get.changeTheme(AppThemes.lightHotTheme);
+      theme = AppThemes.buildTheme(AppColors.orange, isDarkMode);
     }
+
+    Get.changeTheme(theme);
   }
 
   Future<String> getLocationName() async {

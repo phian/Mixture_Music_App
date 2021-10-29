@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/app_colors.dart';
-
 class PlaylistHeader extends StatelessWidget {
   const PlaylistHeader({
     Key? key,
@@ -13,37 +11,29 @@ class PlaylistHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
       child: Row(
         children: [
           Stack(
             alignment: AlignmentDirectional.center,
             children: [
-              Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.3),
-                      spreadRadius: 3,
-                      blurRadius: 3,
-                      offset: const Offset(2, 2),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(5),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                    ),
-                    itemCount: 4,
-                    itemBuilder: (context, index) => Image.network(
-                      coverImageUrl[index],
+              SizedBox(
+                height: 100,
+                width: 100,
+                child: Card(
+                  elevation: 4,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(4),
+                    child: GridView.builder(
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                      ),
+                      itemCount: 4,
+                      itemBuilder: (context, index) => Image.network(
+                        coverImageUrl[index],
+                      ),
                     ),
                   ),
                 ),
@@ -51,8 +41,8 @@ class PlaylistHeader extends StatelessWidget {
               Container(
                 height: 40,
                 width: 40,
-                decoration: const BoxDecoration(
-                  color: AppColors.captionTextColor,
+                decoration: BoxDecoration(
+                  color: theme.primaryColorLight,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -69,11 +59,16 @@ class PlaylistHeader extends StatelessWidget {
               children: [
                 Text(
                   "Today's Playlist",
-                  style: Theme.of(context).textTheme.headline4!.copyWith(fontSize: 24),
+                  style: theme.textTheme.headline5!.copyWith(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 Text(
                   'Created based on weather',
-                  style: Theme.of(context).textTheme.subtitle1!.copyWith(fontSize: 16),
+                  style: theme.textTheme.caption!.copyWith(
+                    fontSize: 16,
+                  ),
                 ),
                 Row(
                   children: [
@@ -83,7 +78,7 @@ class PlaylistHeader extends StatelessWidget {
                         'Save',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).primaryColor,
+                          color: theme.primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -96,7 +91,7 @@ class PlaylistHeader extends StatelessWidget {
                         'Share',
                         style: TextStyle(
                           fontSize: 16,
-                          color: Theme.of(context).primaryColor,
+                          color: theme.primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),

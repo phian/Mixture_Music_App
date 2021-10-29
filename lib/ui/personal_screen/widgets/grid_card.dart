@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
+import '../../../constants/app_text_style.dart';
 
 class GridCard extends StatefulWidget {
   const GridCard({

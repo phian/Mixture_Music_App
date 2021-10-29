@@ -35,8 +35,9 @@ class _SignInScreenState extends State<SignInScreen> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.1),
               Text(
                 'SIGN IN',
-                style: Theme.of(context).textTheme.headline4!.copyWith(
+                style: Theme.of(context).textTheme.headline5!.copyWith(
                       fontSize: 40,
+                      fontWeight: FontWeight.bold,
                     ),
               ),
               const SizedBox(height: 64.0),

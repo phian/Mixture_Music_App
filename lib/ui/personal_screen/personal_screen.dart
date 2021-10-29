@@ -16,10 +16,7 @@ class PersonalScreen extends StatefulWidget {
   _PersonalScreenState createState() => _PersonalScreenState();
 }
 
-class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProviderStateMixin {
-  late final TabController _tabController = TabController(length: 3, vsync: this);
-  int _selectedIndex = 0;
-
+class _PersonalScreenState extends State<PersonalScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

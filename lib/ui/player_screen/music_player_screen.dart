@@ -1,10 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
-
-import '../../widgets/marquee_text.dart';
+import 'controller/music_player_controller.dart';
 import 'widget/music_control_button.dart';
+import '../../widgets/marquee_text.dart';
 
 class MusicPlayerScreen extends StatelessWidget {
   MusicPlayerScreen({Key? key}) : super(key: key);
@@ -18,9 +17,7 @@ class MusicPlayerScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           'Now playing',
-          style: theme.textTheme.caption!.copyWith(
-            color: theme.colorScheme.onBackground,
-          ),
+          style: theme.textTheme.headline6,
         ),
         centerTitle: true,
         leading: CupertinoButton(
@@ -30,15 +27,6 @@ class MusicPlayerScreen extends StatelessWidget {
             color: Theme.of(context).colorScheme.onBackground,
           ),
         ),
-        actions: [
-          CupertinoButton(
-            onPressed: () {},
-            child: Icon(
-              Icons.favorite_border,
-              color: Theme.of(context).colorScheme.onBackground,
-            ),
-          ),
-        ],
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -46,7 +34,7 @@ class MusicPlayerScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.all(10),
@@ -60,18 +48,42 @@ class MusicPlayerScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              MarqueeText(
-                controller.selectedSong.value!.title,
-                style: Theme.of(context).textTheme.headline4!.copyWith(
-                      fontSize: 26,
+              Row(
+                children: [
+                  Expanded(
+                    child: MarqueeText(
+                      controller.selectedSong.value!.title,
+                      style: Theme.of(context).textTheme.headline6!.copyWith(
+                            fontSize: 26,
+                          ),
+                      horizontalPadding: 10,
                     ),
-                horizontalPadding: 10,
+                  ),
+                  Obx(
+                    () => CupertinoButton(
+                      onPressed: () {
+                        controller.selectedSong.update((song) {
+                          song!.isFavorite = !song.isFavorite;
+                        });
+                      },
+                      child: Icon(
+                        controller.selectedSong.value!.isFavorite
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: controller.selectedSong.value!.isFavorite
+                            ? theme.primaryColor
+                            : theme.colorScheme.onBackground,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 4),
               MarqueeText(
                 controller.selectedSong.value!.artist,
                 style: theme.textTheme.caption!.copyWith(
-                  fontWeight: FontWeight.normal,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                  //color: theme.textTheme.subtitle1!.color!.withOpacity(0.7),
                 ),
                 horizontalPadding: 10,
               ),
@@ -82,10 +94,8 @@ class MusicPlayerScreen extends StatelessWidget {
                   activeTrackColor: theme.primaryColor.withOpacity(0.8),
                   inactiveTrackColor: theme.primaryColor.withOpacity(0.2),
                   thumbColor: theme.primaryColor.withOpacity(0.8),
-                  thumbShape:
-                      const RoundSliderThumbShape(enabledThumbRadius: 5),
-                  overlayShape:
-                      const RoundSliderThumbShape(enabledThumbRadius: 10),
+                  thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+                  overlayShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
                   overlayColor: theme.primaryColor.withOpacity(0.1),
                 ),
                 child: Slider(
@@ -97,9 +107,15 @@ class MusicPlayerScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: const [
-                    Text('00:31'),
+                    Text(
+                      '00:31',
+                      //style: theme.textTheme.caption,
+                    ),
                     Spacer(),
-                    Text('03:45'),
+                    Text(
+                      '03:45',
+                      //style: theme.textTheme.caption,
+                    ),
                   ],
                 ),
               ),
