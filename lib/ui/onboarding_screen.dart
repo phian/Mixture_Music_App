@@ -2,9 +2,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
-
-import '../constants/app_colors.dart';
+import '../constants/app_constants.dart';
 
 import '../routing/routes.dart';
 import '../widgets/base_button.dart';
@@ -45,29 +43,23 @@ class OnBoardingScreen extends StatelessWidget {
                     children: [
                       Text(
                         "MUSIC PLAYER",
-                        style: Theme.of(context).textTheme.caption!.copyWith(
-                              fontWeight: FontWeight.w400,
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                            ),
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 16.0,
+                          color: Theme.of(context).primaryColor,
+                        ),
                       ),
                       const SizedBox(height: 18.0),
                       Text(
                         "WELCOME TO MIXTURE MUSIC APP",
-                        style: Theme.of(context).textTheme.caption!.copyWith(
+                        style: Theme.of(context).textTheme.headline5!.copyWith(
                               fontWeight: FontWeight.w600,
                               fontSize: 30.0,
-                              color: AppColors.white,
                             ),
                       ),
                       const SizedBox(height: 24.0),
-                      Text(
-                        "Newest songs around the world",
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                          fontSize: 16,
-                              color: AppColors.white,
-                            ),
-                      ),
+                      Text("Newest songs around the world",
+                          style: Theme.of(context).textTheme.subtitle1),
                       const SizedBox(height: 64.0),
                       BaseButton(
                         content: "GET STARTED",

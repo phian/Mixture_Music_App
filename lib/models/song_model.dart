@@ -3,9 +3,9 @@ class SongModel {
   final String title;
   final String artist;
   final String coverImageUrl;
-  final bool isFavorite;
+  bool isFavorite;
 
-  const SongModel({
+  SongModel({
     required this.id,
     required this.title,
     required this.artist,

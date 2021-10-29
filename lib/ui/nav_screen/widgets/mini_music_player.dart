@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
+import '../../../constants/app_constants.dart';
 import 'package:mixture_music_app/models/song_model.dart';
 import 'package:mixture_music_app/widgets/marquee_text.dart';
 
@@ -18,21 +18,22 @@ class MiniMusicPlayer extends StatelessWidget {
     if (song == null) {
       return SizedBox.shrink();
     }
+    final theme = Theme.of(context);
     return GestureDetector(
       onTap: onTap,
       child: Material(
         child: Container(
-          color: Theme.of(context).primaryColor.withOpacity(0.2),
+          color: Theme.of(context).primaryColor.withOpacity(0.3),
           height: AppConstants.playerMinHeight,
           child: Column(
             children: [
               LinearProgressIndicator(
                 value: 0.3,
                 valueColor: AlwaysStoppedAnimation<Color>(
-                  Theme.of(context).primaryColor,
+                  theme.primaryColor,
                 ),
                 minHeight: 2.2,
-                backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                backgroundColor: theme.primaryColor.withOpacity(0.3),
               ),
               Expanded(
                 child: Padding(
@@ -57,15 +58,13 @@ class MiniMusicPlayer extends StatelessWidget {
                           children: [
                             MarqueeText(
                               song!.title,
-                              //overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.caption!.copyWith(fontSize: 14),
+                              style: theme.textTheme.headline6!.copyWith(fontSize: 16),
                             ),
                             MarqueeText(
                               song!.artist,
                               //overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: theme.textTheme.caption!.copyWith(
                                 fontSize: 14,
-                                color: Colors.grey.shade500,
                               ),
                             ),
                           ],

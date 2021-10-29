@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
-import 'package:mixture_music_app/constants/enums/enums.dart';
-import 'package:mixture_music_app/models/library_model.dart';
-import 'package:mixture_music_app/ui/library/widgets/library_grid_view_card.dart';
-import 'package:mixture_music_app/ui/library/widgets/library_list_view_card.dart';
-import 'package:mixture_music_app/ui/library/widgets/shuffle_and_swap_view.dart';
+import '../../constants/app_colors.dart';
+import '../../constants/app_constants.dart';
+import '../../constants/app_text_style.dart';
+import '../../constants/enums/enums.dart';
+import '../../models/library_model.dart';
+import 'widgets/library_grid_view_card.dart';
+import 'widgets/library_list_view_card.dart';
+import 'widgets/shuffle_and_swap_view.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({Key? key}) : super(key: key);

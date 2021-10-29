@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/ui/nav_screen/nav_screen.dart';
+import '../ui/nav_screen/nav_screen.dart';
 
-import 'package:mixture_music_app/ui/player_screen/music_player_screen.dart';
+import '../ui/player_screen/music_player_screen.dart';
 import '../ui/nav_screen/nav_screen.dart';
 import 'routes.dart';
 import '../ui/forgot_password.dart';

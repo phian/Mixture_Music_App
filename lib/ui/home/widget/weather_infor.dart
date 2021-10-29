@@ -29,7 +29,7 @@ class WeatherInfor extends StatelessWidget {
           height: 240,
           child: ListView(
             physics: AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(horizontal: 12),
             scrollDirection: Axis.horizontal,
             children: [
               CurrentWeather(
@@ -48,165 +48,6 @@ class WeatherInfor extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class DailyWeather extends StatelessWidget {
-  const DailyWeather({
-    Key? key,
-    required this.daily,
-    this.isToday = false,
-  }) : super(key: key);
-
-  final isToday;
-  final DailyWeatherModel daily;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 150,
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 4,
-            blurRadius: 4,
-            offset: Offset(3, 3),
-          ),
-        ],
-        color: Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            isToday ? 'Today:' : 'Tomorrow:',
-            style: Theme.of(context).textTheme.caption,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                DateFormat('MMM d').format(
-                  DateTime.fromMillisecondsSinceEpoch(daily.dt * 1000),
-                ),
-                style: Theme.of(context).textTheme.subtitle1,
-              ),
-              Spacer(),
-              BoxedIcon(
-                WeatherIcons.fromString(
-                  daily.weather[0].getIconName(),
-                  fallback: WeatherIcons.na,
-                ),
-                size: 36,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-            ],
-          ),
-          Text(
-            daily.weather[0].description,
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Spacer(),
-          Align(
-            alignment: Alignment.topRight,
-            child: Text(
-              '${daily.temp.max.round()}°',
-              style: TextStyle(
-                fontSize: 30,
-                color: Theme.of(context).colorScheme.secondary,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.topRight,
-            child: Text(
-              '${daily.temp.min.round()}°',
-              style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CurrentWeather extends StatelessWidget {
-  const CurrentWeather({
-    Key? key,
-    required this.current,
-  }) : super(key: key);
-
-  final CurrentWeatherModel current;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 250,
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.2),
-            spreadRadius: 3,
-            blurRadius: 3,
-            offset: Offset(3, 3),
-          ),
-        ],
-        color: Theme.of(context).scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(4),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Right Now:',
-            style: Theme.of(context).textTheme.caption,
-          ),
-          Row(
-            children: [
-              BoxedIcon(
-                WeatherIcons.fromString(
-                  current.weather[0].getIconName(),
-                  fallback: WeatherIcons.na,
-                ),
-                size: 70,
-                color: Theme.of(context).colorScheme.secondary,
-              ),
-              Spacer(),
-              Text(
-                '${current.temp.round()}°',
-                style: TextStyle(
-                  fontFamily: AppTextStyles.fontName,
-                  fontSize: 62,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.secondary,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            'Pressure: ${current.pressure} hPa',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Text(
-            'Humidity: ${current.humidity}%',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-          Text(
-            'Wind: ${current.windSpeed} mps',
-            style: Theme.of(context).textTheme.subtitle1,
-          ),
-        ],
-      ),
     );
   }
 }
@@ -234,7 +75,7 @@ class LocationInfor extends StatelessWidget {
           ),
           Text(
             'In $location',
-            style: Theme.of(context).textTheme.headline5,
+            style: Theme.of(context).textTheme.headline6,
           ),
           SizedBox(height: 16),
           Row(
@@ -259,6 +100,154 @@ class LocationInfor extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+}
+
+class CurrentWeather extends StatelessWidget {
+  const CurrentWeather({
+    Key? key,
+    required this.current,
+  }) : super(key: key);
+
+  final CurrentWeatherModel current;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 250,
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Right Now:',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(height: 16),
+              Row(
+                children: [
+                  BoxedIcon(
+                    WeatherIcons.fromString(
+                      current.weather[0].getIconName(),
+                      fallback: WeatherIcons.na,
+                    ),
+                    size: 70,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                  Spacer(),
+                  Text(
+                    '${current.temp.round()}°',
+                    style: TextStyle(
+                      fontFamily: AppTextStyles.fontName,
+                      fontSize: 62,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                'Pressure: ${current.pressure} hPa',
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+              Text(
+                'Humidity: ${current.humidity}%',
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+              Text(
+                'Wind: ${current.windSpeed} mps',
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class DailyWeather extends StatelessWidget {
+  const DailyWeather({
+    Key? key,
+    required this.daily,
+    this.isToday = false,
+  }) : super(key: key);
+
+  final isToday;
+  final DailyWeatherModel daily;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 150,
+      child: Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                isToday ? 'Today:' : 'Tomorrow:',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    DateFormat('MMM d').format(
+                      DateTime.fromMillisecondsSinceEpoch(daily.dt * 1000),
+                    ),
+                    style: Theme.of(context).textTheme.subtitle1,
+                  ),
+                  Spacer(),
+                  BoxedIcon(
+                    WeatherIcons.fromString(
+                      daily.weather[0].getIconName(),
+                      fallback: WeatherIcons.na,
+                    ),
+                    size: 36,
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ],
+              ),
+              Text(
+                daily.weather[0].description,
+                style: Theme.of(context).textTheme.subtitle1,
+              ),
+              Spacer(),
+              Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  '${daily.temp.max.round()}°',
+                  style: TextStyle(
+                    fontSize: 30,
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.topRight,
+                child: Text(
+                  '${daily.temp.min.round()}°',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

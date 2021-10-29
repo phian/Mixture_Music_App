@@ -2,7 +2,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
+import '../../constants/app_constants.dart';
 import '../../constants/app_constants.dart';
 
 import '../player_screen/controller/music_player_controller.dart';
@@ -86,13 +86,6 @@ class Home extends StatelessWidget {
                     height: 16,
                     thickness: 0.5,
                   ),
-                ),
-                Obx(
-                  () => musicController.selectedSong.value != null
-                      ? SizedBox(
-                          height: AppConstants.playerMinHeight,
-                        )
-                      : SizedBox.shrink(),
                 ),
               ],
             ),

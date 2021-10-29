@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/ui/library/library_screen.dart';
+import '../library/library_screen.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/routing/routes.dart';
+import '../../routing/routes.dart';
 
 import '../player_screen/controller/music_player_controller.dart';
 
 import '../home/home.dart';
-
 
 import '../search_screen.dart';
 import 'widgets/mini_music_player.dart';
@@ -33,32 +32,30 @@ class _NavScreenState extends State<NavScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
-        () => Stack(
-          children: _screen
-              .asMap()
-              .map((i, screen) => MapEntry(
-                    i,
-                    Offstage(
-                      offstage: selectedScreenIndex != i,
-                      child: screen,
-                    ),
-                  ))
-              .values
-              .toList()
-            ..add(
-              Offstage(
-                offstage: musicController.selectedSong.value == null,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: MiniMusicPlayer(
-                    song: musicController.selectedSong.value,
-                    onTap: () {
-                      Get.toNamed(AppRoutes.musicPlayerScreen);
-                    },
-                  ),
-                ),
+        () => Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: _screen
+                    .asMap()
+                    .map((i, screen) => MapEntry(
+                          i,
+                          Offstage(
+                            offstage: selectedScreenIndex != i,
+                            child: screen,
+                          ),
+                        ))
+                    .values
+                    .toList(),
               ),
             ),
+            MiniMusicPlayer(
+              song: musicController.selectedSong.value,
+              onTap: () {
+                Get.toNamed(AppRoutes.musicPlayerScreen);
+              },
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
