@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/ui/splash_screen.dart';
 
 import 'routing/route_generator.dart';
+import 'ui/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +20,9 @@ void main() async {
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator().onGenerateRoute,
+
+      // theme: ThemeData.light(),
+      // darkTheme: ThemeData.dark(),
     ),
   );
 }

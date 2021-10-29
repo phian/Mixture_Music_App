@@ -18,7 +18,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backgroundColor,
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
@@ -30,13 +29,12 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(height: MediaQuery.of(context).size.height * 0.1),
-                  const Text(
+                  Text(
                     'SIGN UP',
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                    ),
+                    style: Theme.of(context).textTheme.headline5!.copyWith(
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 64.0),
                   Wrap(
@@ -86,11 +84,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   child: Container(
                     padding: const EdgeInsets.all(4.0),
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         style: TextStyle(
                           fontSize: 18.0,
                           fontWeight: FontWeight.w400,
-                          color: AppColors.cEF01A0,
+                          color: Theme.of(context).primaryColor,
                         ),
                         text: 'Sign In',
                       ),

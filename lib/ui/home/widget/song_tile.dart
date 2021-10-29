@@ -16,6 +16,7 @@ class SongTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: onTap,
@@ -40,15 +41,17 @@ class SongTile extends StatelessWidget {
                   Text(
                     songModel.title,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .caption!
-                        .copyWith(fontSize: 16),
+                    style: theme.textTheme.headline6!.copyWith(
+                      fontSize: 16,
+                      color: isPlaying ? theme.primaryColor : theme.textTheme.headline6!.color,
+                    ),
                   ),
                   Text(
                     songModel.artist,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: theme.textTheme.caption!.copyWith(
+                      fontSize: 14,
+                    ),
                   ),
                 ],
               ),
@@ -57,7 +60,7 @@ class SongTile extends StatelessWidget {
             if (isPlaying)
               Icon(
                 Icons.play_arrow,
-                color: Theme.of(context).primaryColor,
+                color: theme.primaryColor,
               ),
           ],
         ),

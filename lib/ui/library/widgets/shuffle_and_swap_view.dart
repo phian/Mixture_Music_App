@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
-import 'package:mixture_music_app/constants/enums/enums.dart';
-import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import '../../../constants/app_colors.dart';
+import '../../../constants/app_text_style.dart';
+import '../../../constants/enums/enums.dart';
+import '../../../widgets/inkwell_wrapper.dart';
 
 class ShuffleAndSwapView extends StatefulWidget {
   const ShuffleAndSwapView({

@@ -39,7 +39,7 @@ class Condition {
   }
 }
 
-Map weatherIconMap = {
+Map<String, dynamic> weatherIconMap = {
   'wi-owm-200': 'thunderstorm',
   'wi-owm-201': 'thunderstorm',
   'wi-owm-202': 'thunderstorm',

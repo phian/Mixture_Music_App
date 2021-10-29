@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/images/app_images.dart';
-import 'package:mixture_music_app/routing/routes.dart';
-import 'package:mixture_music_app/ui/home/controller/home_controller.dart';
+import '../images/app_images.dart';
+import '../routing/routes.dart';
+import 'home/controller/home_controller.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    fetchData().then((value) => Get.offAllNamed(AppRoutes.navigationScreen));
+    fetchData().then((value) => Get.offAllNamed(AppRoutes.onBoarding));
   }
 
   Future<void> fetchData() async {

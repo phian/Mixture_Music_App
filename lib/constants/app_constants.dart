@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/models/library_model.dart';
-import 'package:mixture_music_app/models/song_model.dart';
+
+import '../models/library_model.dart';
+import '../models/song_model.dart';
+import 'app_colors.dart';
 
 class AppConstants {
   static const double playerMinHeight = 60;
@@ -78,10 +79,10 @@ final libraryExampleModels = [
   ),
 ];
 
-const listSong = [
+final listSong = [
   SongModel(
     id: 01,
-    title: 'Trời hôm nay nhiều mây cực',
+    title: 'Trời hôm nay nhiều mây cực cực cực cực cực cực',
     artist: 'Đen Vâu',
     coverImageUrl:
         'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',

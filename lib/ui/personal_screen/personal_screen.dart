@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
-import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/grid_card.dart';
+import '../../constants/app_colors.dart';
+import '../../constants/app_constants.dart';
+import '../../constants/app_text_style.dart';
+import '../../models/facebook/facebook_user_model.dart';
+import 'widgets/grid_card.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({Key? key, required this.userModel}) : super(key: key);
