@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_text_style.dart';
+import 'package:mixture_music_app/images/app_icons.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 
-class CreatePlaylistCard extends StatelessWidget {
-  const CreatePlaylistCard({
+class RecentSongButton extends StatelessWidget {
+  const RecentSongButton({
     Key? key,
     this.onTap,
     this.title,
@@ -44,9 +45,10 @@ class CreatePlaylistCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: icon ??
-                  const Icon(
-                    Icons.add_circle_outline_outlined,
-                    size: 30.0,
+                  Image.asset(
+                    AppIcons.recentSong,
+                    width: 30.0,
+                    height: 30.0,
                     color: AppColors.white,
                   ),
             ),
