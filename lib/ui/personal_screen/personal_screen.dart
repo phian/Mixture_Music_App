@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../constants/app_colors.dart';
-import '../../constants/app_constants.dart';
-import '../../constants/app_text_style.dart';
-import '../../models/facebook/facebook_user_model.dart';
-import 'widgets/grid_card.dart';
+import 'package:mixture_music_app/constants/app_colors.dart';
+import 'package:mixture_music_app/constants/app_constants.dart';
+import 'package:mixture_music_app/constants/app_text_style.dart';
+import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/ui/personal_screen/widgets/grid_card.dart';
+import 'package:mixture_music_app/ui/personal_screen/widgets/playlist_card.dart';
+import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({Key? key, required this.userModel}) : super(key: key);
@@ -13,7 +15,13 @@ class PersonalScreen extends StatefulWidget {
   _PersonalScreenState createState() => _PersonalScreenState();
 }
 
-class _PersonalScreenState extends State<PersonalScreen> {
+class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProviderStateMixin {
+  int _selectedIndex = 0;
+  late final TabController _tabController = TabController(
+    length: 3,
+    vsync: this,
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,7 +93,7 @@ class _PersonalScreenState extends State<PersonalScreen> {
             ),
             const SizedBox(height: 16.0),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: MediaQuery.of(context).size.height * 0.28,
               child: ListView(
                 scrollDirection: Axis.horizontal,
                 children: [
@@ -93,77 +101,109 @@ class _PersonalScreenState extends State<PersonalScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              ...List.generate(
-                                3,
-                                (index) => Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 8.0),
-                                  child: GridCard(
-                                    cardIcon: accountScreenGridIcon[index],
-                                    cardTitle: accountScreenGridData[index],
-                                    iconColor: accountScreenIconColors[index],
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
+                        ...List.generate(
+                          2,
+                          (i) => Expanded(
+                            child: Row(
+                              children: [
+                                ...List.generate(
+                                  3,
+                                  (index) => Container(
+                                    margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
+                                    child: GridCard(
+                                      cardIcon: accountScreenGridIcon[i == 0 ? index : index + 3],
+                                      cardTitle: accountScreenGridData[i == 0 ? index : index + 3],
+                                      iconColor: accountScreenIconColors[i == 0 ? index : index + 3],
+                                      width: MediaQuery.of(context).size.width * 0.4,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              ...List.generate(
-                                3,
-                                (index) => Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 16.0, vertical: 8.0),
-                                  child: GridCard(
-                                    cardIcon: accountScreenGridIcon[index + 3],
-                                    cardTitle: accountScreenGridData[index + 3],
-                                    iconColor:
-                                        accountScreenIconColors[index + 3],
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.4,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
                       ],
                     ),
                   )
                 ],
               ),
             ),
-            const SizedBox(height: 24.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Playlist',
-                style: AppTextStyles.lightTextTheme.headline5?.copyWith(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, top: 24.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TabBar(
+                    controller: _tabController,
+                    onTap: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                        _tabController.animateTo(index);
+                      });
+                    },
+                    isScrollable: true,
+                    indicatorColor: AppColors.darkBlue,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicatorWeight: 3.0,
+                    physics: const NeverScrollableScrollPhysics(),
+                    tabs: List.generate(
+                      personalTitle.length,
+                      (index) => Tab(
+                        icon: Text(
+                          personalTitle[index],
+                          textAlign: TextAlign.center,
+                          style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.more_vert),
+                  )
+                ],
               ),
             ),
-            const SizedBox(height: 16.0),
-            const SizedBox(height: 24.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                'Suggest playlist',
-                style: AppTextStyles.lightTextTheme.headline5?.copyWith(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
+            FadeIndexedStack(
+              index: _selectedIndex,
+              children: [
+                ...List.generate(
+                  3,
+                  (index) => Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24.0),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                        child: Text(
+                          'Suggested playlist',
+                          style: AppTextStyles.lightTextTheme.headline5?.copyWith(
+                            color: AppColors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                      ...List.generate(
+                        personalSuggestPlaylists.length,
+                        (index) => PlaylistCard(
+                          playlist: personalSuggestPlaylists[index],
+                          onTap: () {},
+                          hasFavourite: true,
+                          onFavouriteTap: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 16.0),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
-            const SizedBox(height: 16.0),
           ],
         ),
       ),

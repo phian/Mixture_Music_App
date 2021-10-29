@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/app_text_style.dart';
@@ -56,7 +57,8 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: const Icon(Icons.refresh),
+                          icon: const Icon(Icons.add, size: 30.0),
+                          tooltip: 'Add',
                         )
                       ],
                     ),
@@ -98,12 +100,6 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                   ],
                 ),
               ),
-              // LibraryGridViewCard(
-              //   libraryModel: LibraryModel(
-              //     imageUrl: "https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg",
-              //     libraryTitle: "Trời hôm nay nhiều mây cực",
-              //   ),
-              // ),
               Expanded(
                 child: TabBarView(
                   controller: _tabController,

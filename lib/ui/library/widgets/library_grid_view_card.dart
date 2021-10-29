@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../../../constants/app_text_style.dart';
-import '../../../models/library_model.dart';
-import 'loading_container.dart';
-import '../../../widgets/inkwell_wrapper.dart';
+import 'package:mixture_music_app/constants/app_text_style.dart';
+import 'package:mixture_music_app/models/library_model.dart';
+import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import 'package:mixture_music_app/widgets/loading_container.dart';
 
 class LibraryGridViewCard extends StatelessWidget {
   const LibraryGridViewCard({
