@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/app_text_style.dart';
@@ -56,7 +57,8 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                         ),
                         IconButton(
                           onPressed: () {},
-                          icon: const Icon(Icons.refresh),
+                          icon: const Icon(Icons.add, size: 30.0),
+                          tooltip: 'Add',
                         )
                       ],
                     ),

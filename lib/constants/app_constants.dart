@@ -3,6 +3,7 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
 import 'package:mixture_music_app/models/song_model.dart';
+
 import 'app_colors.dart';
 
 class AppConstants {
@@ -50,7 +51,7 @@ const personalTitle = [
   'Recent activity',
 ];
 
-final personalPlaylists = [
+final personalSuggestPlaylists = [
   PlaylistModel(
     imageUrl: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     playlistName: 'Đen Vâu',
@@ -61,9 +62,6 @@ final personalPlaylists = [
     playlistName: 'Trung Quân idol',
     owner: 'Nguyễn Phi Ân',
   ),
-];
-
-final personalSuggestPlaylists = [
   PlaylistModel(
     imageUrl: 'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
     playlistName: 'Vũ Cát Tường',
@@ -109,7 +107,7 @@ final libraryExampleModels = [
   ),
 ];
 
-const listSong = [
+final listSong = [
   SongModel(
     id: 01,
     title: 'Trời hôm nay nhiều mây cực cực cực cực cực cực',

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../constants/app_text_style.dart';
 
 class GridCard extends StatefulWidget {
@@ -73,6 +74,9 @@ class _GridCardState extends State<GridCard> with SingleTickerProviderStateMixin
       onTapUp: (tapUpDetails) {
         _onTapUp(tapUpDetails);
         widget.onTap?.call();
+      },
+      onTapCancel: () {
+        _controller.reverse();
       },
       child: Transform.scale(
         scale: _scale,
