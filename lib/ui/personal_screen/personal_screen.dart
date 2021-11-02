@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/app_text_style.dart';
 import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/personal_screen/view/mix_music_view.dart';
 import 'package:mixture_music_app/ui/personal_screen/view/playlist_view.dart';
 import 'package:mixture_music_app/ui/personal_screen/view/recent_activity_view.dart';
@@ -48,7 +50,9 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Get.toNamed(AppRoutes.settingsScreen);
+                  },
                   icon: const Icon(Icons.settings_outlined),
                 ),
               ],
