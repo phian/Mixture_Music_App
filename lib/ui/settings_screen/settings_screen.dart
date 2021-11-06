@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
+import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/settings_screen/constants/settings_screen_constants.dart';
 import 'package:mixture_music_app/ui/settings_screen/widgets/setting_tile.dart';
 import 'package:mixture_music_app/widgets/base_app_bar.dart';
+import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -38,10 +40,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
       appBar: BaseAppBar(
         title: Text(
           'Settings',
-          style: AppTextStyles.lightTextTheme.headline4?.copyWith(
-            fontSize: 30.0,
-            color: AppColors.black,
-          ),
+          style: Theme.of(context).textTheme.headline4?.copyWith(
+                fontSize: 22.0,
+                color: AppColors.black,
+                fontWeight: FontWeight.bold,
+              ),
         ),
         centerTitle: true,
         backgroundColor: AppColors.transparent,
@@ -65,11 +68,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: Icon(firstSectionIcons[index], size: 30.0),
                 title: Text(
                   firstSectionTexts[index],
-                  style: AppTextStyles.lightTextTheme.caption?.copyWith(
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: Theme.of(context).textTheme.caption?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.0,
+                      ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  showModalBottomSheet(
+                    context: context,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) {
+                      return BottomSheetWrapper(
+                        contentItems: const [],
+                        title: Text(
+                          secondSectionTexts[index],
+                          style: Theme.of(context).textTheme.headline5,
+                        ),
+                      );
+                    },
+                  );
+                },
                 trailing: const Icon(Icons.arrow_forward_ios, size: 20.0),
               ),
             ),
@@ -84,11 +102,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 leading: Icon(secondSectionIcons[index], size: 30.0),
                 title: Text(
                   secondSectionTexts[index],
-                  style: AppTextStyles.lightTextTheme.caption?.copyWith(
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: Theme.of(context).textTheme.caption?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.0,
+                      ),
                 ),
-                onTap: () {},
+                onTap: () {
+                  _navigate(index: index);
+                },
                 trailing: index == 0 ? Text(_appVersion) : null,
               ),
             ),
@@ -96,5 +117,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
     );
+  }
+
+  void _navigate({required int index}) {
+    switch (index) {
+      case 0:
+        Fluttertoast.showToast(
+          msg: 'Current version: $_appVersion',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          fontSize: 16.0,
+          backgroundColor: Colors.grey,
+        );
+        break;
+      case 2:
+        Get.toNamed(AppRoutes.feedbackAndBugReport);
+        break;
+    }
   }
 }

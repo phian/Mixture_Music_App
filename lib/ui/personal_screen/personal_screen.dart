@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
 import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/personal_screen/view/mix_music_view.dart';
@@ -10,6 +9,7 @@ import 'package:mixture_music_app/ui/personal_screen/view/playlist_view.dart';
 import 'package:mixture_music_app/ui/personal_screen/view/recent_activity_view.dart';
 import 'package:mixture_music_app/ui/personal_screen/widgets/grid_card.dart';
 import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
+import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 
 class PersonalScreen extends StatefulWidget {
   const PersonalScreen({Key? key, required this.userModel}) : super(key: key);
@@ -42,10 +42,10 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
                     child: Text(
                       'Personal Info',
                       textAlign: TextAlign.left,
-                      style: AppTextStyles.lightTextTheme.headline4?.copyWith(
-                        fontSize: 30.0,
-                        color: AppColors.black,
-                      ),
+                      style: Theme.of(context).textTheme.headline4?.copyWith(
+                            fontSize: 30.0,
+                            color: AppColors.black,
+                          ),
                     ),
                   ),
                 ),
@@ -58,41 +58,54 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
               ],
             ),
             const SizedBox(height: 24.0),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Row(
-                children: [
-                  ClipOval(
-                    child: Image.network(
-                      widget.userModel.picture!.url!,
-                      width: MediaQuery.of(context).size.width * 0.25,
-                      height: MediaQuery.of(context).size.width * 0.25,
+            InkWellWrapper(
+              color: Colors.transparent,
+              onTap: () {},
+              borderRadius: BorderRadius.zero,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                child: Row(
+                  children: [
+                    ClipOval(
+                      child: Image.network(
+                        widget.userModel.picture!.url!,
+                        width: MediaQuery.of(context).size.width * 0.25,
+                        height: MediaQuery.of(context).size.width * 0.25,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 16.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        widget.userModel.name!,
-                        style: AppTextStyles.lightTextTheme.headline5?.copyWith(
-                          color: AppColors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    const SizedBox(width: 16.0),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            widget.userModel.name!,
+                            style: Theme.of(context).textTheme.headline5?.copyWith(
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                          ),
+                          const SizedBox(height: 4.0),
+                          Text(
+                            widget.userModel.email!,
+                            style: Theme.of(context).textTheme.caption?.copyWith(
+                                  color: AppColors.black,
+                                  fontWeight: FontWeight.w100,
+                                  fontSize: 15.0,
+                                ),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 4.0),
-                      Text(
-                        widget.userModel.email!,
-                        style: AppTextStyles.lightTextTheme.caption?.copyWith(
-                          color: AppColors.black,
-                          fontWeight: FontWeight.w100,
-                          fontSize: 16.0,
-                        ),
+                    ),
+                    const Expanded(
+                      child: Align(
+                        child: Icon(Icons.arrow_forward_ios, size: 20.0),
+                        alignment: Alignment.centerRight,
                       ),
-                    ],
-                  )
-                ],
+                    )
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 24.0),
@@ -100,10 +113,10 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Text(
                 'Library',
-                style: AppTextStyles.lightTextTheme.headline5?.copyWith(
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.headline5?.copyWith(
+                      color: AppColors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ),
             const SizedBox(height: 16.0),
@@ -167,11 +180,11 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
                         icon: Text(
                           personalTitle[index],
                           textAlign: TextAlign.center,
-                          style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
-                            color: AppColors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16.0,
-                          ),
+                          style: Theme.of(context).textTheme.subtitle1?.copyWith(
+                                color: AppColors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16.0,
+                              ),
                         ),
                       ),
                     ),
