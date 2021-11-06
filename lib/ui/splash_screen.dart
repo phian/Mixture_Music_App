@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../images/app_images.dart';
+import 'package:mixture_music_app/images/app_icons.dart';
+
 import '../routing/routes.dart';
 import 'home/controller/home_controller.dart';
 
@@ -29,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Center(
         child: Image.asset(
-          AppImages.appIcon,
+          AppIcons.appIcon,
           width: MediaQuery.of(context).size.width * 0.5,
           height: MediaQuery.of(context).size.height * 0.5,
         ),
