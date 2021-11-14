@@ -11,6 +11,7 @@ final secondSectionIcons = [
   Icons.help_outline_outlined,
   Icons.flag_outlined,
   Icons.star_border_outlined,
+  Icons.logout_outlined,
 ];
 
 final firstSectionTexts = [
@@ -24,4 +25,5 @@ final secondSectionTexts = [
   'Help',
   'Feedback, bug report',
   'Rate our app',
+  'Log out',
 ];
