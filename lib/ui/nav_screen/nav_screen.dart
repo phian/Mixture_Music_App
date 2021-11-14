@@ -25,7 +25,7 @@ class _NavScreenState extends State<NavScreen> {
     Home(),
     const SearchScreen(),
     const LibraryScreen(),
-    PersonalScreen(
+    SettingsScreen(
       userModel: FacebookUserModel(
         id: 1,
         name: 'Đen Vâu',
