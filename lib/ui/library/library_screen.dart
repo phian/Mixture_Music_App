@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mixture_music_app/ui/library/views/mix_music_view.dart';
+import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
 
 import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
@@ -19,6 +21,7 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateMixin {
   late final TabController _tabController;
   ViewType _viewType = ViewType.list;
+  int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -34,7 +37,6 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
           padding: EdgeInsets.only(
             top: MediaQuery.of(context).padding.top + 16.0,
           ),
-          height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -49,8 +51,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                       children: [
                         Text(
                           'Your Library',
-                          style:
-                              AppTextStyles.lightTextTheme.headline4?.copyWith(
+                          style: AppTextStyles.lightTextTheme.headline4?.copyWith(
                             fontSize: 30.0,
                             color: AppColors.black,
                           ),
@@ -68,17 +69,22 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                         controller: _tabController,
                         onTap: (index) {
                           print(index);
+                          setState(() {
+                            _selectedIndex = index;
+                            _tabController.animateTo(index);
+                          });
                         },
                         isScrollable: true,
-                        physics: const AlwaysScrollableScrollPhysics(
-                            parent: BouncingScrollPhysics()),
+                        indicatorColor: AppColors.darkBlue,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        indicatorWeight: 3.0,
+                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                         tabs: List.generate(
                           libraryTitle.length,
                           (index) => Tab(
                             icon: Text(
                               libraryTitle[index],
-                              style: AppTextStyles.lightTextTheme.subtitle1
-                                  ?.copyWith(
+                              style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
                                 color: AppColors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
@@ -100,35 +106,33 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                   ],
                 ),
               ),
-              Expanded(
-                child: TabBarView(
-                  controller: _tabController,
-                  children: List.generate(
-                    5,
-                    (index) => Container(
-                      margin: const EdgeInsets.only(
-                        left: 16.0,
-                        right: 16.0,
-                      ),
-                      child: AnimatedSwitcher(
-                        transitionBuilder: (child, anim) {
-                          return FadeTransition(
-                            opacity: anim,
-                            child: ScaleTransition(
-                              scale: anim,
-                              child: child,
-                            ),
-                          );
-                        },
-                        duration: const Duration(milliseconds: 300),
-                        child: _viewType == ViewType.list
-                            ? _LibraryListView(libraries: libraryExampleModels)
-                            : _LibraryGridView(
-                                libraries: libraryExampleModels,
-                              ),
-                      ),
-                    ),
-                  ),
+              FadeIndexedStack(
+                index: _selectedIndex,
+                children: List.generate(
+                  libraryTitle.length,
+                  (index) => index == 1
+                      ? const MixMusicView()
+                      : Container(
+                          margin: const EdgeInsets.only(
+                            left: 16.0,
+                            right: 16.0,
+                          ),
+                          child: AnimatedSwitcher(
+                            transitionBuilder: (child, anim) {
+                              return FadeTransition(
+                                opacity: anim,
+                                child: ScaleTransition(
+                                  scale: anim,
+                                  child: child,
+                                ),
+                              );
+                            },
+                            duration: const Duration(milliseconds: 300),
+                            child: _viewType == ViewType.list
+                                ? _LibraryListView(libraries: libraryExampleModels)
+                                : _LibraryGridView(libraries: libraryExampleModels),
+                          ),
+                        ),
                 ),
               ),
             ],
@@ -146,24 +150,29 @@ class _LibraryListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {},
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            ...List.generate(
-              libraries.length,
-              (index) => Container(
-                margin: const EdgeInsets.only(top: 16.0),
-                child: LibraryListViewCard(
-                  libraryModel: libraries[index],
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(16.0),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: RefreshIndicator(
+        onRefresh: () async {},
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ...List.generate(
+                libraries.length,
+                (index) => Container(
+                  margin: const EdgeInsets.only(top: 16.0),
+                  child: LibraryListViewCard(
+                    libraryModel: libraries[index],
+                    onTap: (isPlaying) {},
+                    isPlaying: true,
+                    borderRadius: BorderRadius.circular(16.0),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-          ],
+              const SizedBox(height: kBottomNavigationBarHeight + 32.0),
+            ],
+          ),
         ),
       ),
     );
@@ -177,31 +186,34 @@ class _LibraryGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async {},
-      child: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Wrap(
-              spacing: 24.0,
-              runSpacing: 8.0,
-              children: [
-                ...List.generate(
-                  libraries.length,
-                  (index) => Container(
-                    margin: const EdgeInsets.only(top: 16.0),
-                    child: LibraryGridViewCard(
-                      libraryModel: libraries[index],
-                      onTap: () {},
-                      imageRadius: BorderRadius.circular(16.0),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: RefreshIndicator(
+        onRefresh: () async {},
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Wrap(
+                spacing: 24.0,
+                runSpacing: 8.0,
+                children: [
+                  ...List.generate(
+                    libraries.length,
+                    (index) => Container(
+                      margin: const EdgeInsets.only(top: 16.0),
+                      child: LibraryGridViewCard(
+                        libraryModel: libraries[index],
+                        onTap: (isPlaying) {},
+                        imageRadius: BorderRadius.circular(16.0),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-          ],
+                ],
+              ),
+              const SizedBox(height: kBottomNavigationBarHeight + 32.0),
+            ],
+          ),
         ),
       ),
     );

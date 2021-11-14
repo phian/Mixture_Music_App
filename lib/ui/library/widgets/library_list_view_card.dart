@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:like_button/like_button.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_text_style.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
@@ -16,28 +15,38 @@ class LibraryListViewCard extends StatefulWidget {
     this.borderRadius,
     this.titleStyle,
     this.subtitleStyle,
+    this.isPlaying = false,
   }) : super(key: key);
 
   final LibraryModel libraryModel;
-  final void Function()? onTap;
+  final void Function(bool isPlaying)? onTap;
   final Color? cardColor;
   final Color? loadingColor;
   final BorderRadius? borderRadius;
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
+  final bool isPlaying;
 
   @override
   State<LibraryListViewCard> createState() => _LibraryListViewCardState();
 }
 
 class _LibraryListViewCardState extends State<LibraryListViewCard> {
-  late bool _isLiked = widget.libraryModel.isFavourite ?? false;
+  late final bool _isLiked = widget.libraryModel.isFavourite ?? false;
   int likeCount = 0;
+  late bool _isPlaying = widget.isPlaying;
 
   @override
   Widget build(BuildContext context) {
     return InkWellWrapper(
-      onTap: widget.onTap,
+      onTap: widget.onTap != null
+          ? () {
+              setState(() {
+                _isPlaying = !_isPlaying;
+                widget.onTap?.call(_isPlaying);
+              });
+            }
+          : null,
       color: widget.cardColor ?? AppColors.black12,
       borderRadius: widget.borderRadius,
       child: Container(
@@ -46,11 +55,11 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
           children: [
             widget.libraryModel.imageUrl != null
                 ? ClipRRect(
-                    borderRadius: BorderRadius.circular(30.0),
+                    borderRadius: BorderRadius.circular(5.0),
                     child: Image.network(
                       widget.libraryModel.imageUrl!,
-                      width: 120.0,
-                      height: 120.0,
+                      width: 50.0,
+                      height: 50.0,
                     ),
                   )
                 : LoadingContainer(
@@ -69,11 +78,12 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
                 children: [
                   widget.libraryModel.libraryTitle != null
                       ? Text(
-                          widget.libraryModel.libraryTitle!,
+                    widget.libraryModel.libraryTitle!,
                           style: widget.titleStyle ??
-                              AppTextStyles.lightTextTheme.caption!.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                              Theme.of(context).textTheme.caption?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.0,
+                                  ),
                         )
                       : LoadingContainer(
                           baseColor: Colors.grey.shade300,
@@ -88,39 +98,51 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
                       ? Text(
                           widget.libraryModel.librarySubTitle!,
                           style: widget.subtitleStyle ??
-                              AppTextStyles.lightTextTheme.subtitle1!.copyWith(
-                                fontWeight: FontWeight.w400,
-                                color: AppColors.c7A7C81,
-                              ),
+                              Theme.of(context).textTheme.subtitle1?.copyWith(
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.c7A7C81,
+                                    fontSize: 14.0,
+                                  ),
                         )
                       : LoadingContainer(
                           baseColor: Colors.grey.shade300,
-                    highlightColor: Colors.grey.shade100,
-                    width: MediaQuery
-                        .of(context)
-                        .size
-                        .width * 0.2,
-                    height: 12.0,
-                    borderRadius: BorderRadius.circular(20.0),
-                    loadingColor: widget.loadingColor,
-                  ),
+                          highlightColor: Colors.grey.shade100,
+                          width: MediaQuery.of(context).size.width * 0.2,
+                          height: 12.0,
+                          borderRadius: BorderRadius.circular(20.0),
+                          loadingColor: widget.loadingColor,
+                        ),
                 ],
               ),
             ),
             const SizedBox(width: 8.0),
+            if (widget.isPlaying)
+              IconButton(
+                onPressed: () {
+                  setState(() {
+                    _isPlaying = !_isPlaying;
+                    widget.onTap?.call(_isPlaying);
+                  });
+                },
+                icon: Icon(
+                  _isPlaying ? Icons.pause_sharp : Icons.play_arrow,
+                  color: Theme.of(context).primaryColor,
+                ),
+              ),
+            const SizedBox(width: 8.0),
             widget.libraryModel.isFavourite != null
                 ? LikeButton(
-              size: 30.0,
-              isLiked: _isLiked,
-              onTap: _onLikeButtonTapped,
-              animationDuration: const Duration(milliseconds: 500),
-              likeBuilder: (bool isLiked) {
-                return Icon(
-                  Icons.favorite,
-                  color: isLiked ? AppColors.cEF01A0 : AppColors.white,
-                  size: 30.0,
-                );
-              },
+                    size: 30.0,
+                    isLiked: _isLiked,
+                    onTap: _onLikeButtonTapped,
+                    animationDuration: const Duration(milliseconds: 500),
+                    likeBuilder: (bool isLiked) {
+                      return Icon(
+                        Icons.favorite,
+                        color: isLiked ? AppColors.cEF01A0 : AppColors.white,
+                        size: 25.0,
+                      );
+                    },
                   )
                 : LoadingContainer(
                     baseColor: Colors.grey.shade300,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_text_style.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/stacked_images_list.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/stacked_images_list.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 
 class MixSongCard extends StatelessWidget {
