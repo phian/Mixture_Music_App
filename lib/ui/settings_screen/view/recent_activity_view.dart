@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/app_text_style.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/playlist_card.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/recent_song_button.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/playlist_card.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/recent_song_button.dart';
 
 class RecentActivityView extends StatefulWidget {
   const RecentActivityView({Key? key}) : super(key: key);

@@ -7,6 +7,5 @@ class AppRoutes {
   static const forgotPassword = '$signIn/forgot_password';
   static const navigationScreen = '/navigation_screen';
   static const musicPlayerScreen = '/play_screen';
-  static const settingsScreen = '/personal_info/settings_screen';
-  static const feedbackAndBugReport = '$settingsScreen/feedback-and-bug-report';
+  static const feedbackAndBugReport = '/personal/feedback-and-bug-report';
 }

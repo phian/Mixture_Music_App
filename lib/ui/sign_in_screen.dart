@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/custom_textfield.dart';
 
 import '../constants/app_colors.dart';
@@ -45,10 +46,24 @@ class _SignInScreenState extends State<SignInScreen> {
                 CustomTextField(
                   textFieldType: TextFieldType.email,
                   onChanged: (value) {},
+                  decorationConfig: TextFieldDecorationConfig(
+                    hintText: 'Enter your email or user name',
+                    hintStyle: Theme.of(context).textTheme.caption?.copyWith(
+                          color: AppColors.c7A7C81,
+                          fontSize: 14.0,
+                        ),
+                  ),
                 ),
                 const SizedBox(height: 32.0),
                 CustomTextField(
                   textFieldType: TextFieldType.password,
+                  decorationConfig: TextFieldDecorationConfig(
+                    hintText: 'Enter your password',
+                    hintStyle: Theme.of(context).textTheme.caption?.copyWith(
+                          color: AppColors.c7A7C81,
+                          fontSize: 14.0,
+                        ),
+                  ),
                   onChanged: (value) {},
                 ),
                 const SizedBox(height: 32.0),
@@ -99,7 +114,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         style: TextStyle(
                           fontSize: 14.0,
                           fontWeight: FontWeight.w400,
-                          color: AppColors.white,
                         ),
                       ),
                     ),

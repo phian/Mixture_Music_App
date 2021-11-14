@@ -11,11 +11,10 @@ class AppConstants {
 }
 
 const libraryTitle = [
-  'All',
   'Favourites',
   'Playlists',
-  'Albums',
   'Artists',
+  'Recent activity',
 ];
 
 const accountScreenGridData = [

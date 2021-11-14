@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_text_style.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/playlist_card.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/playlist_card.dart';
 
 class PlaylistView extends StatefulWidget {
   const PlaylistView({
