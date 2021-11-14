@@ -8,4 +8,5 @@ class AppRoutes {
   static const navigationScreen = '/navigation_screen';
   static const musicPlayerScreen = '/play_screen';
   static const feedbackAndBugReport = '/personal/feedback-and-bug-report';
+  static const editProfile = '/personal/edit-profile';
 }

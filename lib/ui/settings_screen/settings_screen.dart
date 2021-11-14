@@ -10,15 +10,15 @@ import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
-class PersonalScreen extends StatefulWidget {
-  const PersonalScreen({Key? key, required this.userModel}) : super(key: key);
+class SettingsScreen extends StatefulWidget {
+  const SettingsScreen({Key? key, required this.userModel}) : super(key: key);
   final FacebookUserModel userModel;
 
   @override
-  _PersonalScreenState createState() => _PersonalScreenState();
+  _SettingsScreenState createState() => _SettingsScreenState();
 }
 
-class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProviderStateMixin {
+class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
   String _appVersion = '';
 
   @override
@@ -56,7 +56,9 @@ class _PersonalScreenState extends State<PersonalScreen> with SingleTickerProvid
             const SizedBox(height: 24.0),
             InkWellWrapper(
               color: Colors.transparent,
-              onTap: () {},
+              onTap: () {
+                Get.toNamed(AppRoutes.editProfile);
+              },
               borderRadius: BorderRadius.zero,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
