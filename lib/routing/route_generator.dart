@@ -39,6 +39,7 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => MusicPlayerScreen());
       case AppRoutes.settingsScreen:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
+      
       default:
         throw const RouteException('Route not found');
     }

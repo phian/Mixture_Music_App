@@ -9,9 +9,7 @@ import '../personal_screen/personal_screen.dart';
 import '../home/home.dart';
 import '../player_screen/controller/music_player_controller.dart';
 
-
-
-import '../search_screen.dart';
+import '../search_screen/search_screen.dart';
 import 'widgets/mini_music_player.dart';
 
 class NavScreen extends StatefulWidget {
@@ -26,7 +24,7 @@ class _NavScreenState extends State<NavScreen> {
 
   final _screen = [
     Home(),
-    const SearchScreen(),
+    SearchScreen(),
     const LibraryScreen(),
     PersonalScreen(
       userModel: FacebookUserModel(
@@ -69,6 +67,9 @@ class _NavScreenState extends State<NavScreen> {
               onTap: () {
                 Get.toNamed(AppRoutes.musicPlayerScreen);
               },
+              onNext: () {},
+              onPlayPause: () {},
+              onPrevious: () {},
             ),
           ],
         ),

@@ -8,10 +8,16 @@ class MiniMusicPlayer extends StatelessWidget {
     Key? key,
     required this.song,
     required this.onTap,
+    required this.onPlayPause,
+    required this.onNext,
+    required this.onPrevious,
   }) : super(key: key);
 
   final SongModel? song;
   final Function() onTap;
+  final Function() onPlayPause;
+  final Function() onNext;
+  final Function() onPrevious;
 
   @override
   Widget build(BuildContext context) {
@@ -71,10 +77,24 @@ class MiniMusicPlayer extends StatelessWidget {
                         ),
                       ),
                       IconButton(
-                        onPressed: () {},
+                        onPressed: onPrevious,
+                        icon: Icon(
+                          Icons.skip_previous,
+                          color: theme.primaryColor,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: onPlayPause,
                         icon: Icon(
                           Icons.pause,
                           color: Theme.of(context).primaryColor,
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: onNext,
+                        icon: Icon(
+                          Icons.skip_next,
+                          color: theme.primaryColor,
                         ),
                       ),
                     ],

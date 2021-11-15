@@ -8,4 +8,5 @@ class AppRoutes {
   static const navigationScreen = '/navigation_screen';
   static const musicPlayerScreen = '/play_screen';
   static const settingsScreen = '/personal_info/settings_screen';
+  static const realSearchScreen = '/search_screen';
 }

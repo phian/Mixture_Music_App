@@ -8,7 +8,7 @@ import '../player_screen/controller/music_player_controller.dart';
 import 'controller/home_controller.dart';
 import 'widget/playlist_header.dart';
 import 'widget/refresh_indicator.dart';
-import 'widget/song_tile.dart';
+import '../../widgets/song_tile.dart';
 import 'widget/weather_infor.dart';
 
 class Home extends StatelessWidget {
@@ -38,7 +38,8 @@ class Home extends StatelessWidget {
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics()),
+              parent: BouncingScrollPhysics(),
+            ),
             child: Column(
               children: [
                 GetBuilder<HomeController>(
@@ -58,9 +59,7 @@ class Home extends StatelessWidget {
                   thickness: 0.5,
                   height: 16,
                 ),
-                PlaylistHeader(
-                    coverImageUrl:
-                        listSong.map((e) => e.coverImageUrl).toList()),
+                PlaylistHeader(coverImageUrl: listSong.map((e) => e.coverImageUrl).toList()),
                 const Divider(
                   indent: 16,
                   endIndent: 16,
@@ -70,16 +69,13 @@ class Home extends StatelessWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding:
-                      const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                   itemCount: listSong.length,
                   itemBuilder: (context, index) {
                     return Obx(
                       () => SongTile(
                         songModel: listSong[index],
-                        isPlaying: index == controller.playingSongIndex.value
-                            ? true
-                            : false,
+                        isPlaying: index == controller.playingSongIndex.value ? true : false,
                         onTap: () {
                           controller.playingSongIndex.value = index;
                           musicController.setSong(listSong[index]);

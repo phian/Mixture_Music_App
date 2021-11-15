@@ -1,6 +1,7 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
+
 class AppThemes {
   AppThemes._();
 
@@ -22,8 +23,12 @@ class AppThemes {
           ).toTheme;
 
     return theme.copyWith(
-      textTheme: theme.textTheme.copyWith(),
-      // add another custom style 
+      textTheme: theme.textTheme.copyWith(
+        headline4: theme.textTheme.headline4!.copyWith(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      // add another custom style
     );
   }
 }
