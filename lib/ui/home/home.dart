@@ -8,7 +8,7 @@ import '../player_screen/controller/music_player_controller.dart';
 import 'controller/home_controller.dart';
 import 'widget/playlist_header.dart';
 import 'widget/refresh_indicator.dart';
-import 'widget/song_tile.dart';
+import '../../widgets/song_tile.dart';
 import 'widget/weather_infor.dart';
 
 class Home extends StatelessWidget {
