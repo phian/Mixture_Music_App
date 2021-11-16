@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
-import 'package:mixture_music_app/ui/personal_screen/widgets/mix_song_card.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/mix_song_card.dart';
 
 class MixMusicView extends StatefulWidget {
   const MixMusicView({Key? key}) : super(key: key);

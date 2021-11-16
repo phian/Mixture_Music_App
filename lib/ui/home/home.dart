@@ -2,8 +2,8 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../constants/app_constants.dart';
 
+import '../../constants/app_constants.dart';
 import '../player_screen/controller/music_player_controller.dart';
 import 'controller/home_controller.dart';
 import 'widget/playlist_header.dart';
@@ -37,9 +37,7 @@ class Home extends StatelessWidget {
             await controller.getLocationAndWeather();
           },
           child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(
-              parent: BouncingScrollPhysics(),
-            ),
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             child: Column(
               children: [
                 GetBuilder<HomeController>(

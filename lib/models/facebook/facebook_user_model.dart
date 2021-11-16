@@ -1,22 +1,6 @@
 import 'facebook_user_picture_model.dart';
 
 class FacebookUserModel {
-/*
-{
-  "id": 1,
-  "name": "",
-  "email": "",
-  "picture": {
-    "data": {
-      "height": 0,
-      "is_silhouette": false,
-      "url": "",
-      "width": 200
-    }
-  }
-}
-*/
-
   int? id;
   String? name;
   String? email;

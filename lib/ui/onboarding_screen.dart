@@ -27,9 +27,12 @@ class OnBoardingScreen extends StatelessWidget {
               items: [
                 ...List.generate(
                   listSong.length,
-                      (index) => Image.network(
-                    listSong[index].coverImageUrl,
-                    fit: BoxFit.cover,
+                  (index) => ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: Image.network(
+                      listSong[index].coverImageUrl,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )
               ],
