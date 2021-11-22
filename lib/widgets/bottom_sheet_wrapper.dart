@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
@@ -6,7 +7,7 @@ class BottomSheetWrapper extends StatefulWidget {
   const BottomSheetWrapper({
     Key? key,
     required this.contentItems,
-    required this.title,
+    this.title,
     this.onItemTap,
     this.backgroundColor,
     this.bottomSheetRadius,
@@ -18,10 +19,12 @@ class BottomSheetWrapper extends StatefulWidget {
     this.itemContentPadding,
     this.itemsPadding,
     this.titleAlign,
+    this.itemsListBackgroundColor,
+    this.titleBackgroundColor,
   }) : super(key: key);
 
   final List<Widget> contentItems;
-  final Widget title;
+  final Widget? title;
   final void Function(int index)? onItemTap;
   final Color? backgroundColor;
   final BorderRadius? bottomSheetRadius;
@@ -33,12 +36,27 @@ class BottomSheetWrapper extends StatefulWidget {
   final EdgeInsetsGeometry? itemContentPadding;
   final EdgeInsetsGeometry? itemsPadding;
   final Alignment? titleAlign;
+  final Color? titleBackgroundColor;
+  final Color? itemsListBackgroundColor;
 
   @override
   _BottomSheetWrapperState createState() => _BottomSheetWrapperState();
 }
 
 class _BottomSheetWrapperState extends State<BottomSheetWrapper> {
+  final GlobalKey _titleKey = GlobalKey();
+  RenderBox? _box;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+      _box = _titleKey.currentContext?.findRenderObject() as RenderBox?;
+      print(_box?.size.height ?? 0.0);
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -51,43 +69,57 @@ class _BottomSheetWrapperState extends State<BottomSheetWrapper> {
         decoration: BoxDecoration(
           color: widget.backgroundColor ?? Theme.of(context).backgroundColor,
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                child: widget.title,
-                alignment: widget.titleAlign,
-                padding: widget.titlePadding,
-              ),
-              Container(
-                height: widget.dividerThickness ?? 1.0,
-                color: widget.dividerColor ?? AppColors.hintColor,
-                margin: const EdgeInsets.symmetric(vertical: 16.0),
-              ),
-              Padding(
-                padding: widget.itemContentPadding ?? EdgeInsets.zero,
-                child: Column(
-                  children: [
-                    ...List.generate(
-                      widget.contentItems.length,
-                      (index) => InkWellWrapper(
-                        onTap: widget.onItemTap != null
-                            ? () {
-                                widget.onItemTap?.call(index);
-                              }
-                            : null,
-                        color: AppColors.transparent,
-                        child: Padding(
-                          child: widget.contentItems[index],
-                          padding: widget.itemContentPadding ?? EdgeInsets.zero,
+        child: Stack(
+          children: [
+            SingleChildScrollView(
+              padding: widget.title != null ? EdgeInsets.only(top: (_box?.size.height ?? 0.0) + 24.0) : EdgeInsets.zero,
+              child: Column(
+                children: [
+                  Container(
+                    padding: widget.itemContentPadding ?? EdgeInsets.zero,
+                    color: widget.itemsListBackgroundColor,
+                    child: Column(
+                      children: [
+                        ...List.generate(
+                          widget.contentItems.length,
+                          (index) => InkWellWrapper(
+                            onTap: widget.onItemTap != null
+                                ? () {
+                                    widget.onItemTap?.call(index);
+                                  }
+                                : null,
+                            color: AppColors.transparent,
+                            child: Padding(
+                              child: widget.contentItems[index],
+                              padding: widget.itemContentPadding ?? EdgeInsets.zero,
+                            ),
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
+                  )
+                ],
+              ),
+            ),
+            Container(
+              color: widget.titleBackgroundColor ?? Colors.white,
+              key: _titleKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    child: widget.title,
+                    alignment: widget.titleAlign,
+                    padding: widget.titlePadding,
+                  ),
+                  Container(
+                    height: widget.dividerThickness ?? 1.0,
+                    color: widget.dividerColor ?? AppColors.hintColor,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

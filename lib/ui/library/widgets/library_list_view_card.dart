@@ -16,6 +16,7 @@ class LibraryListViewCard extends StatefulWidget {
     this.titleStyle,
     this.subtitleStyle,
     this.isPlaying = false,
+    this.cardBorder,
   }) : super(key: key);
 
   final LibraryModel libraryModel;
@@ -26,6 +27,7 @@ class LibraryListViewCard extends StatefulWidget {
   final TextStyle? titleStyle;
   final TextStyle? subtitleStyle;
   final bool isPlaying;
+  final BoxBorder? cardBorder;
 
   @override
   State<LibraryListViewCard> createState() => _LibraryListViewCardState();
@@ -51,25 +53,30 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
       borderRadius: widget.borderRadius,
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        decoration: BoxDecoration(border: widget.cardBorder),
         child: Row(
           children: [
-            widget.libraryModel.imageUrl != null
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(5.0),
-                    child: Image.network(
-                      widget.libraryModel.imageUrl!,
-                      width: 50.0,
-                      height: 50.0,
-                    ),
-                  )
-                : LoadingContainer(
+            ClipRRect(
+              borderRadius: BorderRadius.circular(5.0),
+              child: Image.network(
+                widget.libraryModel.imageUrl ?? '',
+                width: 50.0,
+                height: 50.0,
+                loadingBuilder: (context, child, chunkEvent) {
+                  if (chunkEvent == null) {
+                    return child;
+                  }
+                  return LoadingContainer(
                     baseColor: Colors.grey.shade300,
                     highlightColor: Colors.grey.shade100,
-                    width: 100.0,
-                    height: 100.0,
+                    width: 50.0,
+                    height: 50.0,
                     borderRadius: BorderRadius.circular(20.0),
                     loadingColor: widget.loadingColor,
-                  ),
+                  );
+                },
+              ),
+            ),
             const SizedBox(width: 16.0),
             Expanded(
               child: Column(
@@ -78,7 +85,7 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
                 children: [
                   widget.libraryModel.libraryTitle != null
                       ? Text(
-                    widget.libraryModel.libraryTitle!,
+                          widget.libraryModel.libraryTitle!,
                           style: widget.titleStyle ??
                               Theme.of(context).textTheme.caption?.copyWith(
                                     fontWeight: FontWeight.bold,

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:mixture_music_app/widgets/loading_container.dart';
 
 class PlaylistHeader extends StatelessWidget {
   const PlaylistHeader({
@@ -33,6 +34,11 @@ class PlaylistHeader extends StatelessWidget {
                       itemCount: 4,
                       itemBuilder: (context, index) => Image.network(
                         coverImageUrl[index],
+                        loadingBuilder: (context, child, chunkEvent) {
+                          if (chunkEvent == null) return child;
+
+                          return const LoadingContainer(width: 30.0, height: 30.0);
+                        },
                       ),
                     ),
                   ),

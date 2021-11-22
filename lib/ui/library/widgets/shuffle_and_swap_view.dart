@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../constants/app_colors.dart';
 import '../../../constants/app_text_style.dart';
 import '../../../constants/enums/enums.dart';
@@ -9,10 +10,12 @@ class ShuffleAndSwapView extends StatefulWidget {
     Key? key,
     this.onShuffleTap,
     this.onSwapViewTap,
+    this.visibleSwapViewIcon = true,
   }) : super(key: key);
 
   final void Function()? onShuffleTap;
   final void Function(ViewType viewType)? onSwapViewTap;
+  final bool visibleSwapViewIcon;
 
   @override
   State<ShuffleAndSwapView> createState() => _ShuffleAndSwapViewState();
@@ -59,24 +62,32 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
             ),
           ),
         ),
-        IconButton(
-          onPressed: widget.onSwapViewTap != null
-              ? () {
-                  setState(() {
-                    _isList = !_isList;
-                    if (_isList) {
-                      _aniController!.reverse();
-                      widget.onSwapViewTap?.call(ViewType.list);
-                    } else {
-                      _aniController!.forward();
-                      widget.onSwapViewTap?.call(ViewType.grid);
-                    }
-                  });
-                }
-              : null,
-          icon: AnimatedIcon(
-            icon: AnimatedIcons.view_list,
-            progress: _aniController!,
+        Visibility(
+          visible: widget.visibleSwapViewIcon,
+          child: InkWellWrapper(
+            borderRadius: BorderRadius.circular(90.0),
+            onTap: widget.onSwapViewTap != null
+                ? () {
+                    setState(() {
+                      _isList = !_isList;
+                      if (_isList) {
+                        _aniController!.reverse();
+                        widget.onSwapViewTap?.call(ViewType.list);
+                      } else {
+                        _aniController!.forward();
+                        widget.onSwapViewTap?.call(ViewType.grid);
+                      }
+                    });
+                  }
+                : null,
+            child: Container(
+              decoration: const BoxDecoration(shape: BoxShape.circle),
+              padding: const EdgeInsets.all(12.0),
+              child: AnimatedIcon(
+                icon: AnimatedIcons.view_list,
+                progress: _aniController!,
+              ),
+            ),
           ),
         ),
       ],

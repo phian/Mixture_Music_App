@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/widgets/loading_container.dart';
+
+import '../../widgets/marquee_text.dart';
 import 'controller/music_player_controller.dart';
 import 'widget/music_control_button.dart';
-import '../../widgets/marquee_text.dart';
 
 class MusicPlayerScreen extends StatelessWidget {
   MusicPlayerScreen({Key? key}) : super(key: key);
@@ -41,9 +43,14 @@ class MusicPlayerScreen extends StatelessWidget {
                 child: Hero(
                   tag: 'Artwork',
                   child: Image.network(
-                    controller.selectedSong.value!.coverImageUrl,
+                    controller.selectedSong.value?.coverImageUrl ?? '',
                     width: double.infinity,
                     fit: BoxFit.cover,
+                    loadingBuilder: (context, child, chunkEvent) {
+                      if (chunkEvent == null) return child;
+
+                      return const LoadingContainer(width: double.infinity);
+                    },
                   ),
                 ),
               ),
@@ -52,7 +59,7 @@ class MusicPlayerScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: MarqueeText(
-                      controller.selectedSong.value!.title,
+                      controller.selectedSong.value?.title ?? '',
                       style: Theme.of(context).textTheme.headline6!.copyWith(
                             fontSize: 26,
                           ),
@@ -67,19 +74,15 @@ class MusicPlayerScreen extends StatelessWidget {
                         });
                       },
                       child: Icon(
-                        controller.selectedSong.value!.isFavorite
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                        color: controller.selectedSong.value!.isFavorite
-                            ? theme.primaryColor
-                            : theme.colorScheme.onBackground,
+                        controller.selectedSong.value!.isFavorite ? Icons.favorite : Icons.favorite_border,
+                        color: controller.selectedSong.value!.isFavorite ? theme.primaryColor : theme.colorScheme.onBackground,
                       ),
                     ),
                   ),
                 ],
               ),
               MarqueeText(
-                controller.selectedSong.value!.artist,
+                controller.selectedSong.value?.artist ?? '',
                 style: theme.textTheme.caption!.copyWith(
                   fontSize: 18,
                   fontWeight: FontWeight.w500,

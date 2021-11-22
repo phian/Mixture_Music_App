@@ -2,6 +2,7 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/widgets/loading_container.dart';
 
 import '../constants/app_constants.dart';
 import '../routing/routes.dart';
@@ -30,8 +31,13 @@ class OnBoardingScreen extends StatelessWidget {
                   (index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: Image.network(
-                      listSong[index].coverImageUrl,
+                      listSong[index].coverImageUrl ?? '',
                       fit: BoxFit.cover,
+                      loadingBuilder: (context, child, chunkEvent) {
+                        if (chunkEvent == null) return child;
+
+                        return const LoadingContainer(width: 30.0, height: 30.0);
+                      },
                     ),
                   ),
                 )
