@@ -4,6 +4,8 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/sections/edit_playlist_sheet.dart';
+import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/delete_dialog.dart';
+import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/share_dialog.dart';
 import 'package:mixture_music_app/widgets/base_app_bar.dart';
 import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
 import 'package:mixture_music_app/widgets/image_grid_widget.dart';
@@ -18,7 +20,7 @@ class PlayListDetailScreen extends StatefulWidget {
 }
 
 class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
-  final List<IconData> _actionIcons = [Icons.add, Icons.edit, Icons.share];
+  final List<IconData> _actionIcons = [Icons.add, Icons.edit, Icons.share, Icons.delete];
   final List<String> _menuTexts = ['Add tracks', 'Edit playlist', 'Share playlist', 'Delete playlist'];
 
   @override
@@ -143,6 +145,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
               IntrinsicWidth(
                 child: InkWellWrapper(
                   onTap: () {},
+                  borderRadius: BorderRadius.circular(4.0),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
@@ -203,8 +206,27 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
         );
         break;
       case 2:
+        Get.dialog(
+          ShareDialog(
+            playlistId: 'PlaylistId',
+            playListName: 'Playlist name',
+            contentPadding: const EdgeInsets.all(16.0),
+            playlistNameStyle: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 30.0, fontWeight: FontWeight.bold),
+            titleStyle: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.bold),
+          ),
+        );
         break;
       case 3:
+        Get.dialog(
+          DeleteDialog(
+            onCancelButtonTap: () {
+              Get.back();
+            },
+            onDeleteButtonTap: () {
+              Get.back();
+            },
+          ),
+        );
         break;
     }
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/custom_textfield.dart';
 
 import '../constants/app_colors.dart';
@@ -44,14 +45,35 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         CustomTextField(
                           textFieldType: TextFieldType.name,
                           onChanged: (value) {},
+                          decorationConfig: TextFieldDecorationConfig(
+                            hintText: 'Enter your email or user name',
+                            hintStyle: Theme.of(context).textTheme.caption?.copyWith(
+                                  color: AppColors.c7A7C81,
+                                  fontSize: 14.0,
+                                ),
+                          ),
                         ),
                         CustomTextField(
                           textFieldType: TextFieldType.email,
                           onChanged: (value) {},
+                          decorationConfig: TextFieldDecorationConfig(
+                            hintText: 'Enter your password',
+                            hintStyle: Theme.of(context).textTheme.caption?.copyWith(
+                                  color: AppColors.c7A7C81,
+                                  fontSize: 14.0,
+                                ),
+                          ),
                         ),
                         CustomTextField(
                           textFieldType: TextFieldType.password,
                           onChanged: (value) {},
+                          decorationConfig: TextFieldDecorationConfig(
+                            hintText: 'Re-enter your password',
+                            hintStyle: Theme.of(context).textTheme.caption?.copyWith(
+                                  color: AppColors.c7A7C81,
+                                  fontSize: 14.0,
+                                ),
+                          ),
                         ),
                       ],
                     ),
@@ -59,6 +81,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     BaseButton(
                       content: 'SIGN UP',
                       onTap: () {},
+                      buttonRadius: BorderRadius.circular(8.0),
                     ),
                   ],
                 ),
@@ -67,37 +90,39 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Text(
-                  "Don't have an account? ",
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.white,
-                  ),
-                ),
-                InkWellWrapper(
-                  onTap: () {
-                    Get.back();
-                  },
-                  color: AppColors.transparent,
-                  child: Container(
-                    padding: const EdgeInsets.all(4.0),
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.w400,
-                          color: Theme.of(context).primaryColor,
-                        ),
-                        text: 'Sign In',
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    "Don't have an account? ",
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.w400,
                     ),
                   ),
-                )
-              ],
+                  InkWellWrapper(
+                    onTap: () {
+                      Get.back();
+                    },
+                    color: AppColors.transparent,
+                    child: Container(
+                      padding: const EdgeInsets.all(4.0),
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.w400,
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          text: 'Sign In',
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ],

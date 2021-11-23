@@ -94,6 +94,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 const Expanded(child: SizedBox()),
                 BaseButton(
                   content: 'SIGN IN',
+                  buttonRadius: BorderRadius.circular(8.0),
                   onTap: () {
                     Get.offAllNamed(AppRoutes.navigationScreen);
                   },

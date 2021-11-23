@@ -73,6 +73,7 @@ class OnBoardingScreen extends StatelessWidget {
                       const SizedBox(height: 64.0),
                       BaseButton(
                         content: 'GET STARTED',
+                        buttonRadius: BorderRadius.circular(8.0),
                         onTap: () {
                           Get.toNamed(AppRoutes.signIn);
                         },
