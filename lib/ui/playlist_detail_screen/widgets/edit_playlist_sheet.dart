@@ -159,43 +159,26 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-            width: MediaQuery.of(context).size.width,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWellWrapper(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.swap_vert),
-                        const SizedBox(width: 16.0),
-                        Text(
-                          'Sorting',
-                          style: Theme.of(context).textTheme.caption?.copyWith(
-                                fontSize: 16.0,
-                              ),
-                        ),
-                      ],
-                    ),
+            child: IntrinsicWidth(
+              child: InkWellWrapper(
+                onTap: () {},
+                borderRadius: BorderRadius.circular(4.0),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.swap_vert),
+                      const SizedBox(width: 16.0),
+                      Text(
+                        'Sorting',
+                        style: Theme.of(context).textTheme.caption?.copyWith(
+                              fontSize: 16.0,
+                            ),
+                      ),
+                    ],
                   ),
                 ),
-                InkWellWrapper(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text(
-                      'Custom',
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                            fontSize: 16.0,
-                            color: Theme.of(context).primaryColor,
-                          ),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
           Container(
