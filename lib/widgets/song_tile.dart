@@ -17,6 +17,7 @@ class SongTile extends StatefulWidget {
     this.width,
     this.canChoose = false,
     this.canMove = false,
+    this.initialCheck = false,
     this.onCheckChanged,
   }) : super(key: key);
 
@@ -31,13 +32,14 @@ class SongTile extends StatefulWidget {
   final bool canChoose;
   final bool canMove;
   final void Function(bool? value)? onCheckChanged;
+  final bool initialCheck;
 
   @override
   State<SongTile> createState() => _SongTileState();
 }
 
 class _SongTileState extends State<SongTile> {
-  bool _isSelected = false;
+  late bool _isSelected = widget.initialCheck;
 
   @override
   Widget build(BuildContext context) {

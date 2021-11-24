@@ -201,6 +201,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
               playlistModel: PlaylistModel(
                 playlistName: 'Playlist name',
               ),
+              songs: listSong,
             );
           },
         );
@@ -211,8 +212,21 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             playlistId: 'PlaylistId',
             playListName: 'Playlist name',
             contentPadding: const EdgeInsets.all(16.0),
-            playlistNameStyle: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 30.0, fontWeight: FontWeight.bold),
-            titleStyle: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.bold),
+            playlistNameStyle: Theme.of(context).textTheme.headline5?.copyWith(
+                  fontSize: 25.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+            titleStyle: Theme.of(context).textTheme.headline5?.copyWith(
+                  fontSize: 30.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Roboto',
+                ),
+            subtitleStyle: Theme.of(context).textTheme.caption?.copyWith(
+                  fontSize: 18.0,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Roboto',
+                ),
           ),
         );
         break;
