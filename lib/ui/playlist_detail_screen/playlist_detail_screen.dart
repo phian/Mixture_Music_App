@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
+import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_sheet.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/delete_dialog.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/edit_playlist_sheet.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/share_dialog.dart';
@@ -191,16 +192,29 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
   void _openMenuSection(int index) {
     switch (index) {
       case 0:
+        showModalBottomSheet(
+            context: context,
+            backgroundColor: Colors.transparent,
+            isScrollControlled: true,
+            builder: (_) {
+              return AddSongSheet(
+                songs: listSong,
+                sheetHeight: MediaQuery.of(context).size.height * 0.9,
+                sheetRadius: const BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+              );
+            });
         break;
       case 1:
         showModalBottomSheet(
           context: context,
           backgroundColor: Colors.transparent,
+          isScrollControlled: true,
           builder: (_) {
             return EditPlaylistSheet(
               playlistModel: PlaylistModel(
                 playlistName: 'Playlist name',
               ),
+              sheetHeight: MediaQuery.of(context).size.height * 0.9,
               songs: listSong,
             );
           },

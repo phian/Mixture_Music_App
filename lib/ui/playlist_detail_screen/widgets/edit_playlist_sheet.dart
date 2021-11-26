@@ -24,12 +24,14 @@ class EditPlaylistSheet extends StatefulWidget {
     required this.songs,
     this.onDeleteSongButtonTap,
     this.onChanged,
+    this.sheetHeight,
   }) : super(key: key);
 
   final PlaylistModel playlistModel;
   final List<SongModel> songs;
   final void Function(List<SongModel> deleteSongs)? onDeleteSongButtonTap;
   final void Function(List<SongModel> songs)? onChanged;
+  final double? sheetHeight;
 
   @override
   _EditPlaylistSheetState createState() => _EditPlaylistSheetState();
@@ -48,241 +50,244 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
 
   @override
   Widget build(BuildContext context) {
-    return UnFocusWidget(
-      child: Stack(
-        children: [
-          BottomSheetWrapper(
-            title: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Row(
-                children: [
-                  InkWellWrapper(
-                    borderRadius: BorderRadius.circular(4.0),
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Cancel',
-                        style: Theme.of(context).textTheme.caption?.copyWith(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Text(
-                      'Edit Playlist',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.caption?.copyWith(
-                            fontSize: 20.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
-                  ),
-                  InkWellWrapper(
-                    borderRadius: BorderRadius.circular(4.0),
-                    onTap: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        'Save',
-                        style: Theme.of(context).textTheme.caption?.copyWith(
-                              fontSize: 16.0,
-                              color: Theme.of(context).primaryColor,
-                            ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            contentItems: [
-              const SizedBox(height: 16.0),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 48.0),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).dividerColor)),
-                ),
-                child: GestureDetector(
-                  onTap: () {
-                    print('Tapped');
-                    Get.dialog(
-                      Dialog(
-                        child: PickImageDialog(
-                          onCameraTap: () {
-                            _pickImage(ImageSource.camera);
-                            Get.back();
-                          },
-                          onGalleryTap: () {
-                            _pickImage(ImageSource.gallery);
-                            Get.back();
-                          },
-                        ),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      barrierColor: Colors.transparent,
-                    );
-                  },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ImageGridWidget(
-                        imageUrls: listSong.map((e) => e.coverImageUrl).toList(),
-                        gridRadius: BorderRadius.circular(4.0),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(8.0),
-                        child: const Icon(Icons.edit_outlined, color: Colors.white, size: 40.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.white, width: 1.5),
-                          borderRadius: BorderRadius.circular(90.0),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 32.0),
-              CustomTextField(
-                textFieldType: TextFieldType.name,
-                textFieldConfig: TextFieldConfig(
-                  controller: TextEditingController(text: widget.playlistModel.playlistName),
-                  textAlign: TextAlign.center,
-                ),
-                decorationConfig: const TextFieldDecorationConfig(
-                  prefixIcon: Icon(Icons.edit_outlined),
-                  hintText: 'Enter your playlist name',
-                  enabledBorder: UnderlineInputBorder(),
-                  focusedBorder: UnderlineInputBorder(),
-                  border: UnderlineInputBorder(),
-                  errorBorder: UnderlineInputBorder(),
-                ),
-              ),
-              const SizedBox(height: 32.0),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).dividerColor,
-                  border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).dividerColor)),
-                ),
-                child: const SizedBox(),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
-                child: IntrinsicWidth(
-                  child: InkWellWrapper(
-                    onTap: () {},
-                    borderRadius: BorderRadius.circular(4.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.swap_vert),
-                          const SizedBox(width: 16.0),
-                          Text(
-                            'Sorting',
-                            style: Theme.of(context).textTheme.caption?.copyWith(
-                                  fontSize: 16.0,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(vertical: 24.0),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).dividerColor,
-                  border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).dividerColor)),
-                ),
-                child: const SizedBox(),
-              ),
-              const SizedBox(height: 8.0),
-              ReorderableListView(
-                shrinkWrap: true,
-                dragStartBehavior: DragStartBehavior.start,
-                physics: const ClampingScrollPhysics(),
-                children: <Widget>[
-                  ...List.generate(
-                    _songs.length,
-                    (index) => SongTile(
-                      key: UniqueKey(),
-                      onCheckChanged: (value) {
-                        print(value);
-                        if (value != null && value == true && _selectedSong.contains(_songs[index]) == false) {
-                          setState(() {
-                            _selectedSong.add(_songs[index]);
-                          });
-                        } else {
-                          setState(() {
-                            _selectedSong.removeWhere((element) => element.id == _songs[index].id);
-                          });
-                        }
+    return SizedBox(
+      height: widget.sheetHeight,
+      child: UnFocusWidget(
+        child: Stack(
+          children: [
+            BottomSheetWrapper(
+              title: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Row(
+                  children: [
+                    InkWellWrapper(
+                      borderRadius: BorderRadius.circular(4.0),
+                      onTap: () {
+                        Get.back();
                       },
-                      canChoose: true,
-                      canMove: true,
-                      initialCheck: _selectedSong.contains(_songs[index]),
-                      songModel: _songs[index],
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                      onTap: () {},
-                      border: index == 0
-                          ? const Border.symmetric(
-                              horizontal: BorderSide(color: AppColors.c7A7C81),
-                            )
-                          : const Border(
-                              bottom: BorderSide(color: AppColors.c7A7C81),
-                            ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Cancel',
+                          style: Theme.of(context).textTheme.caption?.copyWith(
+                                fontSize: 16.0,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                        ),
+                      ),
                     ),
-                  )
-                ],
-                onReorder: (int oldIndex, int newIndex) {
-                  setState(() {
-                    _songs.insert(newIndex, listSong.removeAt(oldIndex));
-                  });
-                },
+                    Expanded(
+                      child: Text(
+                        'Edit Playlist',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.caption?.copyWith(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      ),
+                    ),
+                    InkWellWrapper(
+                      borderRadius: BorderRadius.circular(4.0),
+                      onTap: () {},
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          'Save',
+                          style: Theme.of(context).textTheme.caption?.copyWith(
+                                fontSize: 16.0,
+                                color: Theme.of(context).primaryColor,
+                              ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 32.0),
-            ],
-            titlePadding: const EdgeInsets.symmetric(vertical: 16.0),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Visibility(
-              visible: _selectedSong.isNotEmpty,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              contentItems: [
+                const SizedBox(height: 16.0),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 48.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).dividerColor)),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      print('Tapped');
+                      Get.dialog(
+                        Dialog(
+                          child: PickImageDialog(
+                            onCameraTap: () {
+                              _pickImage(ImageSource.camera);
+                              Get.back();
+                            },
+                            onGalleryTap: () {
+                              _pickImage(ImageSource.gallery);
+                              Get.back();
+                            },
+                          ),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        barrierColor: Colors.transparent,
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ImageGridWidget(
+                          imageUrls: listSong.map((e) => e.coverImageUrl).toList(),
+                          gridRadius: BorderRadius.circular(4.0),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.all(8.0),
+                          child: const Icon(Icons.edit_outlined, color: Colors.white, size: 40.0),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.white, width: 1.5),
+                            borderRadius: BorderRadius.circular(90.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32.0),
+                CustomTextField(
+                  textFieldType: TextFieldType.name,
+                  textFieldConfig: TextFieldConfig(
+                    controller: TextEditingController(text: widget.playlistModel.playlistName),
+                    textAlign: TextAlign.center,
+                  ),
+                  decorationConfig: const TextFieldDecorationConfig(
+                    prefixIcon: Icon(Icons.edit_outlined),
+                    hintText: 'Enter your playlist name',
+                    enabledBorder: UnderlineInputBorder(),
+                    focusedBorder: UnderlineInputBorder(),
+                    border: UnderlineInputBorder(),
+                    errorBorder: UnderlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 32.0),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).dividerColor,
+                    border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).dividerColor)),
+                  ),
+                  child: const SizedBox(),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+                  child: IntrinsicWidth(
                     child: InkWellWrapper(
-                      color: Theme.of(context).primaryColor,
                       onTap: () {},
                       borderRadius: BorderRadius.circular(4.0),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 16.0),
-                        width: MediaQuery.of(context).size.width,
-                        child: Text(
-                          'Delete ${_selectedSong.length} tracks',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headline5?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.swap_vert),
+                            const SizedBox(width: 16.0),
+                            Text(
+                              'Sorting',
+                              style: Theme.of(context).textTheme.caption?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
+                            ),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8.0),
-                ],
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 24.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).dividerColor,
+                    border: Border.symmetric(horizontal: BorderSide(color: Theme.of(context).dividerColor)),
+                  ),
+                  child: const SizedBox(),
+                ),
+                const SizedBox(height: 8.0),
+                ReorderableListView(
+                  shrinkWrap: true,
+                  dragStartBehavior: DragStartBehavior.start,
+                  physics: const ClampingScrollPhysics(),
+                  children: <Widget>[
+                    ...List.generate(
+                      _songs.length,
+                      (index) => SongTile(
+                        key: UniqueKey(),
+                        onCheckChanged: (value) {
+                          print(value);
+                          if (value != null && value == true && _selectedSong.contains(_songs[index]) == false) {
+                            setState(() {
+                              _selectedSong.add(_songs[index]);
+                            });
+                          } else {
+                            setState(() {
+                              _selectedSong.removeWhere((element) => element.id == _songs[index].id);
+                            });
+                          }
+                        },
+                        canChoose: true,
+                        canMove: true,
+                        initialCheck: _selectedSong.contains(_songs[index]),
+                        songModel: _songs[index],
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                        onTap: () {},
+                        border: index == 0
+                            ? const Border.symmetric(
+                                horizontal: BorderSide(color: AppColors.c7A7C81),
+                              )
+                            : const Border(
+                                bottom: BorderSide(color: AppColors.c7A7C81),
+                              ),
+                      ),
+                    )
+                  ],
+                  onReorder: (int oldIndex, int newIndex) {
+                    setState(() {
+                      _songs.insert(newIndex, listSong.removeAt(oldIndex));
+                    });
+                  },
+                ),
+                const SizedBox(height: 32.0),
+              ],
+              titlePadding: const EdgeInsets.symmetric(vertical: 16.0),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Visibility(
+                visible: _selectedSong.isNotEmpty,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: InkWellWrapper(
+                        color: Theme.of(context).primaryColor,
+                        onTap: () {},
+                        borderRadius: BorderRadius.circular(4.0),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 16.0),
+                          width: MediaQuery.of(context).size.width,
+                          child: Text(
+                            'Delete ${_selectedSong.length} tracks',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headline5?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8.0),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
