@@ -17,7 +17,6 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
     fetchData().then((value) => Get.offAllNamed(AppRoutes.onBoarding));
   }
 

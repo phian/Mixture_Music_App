@@ -36,7 +36,7 @@ class MixSongCard extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: cardRadius ?? BorderRadius.circular(8.0),
-        color: cardBackgroundColor ?? AppColors.coolBlue.withOpacity(0.7),
+        color: cardBackgroundColor ?? AppColors.coolColor.withOpacity(0.7),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,

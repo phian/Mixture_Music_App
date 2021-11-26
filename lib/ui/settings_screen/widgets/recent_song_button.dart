@@ -41,7 +41,7 @@ class RecentSongButton extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(20.0),
               decoration: BoxDecoration(
-                color: iconBackgroundColor ?? AppColors.darkBlue,
+                color: iconBackgroundColor ?? AppColors.coldColor,
                 borderRadius: BorderRadius.circular(8.0),
               ),
               child: icon ??
@@ -58,7 +58,7 @@ class RecentSongButton extends StatelessWidget {
               style: titleStyle ??
                   AppTextStyles.lightTextTheme.caption?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: iconBackgroundColor ?? AppColors.darkBlue,
+                    color: iconBackgroundColor ?? AppColors.coldColor,
                   ),
             ),
           ],

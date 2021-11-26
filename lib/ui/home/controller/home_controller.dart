@@ -42,13 +42,13 @@ class HomeController extends GetxController {
     bool isDarkMode = false;
 
     if (temp <= 5) {
-      theme = AppThemes.buildTheme(AppColors.darkBlue, isDarkMode);
+      theme = AppThemes.buildTheme(AppColors.coldColor, isDarkMode);
     } else if (temp > 5 && temp <= 17) {
-      theme = AppThemes.buildTheme(AppColors.coolBlue, isDarkMode);
+      theme = AppThemes.buildTheme(AppColors.coolColor, isDarkMode);
     } else if (temp > 17 && temp <= 25) {
-      theme = AppThemes.buildTheme(AppColors.fadedOrange, isDarkMode);
+      theme = AppThemes.buildTheme(AppColors.warmColor, isDarkMode);
     } else {
-      theme = AppThemes.buildTheme(AppColors.orange, isDarkMode);
+      theme = AppThemes.buildTheme(AppColors.hotColor, isDarkMode);
     }
 
     Get.changeTheme(theme);
