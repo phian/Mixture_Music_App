@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-
 import 'routing/route_generator.dart';
+import 'ui/home/controller/home_controller.dart';
 import 'ui/splash_screen.dart';
 
 void main() async {
@@ -13,20 +13,28 @@ void main() async {
   await Firebase.initializeApp();
   await Hive.initFlutter();
   await Hive.openBox<List<String>?>('recentSearch');
+
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
     ),
   );
 
-  runApp(
-    GetMaterialApp(
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  MyApp({Key? key}) : super(key: key);
+
+  final homeController = Get.put(HomeController());
+
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: RouteGenerator().onGenerateRoute,
-
-      // theme: ThemeData.light(),
-      // darkTheme: ThemeData.dark(),
-    ),
-  );
+      themeMode: ThemeMode.light,
+    );
+  }
 }

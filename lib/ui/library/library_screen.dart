@@ -18,7 +18,8 @@ class LibraryScreen extends StatefulWidget {
   State<LibraryScreen> createState() => _LibraryScreenState();
 }
 
-class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateMixin {
+class _LibraryScreenState extends State<LibraryScreen>
+    with TickerProviderStateMixin {
   late final TabController _tabController;
   ViewType _viewType = ViewType.list;
   int _selectedIndex = 0;
@@ -51,7 +52,8 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                       children: [
                         Text(
                           'Your Library',
-                          style: AppTextStyles.lightTextTheme.headline4?.copyWith(
+                          style:
+                              AppTextStyles.lightTextTheme.headline4?.copyWith(
                             fontSize: 30.0,
                             color: AppColors.black,
                           ),
@@ -75,16 +77,18 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                           });
                         },
                         isScrollable: true,
-                        indicatorColor: AppColors.darkBlue,
+                        indicatorColor: Theme.of(context).primaryColor,
                         indicatorSize: TabBarIndicatorSize.label,
                         indicatorWeight: 3.0,
-                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                        physics: const AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics()),
                         tabs: List.generate(
                           libraryTitle.length,
                           (index) => Tab(
                             icon: Text(
                               libraryTitle[index],
-                              style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
+                              style: AppTextStyles.lightTextTheme.subtitle1
+                                  ?.copyWith(
                                 color: AppColors.black,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 16.0,
@@ -129,8 +133,10 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                             },
                             duration: const Duration(milliseconds: 300),
                             child: _viewType == ViewType.list
-                                ? _LibraryListView(libraries: libraryExampleModels)
-                                : _LibraryGridView(libraries: libraryExampleModels),
+                                ? _LibraryListView(
+                                    libraries: libraryExampleModels)
+                                : _LibraryGridView(
+                                    libraries: libraryExampleModels),
                           ),
                         ),
                 ),
