@@ -27,8 +27,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.4
-  get: ^4.3.8
-  just_audio: ^0.9.17
+  get: ^4.5.1
+  just_audio: ^0.9.18
   #  audioplayers: ^0.20.1
   flutter_svg: ^0.23.0+1
   http: ^0.13.4
@@ -44,8 +44,9 @@ dependencies:
   package_info_plus: ^1.3.0
   fluttertoast: ^8.0.8
   image_picker: ^0.8.4+4
+  qr_flutter: ^4.0.0
 
-  geolocator: ^7.7.1
+  geolocator: ^8.0.0
   geocoding: ^2.0.1
   weather_icons: ^3.0.0
   intl: ^0.17.0
@@ -68,14 +69,14 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
-# The following section is specific to Flutter.
+# The following sections is specific to Flutter.
 flutter:
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
+  # To add assets to your application, add an assets sections, like this:
   # assets:
   #   - images/a_dot_ham.jpeg
   assets:
@@ -88,8 +89,8 @@ flutter:
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
 
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
+  # To add custom fonts to your application, add a fonts sections here,
+  # in this "flutter" sections. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:

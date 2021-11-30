@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class InkWellWrapper extends StatelessWidget {
-  final Color color;
+  final Color? color;
   final VoidCallback? onTap;
   final Widget child;
   final BorderRadius? borderRadius;
 
   const InkWellWrapper({
     Key? key,
-    required this.color,
+    this.color,
     this.onTap,
     required this.child,
     this.borderRadius,
@@ -17,7 +17,7 @@ class InkWellWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: borderRadius ?? BorderRadius.circular(8.0),
+      borderRadius: borderRadius ?? BorderRadius.zero,
       child: Container(
         color: color,
         child: Material(

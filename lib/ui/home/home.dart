@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../constants/app_constants.dart';
+import '../../widgets/song_tile.dart';
 import '../player_screen/controller/music_player_controller.dart';
 import 'controller/home_controller.dart';
 import 'widget/playlist_header.dart';
 import 'widget/refresh_indicator.dart';
-import '../../widgets/song_tile.dart';
 import 'widget/weather_infor.dart';
 
 class Home extends StatelessWidget {
@@ -57,7 +57,7 @@ class Home extends StatelessWidget {
                   thickness: 0.5,
                   height: 16,
                 ),
-                PlaylistHeader(coverImageUrl: listSong.map((e) => e.coverImageUrl).toList()),
+                PlaylistHeader(coverImageUrl: listSong.map((e) => e.coverImageUrl ?? '').toList()),
                 const Divider(
                   indent: 16,
                   endIndent: 16,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RoundedInkWellWrapper extends StatelessWidget {
-  final Color color;
+  final Color? color;
 
   final VoidCallback? onTap;
 
@@ -9,7 +9,7 @@ class RoundedInkWellWrapper extends StatelessWidget {
 
   const RoundedInkWellWrapper({
     Key? key,
-    required this.color,
+    this.color,
     this.onTap,
     required this.child,
   }) : super(key: key);

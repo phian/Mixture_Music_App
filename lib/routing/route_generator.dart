@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/edit_profile_screen.dart';
 import 'package:mixture_music_app/ui/feedback_and_report_screen.dart';
+import 'package:mixture_music_app/ui/playlist_detail_screen/playlist_detail_screen.dart';
 
 import '../ui/forgot_password.dart';
 import '../ui/home/home.dart';
@@ -42,6 +43,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: (_) => const FeedbackAndReportScreen());
       case AppRoutes.editProfile:
         return MaterialPageRoute(builder: (_) => const EditProfileScreen());
+      case AppRoutes.playlistDetailScreen:
+        return MaterialPageRoute(builder: (_) => const PlayListDetailScreen());
       default:
         throw const RouteException('Route not found');
     }

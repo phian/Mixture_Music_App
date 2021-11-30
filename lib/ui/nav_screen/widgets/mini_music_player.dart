@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../constants/app_constants.dart';
 import '../../../models/song_model.dart';
 import '../../../widgets/marquee_text.dart';
@@ -50,7 +51,7 @@ class MiniMusicPlayer extends StatelessWidget {
                       Hero(
                         tag: 'Artwork',
                         child: Image.network(
-                          song!.coverImageUrl,
+                          song?.coverImageUrl ?? '',
                           width: 45,
                           height: 45,
                           fit: BoxFit.cover,
@@ -63,11 +64,11 @@ class MiniMusicPlayer extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             MarqueeText(
-                              song!.title,
+                              song?.title ?? '',
                               style: theme.textTheme.headline6!.copyWith(fontSize: 16),
                             ),
                             MarqueeText(
-                              song!.artist,
+                              song?.artist ?? '',
                               //overflow: TextOverflow.ellipsis,
                               style: theme.textTheme.caption!.copyWith(
                                 fontSize: 14,
