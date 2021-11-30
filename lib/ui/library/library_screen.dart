@@ -80,7 +80,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                           });
                         },
                         isScrollable: true,
-                        indicatorColor: AppColors.darkBlue,
+                        indicatorColor: Theme.of(context).primaryColor,
                         indicatorSize: TabBarIndicatorSize.label,
                         indicatorWeight: 3.0,
                         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
