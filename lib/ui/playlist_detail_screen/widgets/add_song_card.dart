@@ -14,26 +14,61 @@ class AddSongCard extends StatefulWidget {
     this.imageHeight = 70.0,
     this.imageWidth = 70.0,
     this.imageRadius,
+    this.isPlaying = false,
   }) : super(key: key);
 
   final SongModel song;
-  final void Function() onAddButtonTap;
-  final void Function() onPlayTap;
+  final void Function(SongModel song) onAddButtonTap;
+  final void Function(bool isPlaying) onPlayTap;
   final double imageWidth;
   final double imageHeight;
   final BorderRadius? imageRadius;
+  final bool isPlaying;
 
   @override
   _AddSongCardState createState() => _AddSongCardState();
 }
 
-class _AddSongCardState extends State<AddSongCard> {
+class _AddSongCardState extends State<AddSongCard> with SingleTickerProviderStateMixin {
+  late final AnimationController _animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+  late bool _isPlaying = widget.isPlaying;
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant AddSongCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    print('Here');
+    setState(() {
+      _isPlaying = widget.isPlaying;
+      if (_isPlaying == false) {
+        _animationController.reverse();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         InkWellWrapper(
-          onTap: widget.onPlayTap,
+          onTap: () {
+            setState(() {
+              _isPlaying = !_isPlaying;
+            });
+
+            if (_isPlaying) {
+              _animationController.forward();
+            } else {
+              _animationController.reverse();
+            }
+
+            widget.onPlayTap.call(_isPlaying);
+          },
           child: Stack(
             alignment: Alignment.center,
             children: [
@@ -50,7 +85,7 @@ class _AddSongCardState extends State<AddSongCard> {
                   },
                 ),
               ),
-              const Icon(Icons.play_arrow, size: 40.0, color: AppColors.white),
+              AnimatedIcon(icon: AnimatedIcons.play_pause, progress: _animationController, size: 40.0, color: AppColors.white),
             ],
           ),
         ),
@@ -68,7 +103,9 @@ class _AddSongCardState extends State<AddSongCard> {
         ),
         const SizedBox(width: 16.0),
         RoundedInkWellWrapper(
-          onTap: widget.onAddButtonTap,
+          onTap: () {
+            widget.onAddButtonTap.call(widget.song);
+          },
           child: Container(
             padding: const EdgeInsets.all(2.0),
             child: Icon(Icons.add, color: Theme.of(context).primaryColor),

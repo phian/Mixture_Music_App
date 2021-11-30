@@ -13,14 +13,16 @@ class AddSongSheet extends StatefulWidget {
   const AddSongSheet({
     Key? key,
     required this.songs,
+    required this.onAddingSongs,
+    required this.onPlayingSong,
     this.sheetHeight,
-    this.onAddingSongs,
     this.sheetRadius,
   }) : super(key: key);
 
   final List<SongModel> songs;
   final double? sheetHeight;
-  final void Function(List<SongModel> songs)? onAddingSongs;
+  final void Function(List<SongModel> songs) onAddingSongs;
+  final void Function(SongModel playingSong) onPlayingSong;
   final BorderRadius? sheetRadius;
 
   @override
@@ -32,6 +34,9 @@ class _AddSongSheetState extends State<AddSongSheet> {
     'Recently played',
     'Suggested',
   ];
+  final List<SongModel> _addedSongs = [];
+  late final List<SongModel> _songs = widget.songs;
+  int _playingIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -66,10 +71,14 @@ class _AddSongSheetState extends State<AddSongSheet> {
                 enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
                 errorBorder: const OutlineInputBorder(borderSide: BorderSide.none),
                 filled: true,
-                fillColor: AppColors.black12,
+                fillColor: AppColors.black12.withOpacity(0.1),
                 prefixIcon: const Icon(Icons.search),
                 hintText: 'Search',
-                hintStyle: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColors.hintColor),
+                hintStyle: Theme.of(context).textTheme.headline5?.copyWith(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.w500,
+                      color: AppColors.subTextColor,
+                    ),
               ),
             ),
           ),
@@ -86,7 +95,7 @@ class _AddSongSheetState extends State<AddSongSheet> {
                 _addSongTypes.length,
                 (index) => Container(
                   width: MediaQuery.of(context).size.width * 0.95,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.0), color: AppColors.black12),
+                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.0), color: AppColors.black12.withOpacity(0.05)),
                   child: Stack(
                     alignment: Alignment.topCenter,
                     children: [
@@ -97,13 +106,27 @@ class _AddSongSheetState extends State<AddSongSheet> {
                           child: Column(
                             children: [
                               ...List.generate(
-                                listSong.length,
+                                _songs.length,
                                 (index) => Container(
                                   margin: const EdgeInsets.only(bottom: 16.0),
                                   child: AddSongCard(
                                     song: listSong[index],
-                                    onAddButtonTap: () {},
-                                    onPlayTap: () {},
+                                    isPlaying: _playingIndex == index,
+                                    onAddButtonTap: (song) {
+                                      setState(() {
+                                        _addedSongs.add(song);
+                                        widget.onAddingSongs.call(_addedSongs);
+                                        _songs.removeWhere((element) => element.id == song.id);
+                                      });
+                                    },
+                                    onPlayTap: (isPlaying) {
+                                      if (isPlaying) {
+                                        setState(() {
+                                          _playingIndex = index;
+                                          widget.onPlayingSong.call(_songs[index]);
+                                        });
+                                      }
+                                    },
                                     imageRadius: BorderRadius.circular(4.0),
                                   ),
                                 ),

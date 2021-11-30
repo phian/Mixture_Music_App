@@ -201,6 +201,8 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                 songs: listSong,
                 sheetHeight: MediaQuery.of(context).size.height * 0.9,
                 sheetRadius: const BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                onAddingSongs: (songs) {},
+                onPlayingSong: (playingSong) {},
               );
             });
         break;
