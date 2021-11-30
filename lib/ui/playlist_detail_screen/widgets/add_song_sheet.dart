@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
@@ -117,6 +118,12 @@ class _AddSongSheetState extends State<AddSongSheet> {
                                         _addedSongs.add(song);
                                         widget.onAddingSongs.call(_addedSongs);
                                         _songs.removeWhere((element) => element.id == song.id);
+                                        Fluttertoast.showToast(
+                                          msg: 'Song added',
+                                          fontSize: 18.0,
+                                          backgroundColor: AppColors.c7A7C81,
+                                          textColor: AppColors.white,
+                                        );
                                       });
                                     },
                                     onPlayTap: (isPlaying) {
