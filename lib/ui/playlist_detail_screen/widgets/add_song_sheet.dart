@@ -33,7 +33,7 @@ class AddSongSheet extends StatefulWidget {
 class _AddSongSheetState extends State<AddSongSheet> {
   final List<String> _addSongTypes = [
     'Recently played',
-    'Suggested',
+    'Favourite',
   ];
   final List<SongModel> _addedSongs = [];
   late final List<SongModel> _songs = widget.songs;
