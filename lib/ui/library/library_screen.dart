@@ -154,10 +154,17 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
   }
 }
 
-class _LibraryListView extends StatelessWidget {
+class _LibraryListView extends StatefulWidget {
   const _LibraryListView({required this.libraries});
 
   final List<LibraryModel> libraries;
+
+  @override
+  State<_LibraryListView> createState() => _LibraryListViewState();
+}
+
+class _LibraryListViewState extends State<_LibraryListView> {
+  int _playingIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -167,11 +174,19 @@ class _LibraryListView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           ...List.generate(
-            libraries.length,
+            widget.libraries.length,
             (index) => LibraryListViewCard(
-              libraryModel: libraries[index],
-              onTap: (isPlaying) {},
-              isPlaying: true,
+              libraryModel: widget.libraries[index],
+              onTap: (isPlaying) {
+                if (isPlaying) {
+                  setState(() {
+                    _playingIndex = index;
+                  });
+                } else {
+                  _playingIndex = -1;
+                }
+              },
+              isPlaying: _playingIndex == index,
               borderRadius: BorderRadius.zero,
               cardColor: Colors.transparent,
               cardBorder: index == 0
@@ -186,10 +201,17 @@ class _LibraryListView extends StatelessWidget {
   }
 }
 
-class _LibraryGridView extends StatelessWidget {
+class _LibraryGridView extends StatefulWidget {
   const _LibraryGridView({required this.libraries});
 
   final List<LibraryModel> libraries;
+
+  @override
+  State<_LibraryGridView> createState() => _LibraryGridViewState();
+}
+
+class _LibraryGridViewState extends State<_LibraryGridView> {
+  int _playingIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -203,13 +225,22 @@ class _LibraryGridView extends StatelessWidget {
             runSpacing: 8.0,
             children: [
               ...List.generate(
-                libraries.length,
+                widget.libraries.length,
                 (index) => Container(
                   margin: const EdgeInsets.only(top: 16.0),
                   child: LibraryGridViewCard(
-                    libraryModel: libraries[index],
-                    onTap: (isPlaying) {},
+                    libraryModel: widget.libraries[index],
+                    onTap: (isPlaying) {
+                      if (isPlaying) {
+                        setState(() {
+                          _playingIndex = index;
+                        });
+                      } else {
+                        _playingIndex = -1;
+                      }
+                    },
                     imageRadius: BorderRadius.circular(16.0),
+                    isPlaying: _playingIndex == index,
                   ),
                 ),
               ),

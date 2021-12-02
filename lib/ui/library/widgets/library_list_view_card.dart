@@ -4,6 +4,7 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
+import 'package:mixture_music_app/widgets/rounded_inkwell_wrapper.dart';
 
 class LibraryListViewCard extends StatefulWidget {
   const LibraryListViewCard({
@@ -33,10 +34,29 @@ class LibraryListViewCard extends StatefulWidget {
   State<LibraryListViewCard> createState() => _LibraryListViewCardState();
 }
 
-class _LibraryListViewCardState extends State<LibraryListViewCard> {
+class _LibraryListViewCardState extends State<LibraryListViewCard> with SingleTickerProviderStateMixin {
   late final bool _isLiked = widget.libraryModel.isFavourite ?? false;
   int likeCount = 0;
   late bool _isPlaying = widget.isPlaying;
+  late final AnimationController _aniController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+
+  @override
+  void dispose() {
+    _aniController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant LibraryListViewCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      _isPlaying = widget.isPlaying;
+    });
+
+    if (_isPlaying == false) {
+      _aniController.reverse();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +64,12 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
       onTap: widget.onTap != null
           ? () {
               setState(() {
+                if (_isPlaying) {
+                  _aniController.reverse();
+                } else {
+                  _aniController.forward();
+                }
+
                 _isPlaying = !_isPlaying;
                 widget.onTap?.call(_isPlaying);
               });
@@ -123,19 +149,25 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> {
               ),
             ),
             const SizedBox(width: 8.0),
-            if (widget.isPlaying)
-              IconButton(
-                onPressed: () {
-                  setState(() {
-                    _isPlaying = !_isPlaying;
-                    widget.onTap?.call(_isPlaying);
-                  });
-                },
-                icon: Icon(
-                  _isPlaying ? Icons.pause_sharp : Icons.play_arrow,
-                  color: Theme.of(context).primaryColor,
-                ),
+            RoundedInkWellWrapper(
+              onTap: () {
+                setState(() {
+                  if (_isPlaying) {
+                    _aniController.reverse();
+                  } else {
+                    _aniController.forward();
+                  }
+
+                  _isPlaying = !_isPlaying;
+                  widget.onTap?.call(_isPlaying);
+                });
+              },
+              child: Container(
+                decoration: const BoxDecoration(shape: BoxShape.circle),
+                padding: const EdgeInsets.all(8.0),
+                child: AnimatedIcon(icon: AnimatedIcons.play_pause, progress: _aniController),
               ),
+            ),
             const SizedBox(width: 8.0),
             widget.libraryModel.isFavourite != null
                 ? LikeButton(
