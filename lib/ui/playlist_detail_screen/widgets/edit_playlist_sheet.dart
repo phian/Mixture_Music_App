@@ -40,6 +40,9 @@ class EditPlaylistSheet extends StatefulWidget {
 class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
   final List<SongModel> _selectedSong = [];
   late final List<SongModel> _songs = widget.songs;
+  late final TextEditingController _playlistNameController = TextEditingController(text: widget.playlistModel.playlistName);
+  final List<String> _sortTypes = ['Alphabetical', 'Custom', 'Data Added (Newest)', 'Date Added Oldest'];
+  String _selectedSortType = 'Sorting';
 
   Future<XFile?> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -88,7 +91,11 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                     ),
                     InkWellWrapper(
                       borderRadius: BorderRadius.circular(4.0),
-                      onTap: () {},
+                      onTap: () {
+                        if (primaryFocus != null) {
+                          primaryFocus!.unfocus();
+                        }
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -153,8 +160,9 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                 const SizedBox(height: 32.0),
                 CustomTextField(
                   textFieldType: TextFieldType.name,
+                  onChanged: (value) {},
                   textFieldConfig: TextFieldConfig(
-                    controller: TextEditingController(text: widget.playlistModel.playlistName),
+                    controller: _playlistNameController,
                     textAlign: TextAlign.center,
                   ),
                   decorationConfig: const TextFieldDecorationConfig(
@@ -180,7 +188,49 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                   padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
                   child: IntrinsicWidth(
                     child: InkWellWrapper(
-                      onTap: () {},
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          backgroundColor: Colors.transparent,
+                          builder: (_) {
+                            return BottomSheetWrapper(
+                              contentItems: [
+                                ...List.generate(
+                                  _sortTypes.length,
+                                  (index) => InkWellWrapper(
+                                    onTap: () {
+                                      setState(() {
+                                        _selectedSortType = _sortTypes[index];
+                                      });
+                                    },
+                                    borderRadius: BorderRadius.zero,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 24.0),
+                                      width: MediaQuery.of(context).size.width,
+                                      decoration: BoxDecoration(
+                                        border: index == 0
+                                            ? Border.symmetric(
+                                                horizontal: BorderSide(color: Theme.of(context).dividerColor, width: 1.5),
+                                              )
+                                            : Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1.5)),
+                                      ),
+                                      child: Text(
+                                        _sortTypes[index],
+                                        textAlign: TextAlign.center,
+                                        style: Theme.of(context).textTheme.caption?.copyWith(
+                                              fontSize: 18.0,
+                                            ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                              dividerThickness: 0.0,
+                              bottomSheetRadius: const BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                            );
+                          },
+                        );
+                      },
                       borderRadius: BorderRadius.circular(4.0),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -189,7 +239,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                             const Icon(Icons.swap_vert),
                             const SizedBox(width: 16.0),
                             Text(
-                              'Sorting',
+                              _selectedSortType,
                               style: Theme.of(context).textTheme.caption?.copyWith(
                                     fontSize: 16.0,
                                   ),

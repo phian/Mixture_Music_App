@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
+import 'package:mixture_music_app/widgets/rounded_inkwell_wrapper.dart';
 
 class LibraryGridViewCard extends StatefulWidget {
   const LibraryGridViewCard({
@@ -23,8 +24,27 @@ class LibraryGridViewCard extends StatefulWidget {
   State<LibraryGridViewCard> createState() => _LibraryGridViewCardState();
 }
 
-class _LibraryGridViewCardState extends State<LibraryGridViewCard> {
+class _LibraryGridViewCardState extends State<LibraryGridViewCard> with SingleTickerProviderStateMixin {
   late bool _isPlaying = widget.isPlaying;
+  late final AnimationController _aniController = AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
+
+  @override
+  void dispose() {
+    _aniController.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didUpdateWidget(covariant LibraryGridViewCard oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    setState(() {
+      _isPlaying = widget.isPlaying;
+    });
+
+    if (_isPlaying == false) {
+      _aniController.reverse();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +62,12 @@ class _LibraryGridViewCardState extends State<LibraryGridViewCard> {
                       onTap: widget.onTap != null
                           ? () {
                               setState(() {
+                                if (_isPlaying) {
+                                  _aniController.reverse();
+                                } else {
+                                  _aniController.forward();
+                                }
+
                                 _isPlaying = !_isPlaying;
                                 widget.onTap?.call(_isPlaying);
                               });
@@ -56,11 +82,23 @@ class _LibraryGridViewCardState extends State<LibraryGridViewCard> {
                         ),
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4.0, bottom: 4.0),
-                      child: Icon(
-                        _isPlaying ? Icons.pause_sharp : Icons.play_arrow,
-                        color: Theme.of(context).primaryColor,
+                    RoundedInkWellWrapper(
+                      onTap: () {
+                        setState(() {
+                          if (_isPlaying) {
+                            _aniController.reverse();
+                          } else {
+                            _aniController.forward();
+                          }
+
+                          _isPlaying = !_isPlaying;
+                          widget.onTap?.call(_isPlaying);
+                        });
+                      },
+                      child: Container(
+                        decoration: const BoxDecoration(shape: BoxShape.circle),
+                        padding: const EdgeInsets.all(4.0),
+                        child: AnimatedIcon(icon: AnimatedIcons.play_pause, progress: _aniController, color: Theme.of(context).primaryColor),
                       ),
                     )
                   ],
