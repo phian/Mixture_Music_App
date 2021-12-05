@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mixture_music_app/routing/routes.dart';
 
 import 'routing/route_generator.dart';
 import 'ui/home/controller/home_controller.dart';
-import 'ui/splash_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +31,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      home: const SplashScreen(),
+      // home: const SplashScreen(),
+      // onGenerateRoute: RouteGenerator().onGenerateRoute,
       debugShowCheckedModeBanner: false,
-      onGenerateRoute: RouteGenerator().onGenerateRoute,
       themeMode: ThemeMode.light,
+      getPages: RouteGenerator.pages(),
+      initialRoute: AppRoutes.splash,
     );
   }
 }

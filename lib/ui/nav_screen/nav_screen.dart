@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
+import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/models/auth/facebook/facebook_user_picture_model.dart';
 import 'package:mixture_music_app/ui/search_screen/search_screen.dart';
 
-import '../../models/facebook/facebook_user_model.dart';
-import '../../models/facebook/facebook_user_picture_model.dart';
 import '../../routing/routes.dart';
 import '../home/home.dart';
 import '../library/library_screen.dart';
 import '../player_screen/controller/music_player_controller.dart';
-
 import '../settings_screen/settings_screen.dart';
 import 'widgets/mini_music_player.dart';
 
@@ -40,6 +40,19 @@ class _NavScreenState extends State<NavScreen> {
   ];
 
   final musicController = Get.put(MusicPlayerController());
+  final _authController = Get.find<AuthController>();
+
+  @override
+  void initState() {
+    super.initState();
+    print(_authController.googleUser);
+    _getFbUserData();
+  }
+
+  void _getFbUserData() async {
+    var res = await _authController.getFacebookUserData();
+    print(res.name);
+  }
 
   @override
   Widget build(BuildContext context) {

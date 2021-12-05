@@ -55,5 +55,13 @@ extension StringExtension on String {
         return 'Password is not valid!';
       }
     }
+
+    String pattern = VerifyTextFieldRegex.passwordPattern;
+    var result = RegExp(pattern).hasMatch(this);
+    if (result) {
+      return null;
+    } else {
+      return 'Password is not valid!';
+    }
   }
 }
