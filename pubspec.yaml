@@ -46,6 +46,7 @@ dependencies:
   fluttertoast: ^8.0.8
   image_picker: ^0.8.4+4
   qr_flutter: ^4.0.0
+  image_cropper: ^1.4.1
 
   geolocator: ^8.0.0
   geocoding: ^2.0.1

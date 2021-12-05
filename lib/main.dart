@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/bindings/auth_binding.dart';
+import 'package:mixture_music_app/ui/splash_screen.dart';
 
 import 'routing/route_generator.dart';
 import 'ui/home/controller/home_controller.dart';
@@ -31,12 +32,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      // home: const SplashScreen(),
+      home: const SplashScreen(),
       // onGenerateRoute: RouteGenerator().onGenerateRoute,
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
       getPages: RouteGenerator.pages(),
-      initialRoute: AppRoutes.splash,
+      // initialRoute: AppRoutes.splash,
+      initialBinding: const AuthBinding(),
     );
   }
 }

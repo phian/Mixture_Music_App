@@ -185,6 +185,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       toastLength: Toast.LENGTH_SHORT,
                                       backgroundColor: Theme.of(context).primaryColor,
                                     );
+                                    await _authController.saveAuthType('facebook');
                                     Get.offAllNamed(AppRoutes.navigationScreen);
                                     break;
                                   case LoginStatus.cancelled:
@@ -223,6 +224,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               onTap: () async {
                                 var user = await _authController.signInWithGoogle();
                                 if (user != null) {
+                                  await _authController.saveAuthType('google');
                                   Get.offAllNamed(AppRoutes.navigationScreen);
                                 }
                               },
@@ -283,6 +285,8 @@ class _SignInScreenState extends State<SignInScreen> {
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Theme.of(context).primaryColor,
         );
+        await _authController.updateAuthUser(user);
+        await _authController.saveAuthType('authUser');
         Get.offAllNamed(AppRoutes.navigationScreen);
       }
       if (_userNameController.text == user.userName && _passwordController.text != user.password) {
