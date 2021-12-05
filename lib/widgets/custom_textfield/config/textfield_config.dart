@@ -22,6 +22,7 @@ class TextFieldConfig {
   final int? maxLines;
   final TextInputAction? textInputAction;
   final TextEditingController? controller;
+  final String? Function(String? value)? validator;
 
   const TextFieldConfig({
     this.initialValue,
@@ -45,5 +46,6 @@ class TextFieldConfig {
     this.maxLines,
     this.textInputAction,
     this.controller,
+    this.validator,
   });
 }

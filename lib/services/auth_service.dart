@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -56,12 +57,14 @@ class AuthService {
   late LoginResult _result;
   late AccessToken? _accessToken;
 
-  LoginResult get result => _result;
-  AccessToken? get accessToken => _accessToken;
+  LoginResult get facebookLoginResult => _result;
 
-  Future<LoginResult> signInWithFacebook() async {
+  AccessToken? get facebookAccessToken => _accessToken;
+
+  Future<LoginResult?> signInWithFacebook() async {
+    LoginResult? result;
     try {
-      final result = await FacebookAuth.instance.login();
+      result = await FacebookAuth.instance.login();
       if (result.status == LoginStatus.success) {
         // User logged in
         _accessToken = result.accessToken!;
@@ -77,7 +80,7 @@ class AuthService {
     await FacebookAuth.instance.logOut();
   }
 
-  Future<Map<String, dynamic>> getFacebookUSerData() async {
+  Future<Map<String, dynamic>> getFacebookUserData() async {
     Map<String, dynamic> userData = {};
     try {
       userData = await FacebookAuth.instance.getUserData();
@@ -87,5 +90,36 @@ class AuthService {
     }
 
     return userData;
+  }
+
+  Future<void> addUser({
+    required String userName,
+    required String password,
+  }) async {
+    var result = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).set(
+      {'user_name': userName, 'password': password},
+    ).catchError(
+      (err) {
+        print(err);
+      },
+    );
+
+    return result;
+  }
+
+  Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
+    return await FirebaseFirestore.instance.collection('user_accounts').get().catchError((err) {
+      print(err);
+    });
+  }
+
+  Future<DocumentSnapshot<Map<String, dynamic>>> getUserByUserName(String userName) async {
+    var res = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).get();
+    print(res.data());
+    return res;
+  }
+
+  Future<void> resetAccountPassword(String userName, String newPassword) async {
+    return await FirebaseFirestore.instance.collection('user_accounts').doc(userName).update({'password': newPassword});
   }
 }

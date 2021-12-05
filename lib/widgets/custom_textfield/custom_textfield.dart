@@ -37,7 +37,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       TextEditingController(
         text: widget.textFieldConfig.initialValue,
       );
-  bool _isObscureText = false;
+  bool _isObscureText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -70,9 +70,10 @@ class _CustomTextFieldState extends State<CustomTextField> {
       textAlignVertical: widget.textFieldConfig.textAlignVertical,
       readOnly: widget.textFieldConfig.readOnly,
       textInputAction: widget.textFieldConfig.textInputAction,
-      validator: (value) {
-        return _verifyData(value);
-      },
+      validator: widget.textFieldConfig.validator ??
+          (value) {
+            return _verifyData(value);
+          },
       decoration: InputDecoration(
         constraints: widget.decorationConfig.constraints,
         border: widget.decorationConfig.border,
@@ -144,7 +145,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
     if (value != null) {
       switch (widget.textFieldType) {
         case TextFieldType.password:
-          return null;
+          return value.validatePassword();
         case TextFieldType.email:
           return value.validateEmail();
         case TextFieldType.phoneNumber:

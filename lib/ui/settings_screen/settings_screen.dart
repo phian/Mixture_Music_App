@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/models/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/settings_screen/constants/settings_screen_constants.dart';
 import 'package:mixture_music_app/ui/settings_screen/widgets/setting_tile.dart';
