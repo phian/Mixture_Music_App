@@ -95,9 +95,10 @@ class AuthService {
   Future<void> addUser({
     required String userName,
     required String password,
+    required String avatarUrl,
   }) async {
     var result = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).set(
-      {'user_name': userName, 'password': password},
+      {'user_name': userName, 'password': password, 'avatar_url': avatarUrl},
     ).catchError(
       (err) {
         print(err);

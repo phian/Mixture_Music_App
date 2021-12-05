@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/services/firebase_service.dart';
+import 'package:mixture_music_app/services/share_preference_service.dart';
 
 import '../services/auth_service.dart';
 
 class AuthRepo {
   final AuthService _authService = AuthService();
+  final FirebaseService _firebaseService = const FirebaseService();
+  final SharePrefService _sharePrefService = const SharePrefService();
 
   User? get googleUser => _authService.googleUser;
 
@@ -72,8 +78,9 @@ class AuthRepo {
   Future<void> addUser({
     required String userName,
     required String password,
+    required String avatarUrl,
   }) async {
-    return await _authService.addUser(userName: userName, password: password);
+    return await _authService.addUser(userName: userName, password: password, avatarUrl: avatarUrl);
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
@@ -104,5 +111,23 @@ class AuthRepo {
 
   Future<void> resetAccountPassword(String userName, String newPassword) async {
     return await _authService.resetAccountPassword(userName, newPassword);
+  }
+
+  Future<String> uploadAvatarToFirebase(File image) async {
+    var res = await _firebaseService.uploadAvatarToFirebase(image);
+
+    return await res.ref.getDownloadURL();
+  }
+
+  Future<void> saveAuthType(String authType) async {
+    return await _sharePrefService.saveAuthType(authType);
+  }
+
+  Future<String> getAuthType() async {
+    return await _sharePrefService.getAuthType();
+  }
+
+  Future<void> updateAuthType(String newType) async {
+    return await _sharePrefService.updateAuthType(newType);
   }
 }

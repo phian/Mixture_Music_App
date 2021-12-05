@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -14,6 +16,7 @@ class AuthController extends GetxController {
   LoginResult get facebookLoginResult => _authRepo.facebookLoginResult;
 
   AccessToken? get facebookAccessToken => _authRepo.facebookAccessToken;
+  AuthUserModel? authUser;
 
   // Google
   Future<User?> signInWithGoogle() async {
@@ -65,8 +68,9 @@ class AuthController extends GetxController {
   Future<void> addUser({
     required String userName,
     required String password,
+    required String avatarUrl,
   }) async {
-    return await _authRepo.addUser(userName: userName, password: password);
+    return await _authRepo.addUser(userName: userName, password: password, avatarUrl: avatarUrl);
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
@@ -83,5 +87,27 @@ class AuthController extends GetxController {
 
   Future<void> resetAccountPassword(String userName, String newPassword) async {
     return await _authRepo.resetAccountPassword(userName, newPassword);
+  }
+
+  Future<String> uploadAvatarToFirebase(File image) async {
+    return await _authRepo.uploadAvatarToFirebase(image);
+  }
+
+  Future<void> updateAuthUser(AuthUserModel? user) async {
+    if (user != null) {
+      authUser?.copyWith(user);
+    }
+  }
+
+  Future<void> saveAuthType(String authType) async {
+    return await _authRepo.saveAuthType(authType);
+  }
+
+  Future<String> getAuthType() async {
+    return await _authRepo.getAuthType();
+  }
+
+  Future<void> updateAuthType(String newType) async {
+    return await _authRepo.updateAuthType(newType);
   }
 }
