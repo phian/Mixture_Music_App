@@ -186,6 +186,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       backgroundColor: Theme.of(context).primaryColor,
                                     );
                                     await _authController.saveAuthType('facebook');
+                                    var fbUser = await _authController.getFacebookUserData();
                                     Get.offAllNamed(AppRoutes.navigationScreen);
                                     break;
                                   case LoginStatus.cancelled:
@@ -285,8 +286,9 @@ class _SignInScreenState extends State<SignInScreen> {
           toastLength: Toast.LENGTH_SHORT,
           backgroundColor: Theme.of(context).primaryColor,
         );
-        await _authController.updateAuthUser(user);
         await _authController.saveAuthType('authUser');
+        await _authController.saveAuthUserName(user.userName ?? '');
+        await _authController.saveAuthUserAvatar(user.avatarUrl ?? '');
         Get.offAllNamed(AppRoutes.navigationScreen);
       }
       if (_userNameController.text == user.userName && _passwordController.text != user.password) {

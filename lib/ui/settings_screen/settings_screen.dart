@@ -1,18 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
+import 'package:mixture_music_app/images/app_icons.dart';
+import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/settings_screen/constants/settings_screen_constants.dart';
+import 'package:mixture_music_app/ui/settings_screen/controller/setings_screen_controller.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/interface_sheet.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/notification_sheet.dart';
 import 'package:mixture_music_app/ui/settings_screen/widgets/setting_tile.dart';
-import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import 'package:mixture_music_app/widgets/loading_container.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({Key? key, required this.userModel}) : super(key: key);
-  final FacebookUserModel userModel;
+  const SettingsScreen({Key? key}) : super(key: key);
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -20,6 +26,12 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProviderStateMixin {
   String _appVersion = '';
+  FacebookUserModel? _facebookUser;
+  User? _googleUser;
+  AuthUserModel? _authUser;
+  final _authController = Get.find<AuthController>();
+  String _authType = '';
+  final _settingsController = Get.put(SettingsScreenController());
 
   @override
   void initState() {
@@ -32,6 +44,33 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     }, onError: (err) {
       print('error');
     });
+
+    _getAuthType();
+  }
+
+  void _getAuthType() async {
+    _authType = await _authController.getAuthType();
+    _checkAuthTypeAndInitUser();
+  }
+
+  void _checkAuthTypeAndInitUser() async {
+    switch (_authType) {
+      case 'facebook':
+        _facebookUser = await _authController.getFacebookUserData();
+        setState(() {});
+        break;
+      case 'google':
+        _googleUser = _authController.googleUser;
+        setState(() {});
+        break;
+      case 'authUser':
+        _authUser = AuthUserModel(
+          userName: await _authController.getAuthUserName(),
+          avatarUrl: await _authController.getAuthUserAvatar(),
+        );
+        setState(() {});
+        break;
+    }
   }
 
   @override
@@ -48,28 +87,78 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 'Settings',
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.headline4?.copyWith(
-                      fontSize: 30.0,
-                      color: AppColors.black,
-                    ),
+                  fontSize: 30.0,
+                  color: AppColors.black,
+                ),
               ),
             ),
             const SizedBox(height: 24.0),
             InkWellWrapper(
               color: Colors.transparent,
-              onTap: () {
-                Get.toNamed(AppRoutes.editProfile);
-              },
+              onTap: _authType == 'authUser'
+                  ? () async {
+                      var res = await Get.toNamed(
+                        AppRoutes.editProfile,
+                        arguments: _authUser,
+                      );
+
+                      if (res) {
+                        _authUser = AuthUserModel(
+                          userName: await _authController.getAuthUserName(),
+                          avatarUrl: await _authController.getAuthUserAvatar(),
+                        );
+                        setState(() {});
+                      }
+                    }
+                  : null,
               borderRadius: BorderRadius.zero,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Row(
                   children: [
                     ClipOval(
-                      child: Image.network(
-                        widget.userModel.picture!.url!,
-                        width: MediaQuery.of(context).size.width * 0.25,
-                        height: MediaQuery.of(context).size.width * 0.25,
-                      ),
+                      child: () {
+                        if (_authType == 'authUser') {
+                          if (_authUser!.avatarUrl != null) {
+                            return Image.network(
+                              _authUser!.avatarUrl!,
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: MediaQuery.of(context).size.width * 0.25,
+                              fit: BoxFit.cover,
+                              loadingBuilder: (_, child, chunkEvent) {
+                                if (chunkEvent == null) return child;
+
+                                return LoadingContainer(
+                                  width: MediaQuery.of(context).size.width * 0.25,
+                                  height: MediaQuery.of(context).size.width * 0.25,
+                                );
+                              },
+                            );
+                          } else {
+                            Image.asset(
+                              AppIcons.avatar,
+                              width: MediaQuery.of(context).size.width * 0.25,
+                              height: MediaQuery.of(context).size.width * 0.25,
+                              fit: BoxFit.cover,
+                            );
+                          }
+                        } else {
+                          return Image.network(
+                            _authType == 'facebook' ? _facebookUser!.picture?.url ?? '' : _googleUser!.photoURL ?? '',
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            height: MediaQuery.of(context).size.width * 0.25,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (_, child, chunkEvent) {
+                              if (chunkEvent == null) return child;
+
+                              return LoadingContainer(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: MediaQuery.of(context).size.width * 0.25,
+                              );
+                            },
+                          );
+                        }
+                      }(),
                     ),
                     const SizedBox(width: 16.0),
                     Expanded(
@@ -78,7 +167,11 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            widget.userModel.name!,
+                            _authType == 'facebook'
+                                ? _facebookUser!.name ?? ''
+                                : _authType == 'google'
+                                    ? _googleUser!.displayName ?? ''
+                                    : _authUser!.userName ?? '',
                             style: Theme.of(context).textTheme.headline5?.copyWith(
                                   color: AppColors.black,
                                   fontWeight: FontWeight.bold,
@@ -86,7 +179,11 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           ),
                           const SizedBox(height: 4.0),
                           Text(
-                            widget.userModel.email!,
+                            _authType == 'facebook'
+                                ? _facebookUser!.email ?? ''
+                                : _authType == 'google'
+                                    ? _googleUser!.email ?? ''
+                                    : _authUser!.userName ?? '',
                             style: Theme.of(context).textTheme.caption?.copyWith(
                                   color: AppColors.black,
                                   fontWeight: FontWeight.w100,
@@ -96,12 +193,10 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         ],
                       ),
                     ),
-                    const Expanded(
-                      child: Align(
-                        child: Icon(Icons.arrow_forward_ios, size: 20.0),
-                        alignment: Alignment.centerRight,
-                      ),
-                    )
+                    Visibility(
+                      visible: _authType == 'authUser',
+                      child: const Icon(Icons.arrow_forward_ios, size: 20.0),
+                    ),
                   ],
                 ),
               ),
@@ -109,29 +204,33 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             const SizedBox(height: 24.0),
             ...List.generate(
               firstSectionIcons.length,
-              (index) => SettingTile(
+                  (index) => SettingTile(
                 leading: Icon(firstSectionIcons[index], size: 30.0),
                 title: Text(
                   firstSectionTexts[index],
                   style: Theme.of(context).textTheme.caption?.copyWith(
-                        fontWeight: FontWeight.w400,
-                        fontSize: 16.0,
-                      ),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 16.0,
+                  ),
                 ),
                 onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    backgroundColor: Colors.transparent,
-                    builder: (context) {
-                      return BottomSheetWrapper(
-                        contentItems: const [],
-                        title: Text(
-                          secondSectionTexts[index],
-                          style: Theme.of(context).textTheme.headline5,
-                        ),
-                      );
-                    },
-                  );
+                  if (index == 1) {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return NotificationSheet(controller: _settingsController, title: firstSectionTexts[index]);
+                      },
+                    );
+                  } else if (index == 2) {
+                    showModalBottomSheet(
+                      context: context,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return InterfaceSheet(controller: _settingsController, title: firstSectionTexts[index]);
+                      },
+                    );
+                  }
                 },
                 trailing: const Icon(Icons.arrow_forward_ios, size: 20.0),
               ),
@@ -155,8 +254,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 onTap: () {
                   _navigate(index: index);
                 },
-                trailing: index == 0 ? Text(_appVersion) : null,
-              ),
+                    trailing: index == 0 ? Text(_appVersion) : null,
+                  ),
             ),
           ],
         ),
@@ -174,6 +273,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
           fontSize: 16.0,
           backgroundColor: Colors.grey,
         );
+        break;
+      case 1:
+        Get.toNamed(AppRoutes.helpScreen);
         break;
       case 2:
         Get.toNamed(AppRoutes.feedbackAndBugReport);

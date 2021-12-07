@@ -235,7 +235,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             if (_avatar != null) {
                               avatarUrl = await _authController.uploadAvatarToFirebase(_avatar!);
                             }
-                            await _authController.addUser(
+                            await _authController.addAuthUser(
                               userName: _userNameController.text.trim(),
                               password: _passwordController.text.trim(),
                               avatarUrl: avatarUrl,

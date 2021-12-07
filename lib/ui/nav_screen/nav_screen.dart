@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/auth_controller.dart';
-import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
-import 'package:mixture_music_app/models/auth/facebook/facebook_user_picture_model.dart';
 import 'package:mixture_music_app/ui/search_screen/search_screen.dart';
 
 import '../../routing/routes.dart';
@@ -26,17 +24,7 @@ class _NavScreenState extends State<NavScreen> {
     Home(),
     SearchScreen(),
     const LibraryScreen(),
-    SettingsScreen(
-      userModel: FacebookUserModel(
-        id: 1,
-        name: 'Đen Vâu',
-        email: 'denvau@gmail.com',
-        picture: FacebookUserPictureModel(
-          url: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/'
-              'avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-        ),
-      ),
-    ),
+    const SettingsScreen(),
   ];
 
   final musicController = Get.put(MusicPlayerController());

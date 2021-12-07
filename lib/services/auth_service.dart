@@ -92,7 +92,7 @@ class AuthService {
     return userData;
   }
 
-  Future<void> addUser({
+  Future<void> addAuthUser({
     required String userName,
     required String password,
     required String avatarUrl,
@@ -122,5 +122,12 @@ class AuthService {
 
   Future<void> resetAccountPassword(String userName, String newPassword) async {
     return await FirebaseFirestore.instance.collection('user_accounts').doc(userName).update({'password': newPassword});
+  }
+
+  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
+    await FirebaseFirestore.instance.collection('user_accounts').doc(oldUserName).delete();
+    return await FirebaseFirestore.instance.collection('user_accounts').doc(newUserName).set(
+      {'user_name': newUserName, 'password': password, 'avatar_url': avatarUrl},
+    );
   }
 }

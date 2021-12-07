@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/bindings/auth_binding.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/edit_profile_screen.dart';
 import 'package:mixture_music_app/ui/feedback_and_report_screen.dart';
+import 'package:mixture_music_app/ui/help_screen.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/playlist_detail_screen.dart';
 import 'package:mixture_music_app/ui/splash_screen.dart';
 
@@ -63,52 +64,57 @@ class RouteGenerator {
       GetPage(
         name: AppRoutes.onBoarding,
         page: () => const OnBoardingScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.signIn,
         page: () => const SignInScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.forgotPassword,
         page: () => const ForgotPasswordScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.signUp,
         page: () => const SignUpScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.main,
         page: () => Home(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.navigationScreen,
         page: () => const NavScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.musicPlayerScreen,
         page: () => MusicPlayerScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.feedbackAndBugReport,
         page: () => const FeedbackAndReportScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.editProfile,
         page: () => const EditProfileScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.playlistDetailScreen,
         page: () => const PlayListDetailScreen(),
-        bindings: const [],
+        bindings: const [AuthBinding()],
+      ),
+      GetPage(
+        name: AppRoutes.helpScreen,
+        page: () => const HelpScreen(),
+        bindings: const [AuthBinding()],
       ),
     ];
   }
