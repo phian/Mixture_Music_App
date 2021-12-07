@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:mixture_music_app/bindings/auth_binding.dart';
 import 'package:mixture_music_app/ui/splash_screen.dart';
 
 import 'routing/route_generator.dart';
@@ -37,8 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
       getPages: RouteGenerator.pages(),
-      // initialRoute: AppRoutes.splash,
-      initialBinding: const AuthBinding(),
+      smartManagement: SmartManagement.keepFactory,
     );
   }
 }

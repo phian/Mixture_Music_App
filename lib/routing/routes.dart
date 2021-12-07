@@ -9,6 +9,7 @@ class AppRoutes {
   static const musicPlayerScreen = '/play_screen';
   static const realSearchScreen = '/search_screen';
   static const feedbackAndBugReport = '/personal/feedback-and-bug-report';
-  static const editProfile = '/personal/edit-profile';
-  static const playlistDetailScreen = '/personal/playlist-detail';
+  static const helpScreen = '/settings/help';
+  static const editProfile = '/settings/edit-profile';
+  static const playlistDetailScreen = '/settings/playlist-detail';
 }

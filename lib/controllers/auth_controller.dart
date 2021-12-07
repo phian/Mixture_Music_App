@@ -12,11 +12,8 @@ import '../repos/auth_repo.dart';
 class AuthController extends GetxController {
   final AuthRepo _authRepo = AuthRepo();
   User? googleUser;
-
   LoginResult get facebookLoginResult => _authRepo.facebookLoginResult;
-
   AccessToken? get facebookAccessToken => _authRepo.facebookAccessToken;
-  AuthUserModel? authUser;
 
   // Google
   Future<User?> signInWithGoogle() async {
@@ -65,12 +62,12 @@ class AuthController extends GetxController {
     return userModel;
   }
 
-  Future<void> addUser({
+  Future<void> addAuthUser({
     required String userName,
     required String password,
     required String avatarUrl,
   }) async {
-    return await _authRepo.addUser(userName: userName, password: password, avatarUrl: avatarUrl);
+    return await _authRepo.addAuthUser(userName: userName, password: password, avatarUrl: avatarUrl);
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
@@ -93,12 +90,6 @@ class AuthController extends GetxController {
     return await _authRepo.uploadAvatarToFirebase(image);
   }
 
-  Future<void> updateAuthUser(AuthUserModel? user) async {
-    if (user != null) {
-      authUser?.copyWith(user);
-    }
-  }
-
   Future<void> saveAuthType(String authType) async {
     return await _authRepo.saveAuthType(authType);
   }
@@ -109,5 +100,33 @@ class AuthController extends GetxController {
 
   Future<void> updateAuthType(String newType) async {
     return await _authRepo.updateAuthType(newType);
+  }
+
+  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
+    return await _authRepo.updateAuthUserData(oldUserName, newUserName, avatarUrl, password);
+  }
+
+  Future<void> saveAuthUserName(String userName) async {
+    return await _authRepo.saveAuthUserName(userName);
+  }
+
+  Future<void> saveAuthUserAvatar(String avatarUrl) async {
+    return await _authRepo.saveAuthUserAvatar(avatarUrl);
+  }
+
+  Future<String> getAuthUserName() async {
+    return await _authRepo.getAuthUserName();
+  }
+
+  Future<String> getAuthUserAvatar() async {
+    return await _authRepo.getAuthUserAvatar();
+  }
+
+  Future<void> updateAuthUserName(String newUserName) async {
+    return await _authRepo.updateAuthUserName(newUserName);
+  }
+
+  Future<void> updateAuthUserAvatar(String newAvatarUrl) async {
+    return await _authRepo.updateAuthUserAvatar(newAvatarUrl);
   }
 }

@@ -1,10 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
+import 'package:mixture_music_app/images/app_icons.dart';
+import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/widgets/pick_image_dialog.dart';
 import 'package:mixture_music_app/widgets/base_app_bar.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
@@ -22,7 +27,25 @@ class EditProfileScreen extends StatefulWidget {
 
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _nameController = TextEditingController();
-  bool _isEnableSave = true;
+  bool _isEnableSave = false;
+  AuthUserModel _authUser = AuthUserModel();
+  final _authController = Get.find<AuthController>();
+  File? _avatar;
+  String _userName = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _authUser = (Get.arguments as AuthUserModel);
+    _getUserName();
+  }
+
+  void _getUserName() async {
+    _userName = await _authController.getAuthUserName();
+    setState(() {
+      _nameController.text = _userName;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +69,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               color: AppColors.black,
             ),
             onPressed: () {
-              Get.back();
+              Get.back(result: true);
             },
           ),
           actions: [
@@ -55,7 +78,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               child: Container(
                 margin: const EdgeInsets.only(right: 8.0),
                 child: InkWellWrapper(
-                  onTap: _isEnableSave ? () {} : null,
+                  onTap: _isEnableSave
+                      ? () async {
+                          String url = '';
+                          if (_avatar != null) {
+                            url = await _authController.uploadAvatarToFirebase(_avatar!);
+                            await _authController.updateAuthUserAvatar(url);
+                          }
+                          var temp = await _authController.getUserByUserName(_userName);
+                          await _authController.updateAuthUserData(
+                            _userName,
+                            _nameController.text,
+                            url.isNotEmpty
+                                ? url
+                                : _authUser.avatarUrl?.isNotEmpty == true
+                                    ? _authUser.avatarUrl!
+                                    : '',
+                            temp?.password ?? '',
+                          );
+                          if (_userName != _nameController.text) {
+                            await _authController.updateAuthUserName(_nameController.text);
+                            _getUserName();
+                            _isEnableSave = false;
+                          }
+                          Fluttertoast.showToast(
+                            msg: 'Update profile success',
+                            fontSize: 18.0,
+                            toastLength: Toast.LENGTH_SHORT,
+                            backgroundColor: Theme.of(context).primaryColor,
+                          );
+                        }
+                      : null,
                   color: Colors.transparent,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
@@ -77,30 +130,58 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               SizedBox(height: MediaQuery.of(context).size.height * 0.05),
               Align(
                 alignment: Alignment.center,
-                child: ClipOval(
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.dialog(
-                        Dialog(
-                          child: PickImageDialog(
-                            onCameraTap: () {
-                              _pickImage(ImageSource.camera);
-                            },
-                            onGalleryTap: () {
-                              _pickImage(ImageSource.gallery);
-                            },
-                          ),
-                          backgroundColor: Colors.transparent,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.dialog(
+                      Dialog(
+                        child: PickImageDialog(
+                          onCameraTap: () {
+                            Get.back();
+                            _pickImage(ImageSource.camera);
+                          },
+                          onGalleryTap: () {
+                            Get.back();
+                            _pickImage(ImageSource.gallery);
+                          },
                         ),
-                        barrierColor: Colors.transparent,
-                      );
-                    },
-                    child: Image.network(
-                      'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-                      width: MediaQuery.of(context).size.width * 0.6,
-                      height: MediaQuery.of(context).size.width * 0.6,
-                      fit: BoxFit.cover,
-                    ),
+                        backgroundColor: Colors.transparent,
+                      ),
+                      barrierColor: Colors.transparent,
+                    );
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      ClipOval(
+                        child: () {
+                          if (_avatar != null) {
+                            return Image.file(
+                              _avatar!,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.width * 0.5,
+                              fit: BoxFit.cover,
+                            );
+                          }
+
+                          if (_authUser!.avatarUrl != null) {
+                            return Image.network(
+                              _authUser.avatarUrl!,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.width * 0.5,
+                              fit: BoxFit.cover,
+                            );
+                          } else {
+                            Image.asset(
+                              AppIcons.avatar,
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              height: MediaQuery.of(context).size.width * 0.5,
+                              fit: BoxFit.cover,
+                            );
+                          }
+                        }(),
+                      ),
+                      Icon(Icons.camera_enhance, size: 35.0, color: Theme.of(context).primaryColor),
+                    ],
                   ),
                 ),
               ),
@@ -125,14 +206,12 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     controller: _nameController,
                   ),
                   onChanged: (value) {
-                    if (value.isNotEmpty && _isEnableSave == false) {
+                    if ((value.trim() != _userName && _nameController.text.isNotEmpty) || _avatar != null) {
                       setState(() {
                         _isEnableSave = true;
                       });
-                    } else if (value.isEmpty && _isEnableSave == true) {
-                      setState(() {
-                        _isEnableSave = false;
-                      });
+                    } else {
+                      _isEnableSave = false;
                     }
                   },
                   decorationConfig: TextFieldDecorationConfig(
@@ -162,10 +241,37 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     );
   }
 
-  Future<XFile?> _pickImage(ImageSource source) async {
+  Future<void> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     final result = await picker.pickImage(source: source);
 
-    return result;
+    if (result != null) {
+      _cropImage(result.path);
+    }
+  }
+
+  Future<void> _cropImage(String path) async {
+    _avatar = await ImageCropper.cropImage(
+      sourcePath: path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      androidUiSettings: AndroidUiSettings(
+          toolbarTitle: 'Crop your avatar',
+          toolbarColor: Theme.of(context).primaryColor,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false),
+      iosUiSettings: const IOSUiSettings(
+        minimumAspectRatio: 1.0,
+      ),
+    );
+    setState(() {
+      _isEnableSave = true;
+    });
   }
 }

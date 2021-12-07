@@ -20,7 +20,7 @@ class AuthRepo {
   LoginResult get facebookLoginResult => _authService.facebookLoginResult;
 
   AccessToken? get facebookAccessToken => _authService.facebookAccessToken;
-  late FacebookUserModel facebookUser;
+  FacebookUserModel facebookUser = FacebookUserModel();
 
   // Google
   Future<User?> signInWithGoogle() async {
@@ -75,12 +75,12 @@ class AuthRepo {
     return userModel;
   }
 
-  Future<void> addUser({
+  Future<void> addAuthUser({
     required String userName,
     required String password,
     required String avatarUrl,
   }) async {
-    return await _authService.addUser(userName: userName, password: password, avatarUrl: avatarUrl);
+    return await _authService.addAuthUser(userName: userName, password: password, avatarUrl: avatarUrl);
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
@@ -103,6 +103,7 @@ class AuthRepo {
       user = AuthUserModel(
         userName: data['user_name'],
         password: data['password'],
+        avatarUrl: data['avatar_url'],
       );
     }
 
@@ -129,5 +130,33 @@ class AuthRepo {
 
   Future<void> updateAuthType(String newType) async {
     return await _sharePrefService.updateAuthType(newType);
+  }
+
+  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
+    return await _authService.updateAuthUserData(oldUserName, newUserName, avatarUrl, password);
+  }
+
+  Future<void> saveAuthUserName(String userName) async {
+    return await _sharePrefService.saveAuthUserName(userName);
+  }
+
+  Future<void> saveAuthUserAvatar(String avatarUrl) async {
+    return await _sharePrefService.saveAuthUserAvatar(avatarUrl);
+  }
+
+  Future<String> getAuthUserName() async {
+    return await _sharePrefService.getAuthUserName();
+  }
+
+  Future<String> getAuthUserAvatar() async {
+    return await _sharePrefService.getAuthUserAvatar();
+  }
+
+  Future<void> updateAuthUserName(String newUserName) async {
+    return await _sharePrefService.updateAuthUserName(newUserName);
+  }
+
+  Future<void> updateAuthUserAvatar(String newAvatarUrl) async {
+    return await _sharePrefService.updateAuthUserAvatar(newAvatarUrl);
   }
 }
