@@ -16,6 +16,7 @@ import 'package:mixture_music_app/ui/settings_screen/widgets/setting_tile.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:rating_dialog/rating_dialog.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
@@ -87,9 +88,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 'Settings',
                 textAlign: TextAlign.left,
                 style: Theme.of(context).textTheme.headline4?.copyWith(
-                  fontSize: 30.0,
-                  color: AppColors.black,
-                ),
+                      fontSize: 30.0,
+                      color: AppColors.black,
+                    ),
               ),
             ),
             const SizedBox(height: 24.0),
@@ -143,6 +144,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                             );
                           }
                         } else {
+                          print('facebook url: ${_facebookUser!.picture?.url}');
                           return Image.network(
                             _authType == 'facebook' ? _facebookUser!.picture?.url ?? '' : _googleUser!.photoURL ?? '',
                             width: MediaQuery.of(context).size.width * 0.25,
@@ -209,9 +211,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 title: Text(
                   firstSectionTexts[index],
                   style: Theme.of(context).textTheme.caption?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 16.0,
-                  ),
+                        fontWeight: FontWeight.w400,
+                        fontSize: 16.0,
+                      ),
                 ),
                 onTap: () {
                   if (index == 1) {
@@ -254,8 +256,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                 onTap: () {
                   _navigate(index: index);
                 },
-                    trailing: index == 0 ? Text(_appVersion) : null,
-                  ),
+                trailing: index == 0 ? Text(_appVersion) : null,
+              ),
             ),
           ],
         ),
@@ -263,7 +265,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
     );
   }
 
-  void _navigate({required int index}) {
+  void _navigate({required int index}) async {
     switch (index) {
       case 0:
         Fluttertoast.showToast(
@@ -279,6 +281,52 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
         break;
       case 2:
         Get.toNamed(AppRoutes.feedbackAndBugReport);
+        break;
+      case 3:
+        // RateMyApp rateMyApp = RateMyApp(
+        //   preferencesPrefix: 'rateMyApp_',
+        //   minDays: 0, // Show rate popup on first day of install.
+        //   minLaunches: 5, // Show rate popup after 5 launches of app after minDays is passed.
+        // );
+        // await rateMyApp.init();
+        // rateMyApp.showRateDialog(context);
+
+        Get.dialog(
+          RatingDialog(
+            initialRating: 1.0,
+            // your app's name?
+            title: const Text(
+              'Mixture Music',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            // encourage your user to leave a high rating?
+            message: const Text(
+              'Tap a star to set your rating. Add more description here if you want.',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 15),
+            ),
+            // Your app's logo?
+            image: Image.asset(AppIcons.appIcon, width: 150.0, height: 150.0),
+            submitButtonText: 'Send',
+            commentHint: 'Tell us your feeling',
+            onCancelled: () => print('cancelled'),
+            onSubmitted: (response) {
+              print('rating: ${response.rating}, comment: ${response.comment}');
+
+              // TODO: add your own logic
+              if (response.rating < 3.0) {
+                // send their comments to your email or anywhere you wish
+                // ask the user to contact you instead of leaving a bad review
+              } else {
+                // _rateAndReviewApp();
+              }
+            },
+          ),
+        );
         break;
     }
   }
