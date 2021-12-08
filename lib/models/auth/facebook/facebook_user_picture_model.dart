@@ -12,18 +12,27 @@ class FacebookUserPictureModel {
   });
 
   FacebookUserPictureModel.fromJson(Map<String, dynamic> json) {
-    height = json['height']?.toInt();
-    isSilhouette = json['is_silhouette'];
-    url = json['url']?.toString();
-    width = json['width']?.toInt();
+    height = json['data']['height'];
+    isSilhouette = json['data']['is_silhouette'];
+    url = json['data']['url'];
+    width = json['data']['width'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['height'] = height;
-    data['is_silhouette'] = isSilhouette;
-    data['url'] = url;
-    data['width'] = width;
+    data['data']['height'] = height;
+    data['data']['is_silhouette'] = isSilhouette;
+    data['data']['url'] = url;
+    data['data']['width'] = width;
     return data;
+  }
+
+  FacebookUserPictureModel copyWith(FacebookUserPictureModel? pictureModel) {
+    return FacebookUserPictureModel(
+      width: pictureModel?.width ?? width,
+      height: pictureModel?.height ?? height,
+      url: pictureModel?.url ?? url,
+      isSilhouette: pictureModel?.isSilhouette ?? isSilhouette,
+    );
   }
 }

@@ -11,15 +11,18 @@ import '../repos/auth_repo.dart';
 
 class AuthController extends GetxController {
   final AuthRepo _authRepo = AuthRepo();
-  User? googleUser;
+
+  User? get googleUser => _authRepo.googleUser;
+
   LoginResult get facebookLoginResult => _authRepo.facebookLoginResult;
+
   AccessToken? get facebookAccessToken => _authRepo.facebookAccessToken;
+  FacebookUserModel facebookUser = FacebookUserModel();
 
   // Google
   Future<User?> signInWithGoogle() async {
     try {
       var user = await _authRepo.signInWithGoogle();
-      googleUser = user;
 
       return user;
     } catch (ex) {
@@ -36,6 +39,7 @@ class AuthController extends GetxController {
     LoginResult? result;
     try {
       result = await _authRepo.signInWithFacebook();
+      facebookUser.copyWith(_authRepo.facebookUser);
     } catch (ex) {
       print(ex.toString());
     }

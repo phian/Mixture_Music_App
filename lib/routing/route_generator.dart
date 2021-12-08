@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/bindings/auth_binding.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/edit_profile_screen.dart';
 import 'package:mixture_music_app/ui/feedback_and_report_screen.dart';
 import 'package:mixture_music_app/ui/help_screen.dart';
@@ -59,62 +59,70 @@ class RouteGenerator {
       GetPage(
         name: AppRoutes.splash,
         page: () => const SplashScreen(),
-        bindings: const [AuthBinding()],
+        binding: BindingsBuilder(
+          () {
+            Get.lazyPut(() => AuthController());
+          },
+        ),
       ),
       GetPage(
         name: AppRoutes.onBoarding,
         page: () => const OnBoardingScreen(),
-        bindings: const [AuthBinding()],
+        binding: BindingsBuilder(
+          () {
+            Get.lazyPut(() => AuthController());
+          },
+        ),
       ),
       GetPage(
         name: AppRoutes.signIn,
         page: () => const SignInScreen(),
-        bindings: const [AuthBinding()],
+        binding: BindingsBuilder(
+          () {
+            Get.lazyPut(() => AuthController());
+          },
+        ),
       ),
       GetPage(
         name: AppRoutes.forgotPassword,
         page: () => const ForgotPasswordScreen(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.signUp,
         page: () => const SignUpScreen(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.main,
         page: () => Home(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.navigationScreen,
         page: () => const NavScreen(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.musicPlayerScreen,
         page: () => MusicPlayerScreen(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.feedbackAndBugReport,
         page: () => const FeedbackAndReportScreen(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.editProfile,
         page: () => const EditProfileScreen(),
-        bindings: const [AuthBinding()],
+        binding: BindingsBuilder(
+          () {
+            Get.lazyPut(() => AuthController());
+          },
+        ),
       ),
       GetPage(
         name: AppRoutes.playlistDetailScreen,
         page: () => const PlayListDetailScreen(),
-        bindings: const [AuthBinding()],
       ),
       GetPage(
         name: AppRoutes.helpScreen,
         page: () => const HelpScreen(),
-        bindings: const [AuthBinding()],
       ),
     ];
   }

@@ -32,4 +32,13 @@ class FacebookUserModel {
     }
     return data;
   }
+
+  FacebookUserModel copyWith(FacebookUserModel facebookUser) {
+    return FacebookUserModel(
+      id: facebookUser.id ?? id,
+      email: facebookUser.email ?? email,
+      picture: picture?.copyWith(facebookUser.picture ?? picture),
+      name: facebookUser.name ?? name,
+    );
+  }
 }

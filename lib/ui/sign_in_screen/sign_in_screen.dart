@@ -186,7 +186,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       backgroundColor: Theme.of(context).primaryColor,
                                     );
                                     await _authController.saveAuthType('facebook');
-                                    var fbUser = await _authController.getFacebookUserData();
+                                    _authController.facebookUser = await _authController.getFacebookUserData();
                                     Get.offAllNamed(AppRoutes.navigationScreen);
                                     break;
                                   case LoginStatus.cancelled:
@@ -226,6 +226,12 @@ class _SignInScreenState extends State<SignInScreen> {
                                 var user = await _authController.signInWithGoogle();
                                 if (user != null) {
                                   await _authController.saveAuthType('google');
+                                  Fluttertoast.showToast(
+                                    msg: 'Login success',
+                                    fontSize: 18.0,
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    backgroundColor: Theme.of(context).primaryColor,
+                                  );
                                   Get.offAllNamed(AppRoutes.navigationScreen);
                                 }
                               },
