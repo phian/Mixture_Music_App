@@ -11,6 +11,7 @@ import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/settings_screen/constants/settings_screen_constants.dart';
 import 'package:mixture_music_app/ui/settings_screen/controller/setings_screen_controller.dart';
 import 'package:mixture_music_app/ui/settings_screen/widgets/interface_sheet.dart';
+import 'package:mixture_music_app/ui/settings_screen/widgets/logout_dialog.dart';
 import 'package:mixture_music_app/ui/settings_screen/widgets/notification_sheet.dart';
 import 'package:mixture_music_app/ui/settings_screen/widgets/setting_tile.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
@@ -144,7 +145,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                             );
                           }
                         } else {
-                          print('facebook url: ${_facebookUser!.picture?.url}');
                           return Image.network(
                             _authType == 'facebook' ? _facebookUser!.picture?.url ?? '' : _googleUser!.photoURL ?? '',
                             width: MediaQuery.of(context).size.width * 0.25,
@@ -317,7 +317,15 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             onSubmitted: (response) {
               print('rating: ${response.rating}, comment: ${response.comment}');
 
-              // TODO: add your own logic
+              if (response.rating > 0 || response.comment.isNotEmpty) {
+                Fluttertoast.showToast(
+                  msg: 'Thank you for rating us',
+                  fontSize: 18.0,
+                  toastLength: Toast.LENGTH_SHORT,
+                  backgroundColor: Theme.of(context).primaryColor,
+                );
+              }
+
               if (response.rating < 3.0) {
                 // send their comments to your email or anywhere you wish
                 // ask the user to contact you instead of leaving a bad review
@@ -327,6 +335,33 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             },
           ),
         );
+        break;
+      case 4:
+        Get.dialog(
+          LogoutDialog(
+            onDeleteButtonTap: () async {
+              switch (_authType) {
+                case 'facebook':
+                  await _authController.facebookSignOut();
+                  Get.offAllNamed(AppRoutes.signIn);
+                  break;
+                case 'google':
+                  await _authController.googleSignOut();
+                  Get.offAllNamed(AppRoutes.signIn);
+                  break;
+                case 'authUser':
+                  await _authController.removeAuthUserName();
+                  await _authController.removeAuthUserAvatar();
+                  Get.offAllNamed(AppRoutes.signIn);
+                  break;
+              }
+            },
+            onCancelButtonTap: () {
+              Get.back();
+            },
+          ),
+        );
+
         break;
     }
   }

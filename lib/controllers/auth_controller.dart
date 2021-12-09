@@ -133,4 +133,12 @@ class AuthController extends GetxController {
   Future<void> updateAuthUserAvatar(String newAvatarUrl) async {
     return await _authRepo.updateAuthUserAvatar(newAvatarUrl);
   }
+
+  Future<int> removeAuthUserName() async {
+    return await _authRepo.removeAuthUserName();
+  }
+
+  Future<int> removeAuthUserAvatar() async {
+    return await _authRepo.removeAuthUserAvatar();
+  }
 }

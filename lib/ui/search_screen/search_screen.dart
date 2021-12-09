@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/search_screen/controller/search_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/real_search_screen.dart';
 
@@ -20,7 +21,18 @@ class SearchScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Search', style: theme.textTheme.headline4),
+              Row(
+                children: [
+                  Expanded(child: Text('Search', style: theme.textTheme.headline4)),
+                  IconButton(
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.scanQrCode);
+                    },
+                    icon: const Icon(Icons.camera_enhance_outlined),
+                    iconSize: 27.0,
+                  ),
+                ],
+              ),
               const SizedBox(height: 16),
               GestureDetector(
                 onTap: () {
@@ -31,9 +43,7 @@ class SearchScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.brightness == Brightness.light
-                        ? Colors.grey[200]
-                        : Colors.white24,
+                    color: theme.colorScheme.brightness == Brightness.light ? Colors.grey[200] : Colors.white24,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -58,8 +68,7 @@ class SearchScreen extends StatelessWidget {
                     for (int i = 0; i < controller.limitLenghtRecentSearch(); i++)
                       GestureDetector(
                         onTap: () {
-                          Get.to(() =>
-                              RealSearchScreen(searchKeyWord: controller.listRecentSearch[i]));
+                          Get.to(() => RealSearchScreen(searchKeyWord: controller.listRecentSearch[i]));
                         },
                         child: Chip(
                           label: Text(controller.listRecentSearch[i]),

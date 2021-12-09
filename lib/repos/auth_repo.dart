@@ -159,4 +159,12 @@ class AuthRepo {
   Future<void> updateAuthUserAvatar(String newAvatarUrl) async {
     return await _sharePrefService.updateAuthUserAvatar(newAvatarUrl);
   }
+
+  Future<int> removeAuthUserName() async {
+    return await _sharePrefService.removeAuthUserName();
+  }
+
+  Future<int> removeAuthUserAvatar() async {
+    return await _sharePrefService.removeAuthUserAvatar();
+  }
 }
