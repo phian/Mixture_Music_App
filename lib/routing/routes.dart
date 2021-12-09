@@ -8,6 +8,7 @@ class AppRoutes {
   static const navigationScreen = '/navigation_screen';
   static const musicPlayerScreen = '/play_screen';
   static const realSearchScreen = '/search_screen';
+  static const scanQrCode = '/search/scan-qr';
   static const feedbackAndBugReport = '/personal/feedback-and-bug-report';
   static const helpScreen = '/settings/help';
   static const editProfile = '/settings/edit-profile';

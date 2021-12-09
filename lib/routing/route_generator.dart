@@ -5,6 +5,7 @@ import 'package:mixture_music_app/ui/edit_profile_screen/edit_profile_screen.dar
 import 'package:mixture_music_app/ui/feedback_and_report_screen.dart';
 import 'package:mixture_music_app/ui/help_screen.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/playlist_detail_screen.dart';
+import 'package:mixture_music_app/ui/scan_qr_code_screen.dart';
 import 'package:mixture_music_app/ui/splash_screen.dart';
 
 import '../ui/forgot_password.dart';
@@ -83,30 +84,12 @@ class RouteGenerator {
           },
         ),
       ),
-      GetPage(
-        name: AppRoutes.forgotPassword,
-        page: () => const ForgotPasswordScreen(),
-      ),
-      GetPage(
-        name: AppRoutes.signUp,
-        page: () => const SignUpScreen(),
-      ),
-      GetPage(
-        name: AppRoutes.main,
-        page: () => Home(),
-      ),
-      GetPage(
-        name: AppRoutes.navigationScreen,
-        page: () => const NavScreen(),
-      ),
-      GetPage(
-        name: AppRoutes.musicPlayerScreen,
-        page: () => MusicPlayerScreen(),
-      ),
-      GetPage(
-        name: AppRoutes.feedbackAndBugReport,
-        page: () => const FeedbackAndReportScreen(),
-      ),
+      GetPage(name: AppRoutes.forgotPassword, page: () => const ForgotPasswordScreen()),
+      GetPage(name: AppRoutes.signUp, page: () => const SignUpScreen()),
+      GetPage(name: AppRoutes.main, page: () => Home()),
+      GetPage(name: AppRoutes.navigationScreen, page: () => const NavScreen()),
+      GetPage(name: AppRoutes.musicPlayerScreen, page: () => MusicPlayerScreen()),
+      GetPage(name: AppRoutes.feedbackAndBugReport, page: () => const FeedbackAndReportScreen()),
       GetPage(
         name: AppRoutes.editProfile,
         page: () => const EditProfileScreen(),
@@ -116,14 +99,9 @@ class RouteGenerator {
           },
         ),
       ),
-      GetPage(
-        name: AppRoutes.playlistDetailScreen,
-        page: () => const PlayListDetailScreen(),
-      ),
-      GetPage(
-        name: AppRoutes.helpScreen,
-        page: () => const HelpScreen(),
-      ),
+      GetPage(name: AppRoutes.playlistDetailScreen, page: () => const PlayListDetailScreen()),
+      GetPage(name: AppRoutes.helpScreen, page: () => const HelpScreen()),
+      GetPage(name: AppRoutes.scanQrCode, page: () => const ScanQrCodeScreen()),
     ];
   }
 }
