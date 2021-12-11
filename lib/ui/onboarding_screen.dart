@@ -2,14 +2,22 @@ import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
 import '../constants/app_constants.dart';
 import '../routing/routes.dart';
 import '../widgets/base_button.dart';
 
-class OnBoardingScreen extends StatelessWidget {
+class OnBoardingScreen extends StatefulWidget {
   const OnBoardingScreen({Key? key}) : super(key: key);
+
+  @override
+  State<OnBoardingScreen> createState() => _OnBoardingScreenState();
+}
+
+class _OnBoardingScreenState extends State<OnBoardingScreen> {
+  final _authController = Get.find<AuthController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +36,7 @@ class OnBoardingScreen extends StatelessWidget {
               items: [
                 ...List.generate(
                   listSong.length,
-                  (index) => ClipRRect(
+                      (index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: Image.network(
                       listSong[index].coverImageUrl ?? '',
@@ -64,9 +72,9 @@ class OnBoardingScreen extends StatelessWidget {
                       Text(
                         'WELCOME TO MIXTURE MUSIC APP',
                         style: Theme.of(context).textTheme.headline5?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 30.0,
-                            ),
+                          fontWeight: FontWeight.w600,
+                          fontSize: 30.0,
+                        ),
                       ),
                       const SizedBox(height: 24.0),
                       Text('Newest songs around the world', style: Theme.of(context).textTheme.subtitle1),
@@ -74,8 +82,14 @@ class OnBoardingScreen extends StatelessWidget {
                       BaseButton(
                         content: 'GET STARTED',
                         buttonRadius: BorderRadius.circular(8.0),
-                        onTap: () {
-                          Get.toNamed(AppRoutes.signIn);
+                        onTap: () async {
+                          var authUserName = await _authController.getAuthUserName();
+
+                          if (_authController.currentAuthUser == null || authUserName.isEmpty) {
+                            Get.toNamed(AppRoutes.signIn);
+                          } else {
+                            Get.toNamed(AppRoutes.navigationScreen);
+                          }
                         },
                       ),
                       const SizedBox(height: 32.0),

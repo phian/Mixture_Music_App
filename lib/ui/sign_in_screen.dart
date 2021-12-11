@@ -9,14 +9,14 @@ import 'package:mixture_music_app/widgets/custom_textfield/config/textfield_conf
 import 'package:mixture_music_app/widgets/custom_textfield/custom_textfield.dart';
 import 'package:mixture_music_app/widgets/unfocus_widget.dart';
 
-import '../../constants/app_colors.dart';
-import '../../constants/enums/enums.dart';
-import '../../controllers/auth_controller.dart';
-import '../../images/app_icons.dart';
-import '../../routing/routes.dart';
-import '../../widgets/base_button.dart';
-import '../../widgets/inkwell_wrapper.dart';
-import '../../widgets/sign_in_button.dart';
+import '../constants/app_colors.dart';
+import '../constants/enums/enums.dart';
+import '../controllers/auth_controller.dart';
+import '../images/app_icons.dart';
+import '../routing/routes.dart';
+import '../widgets/base_button.dart';
+import '../widgets/inkwell_wrapper.dart';
+import '../widgets/sign_in_button.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({Key? key}) : super(key: key);
@@ -30,7 +30,6 @@ class _SignInScreenState extends State<SignInScreen> {
   final _userNameController = TextEditingController();
   final _passwordController = TextEditingController();
   final _signInFormKey = GlobalKey<FormState>();
-  String? _validateText;
 
   @override
   Widget build(BuildContext context) {
@@ -187,6 +186,12 @@ class _SignInScreenState extends State<SignInScreen> {
                                     );
                                     await _authController.saveAuthType('facebook');
                                     _authController.facebookUser = await _authController.getFacebookUserData();
+                                    await _authController.createSocialUser(
+                                      '${_authController.facebookUser.id}',
+                                      _authController.facebookUser.email ?? '',
+                                      _authController.facebookUser.picture?.url ?? '',
+                                      _authController.facebookUser.name ?? '',
+                                    );
                                     Get.offAllNamed(AppRoutes.navigationScreen);
                                     break;
                                   case LoginStatus.cancelled:
@@ -226,6 +231,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 var user = await _authController.signInWithGoogle();
                                 if (user != null) {
                                   await _authController.saveAuthType('google');
+                                  await _authController.createSocialUser(user.uid, user.email ?? '', user.photoURL ?? '', user.displayName ?? '');
                                   Fluttertoast.showToast(
                                     msg: 'Login success',
                                     fontSize: 18.0,
@@ -283,7 +289,7 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void _checkUserDataAndNavigateScreen() async {
-    var user = await _authController.getUserByUserName(_userNameController.text);
+    var user = await _authController.getUserByID(_userNameController.text);
     if (user != null) {
       if (_userNameController.text == user.userName && _passwordController.text == user.password) {
         Fluttertoast.showToast(

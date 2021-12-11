@@ -117,7 +117,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     content: 'SUBMIT',
                     onTap: () async {
                       if (_forgotPasswordFormKey.currentState?.validate() == true) {
-                        var res = await _authController.getUserByUserName(_userNameController.text);
+                        var res = await _authController.getUserByID(_userNameController.text);
 
                         if (res != null) {
                           if (_newPasswordController.text == res.password) {

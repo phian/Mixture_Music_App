@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -29,22 +30,72 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   final _nameController = TextEditingController();
   bool _isEnableSave = false;
   AuthUserModel _authUser = AuthUserModel();
+  User? _googleUser;
   final _authController = Get.find<AuthController>();
   File? _avatar;
   String _userName = '';
+  String _userAvatar = '';
+  SignInType _authType = SignInType.authUser;
 
   @override
   void initState() {
     super.initState();
-    _authUser = (Get.arguments as AuthUserModel);
-    _getUserName();
+    _getAuthTypeAndInitUser();
   }
 
-  void _getUserName() async {
-    _userName = await _authController.getAuthUserName();
+  void _getUserName() {
+    switch (_authType) {
+      case SignInType.authUser:
+        _userName = _authUser.userName ?? '';
+        break;
+      case SignInType.facebook:
+        break;
+      case SignInType.google:
+        _userName = _googleUser?.displayName ?? '';
+        break;
+    }
+
     setState(() {
       _nameController.text = _userName;
     });
+  }
+
+  void _getUserAvatar() {
+    switch (_authType) {
+      case SignInType.facebook:
+        break;
+      case SignInType.google:
+        setState(() {
+          _userAvatar = _googleUser?.photoURL ?? '';
+        });
+        break;
+      case SignInType.authUser:
+        setState(() {
+          _userAvatar = _authUser.avatarUrl ?? '';
+        });
+        break;
+    }
+  }
+
+  void _getAuthTypeAndInitUser() async {
+    var authType = await _authController.getAuthType();
+
+    switch (authType) {
+      case 'authUser':
+        _authUser = Get.arguments as AuthUserModel;
+        _authType = SignInType.authUser;
+        _getUserName();
+        _getUserAvatar();
+        break;
+      case 'facebook':
+        break;
+      case 'google':
+        _googleUser = Get.arguments as User;
+        _authType = SignInType.google;
+        _getUserName();
+        _getUserAvatar();
+        break;
+    }
   }
 
   @override
@@ -80,33 +131,67 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 child: InkWellWrapper(
                   onTap: _isEnableSave
                       ? () async {
-                          String url = '';
-                          if (_avatar != null) {
-                            url = await _authController.uploadAvatarToFirebase(_avatar!);
-                            await _authController.updateAuthUserAvatar(url);
+                          if (_authType == SignInType.authUser) {
+                            String url = '';
+                            if (_avatar != null) {
+                              url = await _authController.uploadAvatarToFirebase(_avatar!);
+                              await _authController.updateAuthUserAvatar(url);
+                            }
+
+                            var temp = await _authController.getUserByID(_userName);
+                            await _authController.updateAuthUserData(
+                              _userName,
+                              _nameController.text,
+                              url.isNotEmpty
+                                  ? url
+                                  : _authUser.avatarUrl?.isNotEmpty == true
+                                      ? _authUser.avatarUrl!
+                                      : '',
+                              temp?.password ?? '',
+                            );
+                            if (_userName != _nameController.text) {
+                              await _authController.updateAuthUserName(_nameController.text);
+                              _getUserName();
+                              _isEnableSave = false;
+                            }
+                            Fluttertoast.showToast(
+                              msg: 'Update profile success',
+                              fontSize: 18.0,
+                              toastLength: Toast.LENGTH_SHORT,
+                              backgroundColor: Theme.of(context).primaryColor,
+                            );
+                          } else {
+                            String url = '';
+                            if (_avatar != null) {
+                              url = await _authController.uploadAvatarToFirebase(_avatar!);
+                            }
+
+                            if (url.isNotEmpty) {
+                              await _authController.updateGoogleUserAvatar(url);
+                              _authController.updateGoogleUserOnFirebase(
+                                  _googleUser?.uid ?? '', _googleUser?.email ?? '', url, _googleUser?.displayName ?? '');
+                              _isEnableSave = false;
+                            }
+
+                            if ((_userName != _nameController.text.trim()) && _nameController.text.isNotEmpty) {
+                              await _authController.updateGoogleUserName(_nameController.text);
+                              _authController.updateGoogleUserOnFirebase(
+                                _googleUser?.uid ?? '',
+                                _googleUser?.email ?? '',
+                                _googleUser?.photoURL ?? '',
+                                _nameController.text,
+                              );
+                              _userName = _nameController.text;
+                              _isEnableSave = false;
+                            }
+
+                            Fluttertoast.showToast(
+                              msg: 'Update profile success',
+                              fontSize: 18.0,
+                              toastLength: Toast.LENGTH_SHORT,
+                              backgroundColor: Theme.of(context).primaryColor,
+                            );
                           }
-                          var temp = await _authController.getUserByUserName(_userName);
-                          await _authController.updateAuthUserData(
-                            _userName,
-                            _nameController.text,
-                            url.isNotEmpty
-                                ? url
-                                : _authUser.avatarUrl?.isNotEmpty == true
-                                    ? _authUser.avatarUrl!
-                                    : '',
-                            temp?.password ?? '',
-                          );
-                          if (_userName != _nameController.text) {
-                            await _authController.updateAuthUserName(_nameController.text);
-                            _getUserName();
-                            _isEnableSave = false;
-                          }
-                          Fluttertoast.showToast(
-                            msg: 'Update profile success',
-                            fontSize: 18.0,
-                            toastLength: Toast.LENGTH_SHORT,
-                            backgroundColor: Theme.of(context).primaryColor,
-                          );
                         }
                       : null,
                   color: Colors.transparent,
@@ -163,15 +248,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                             );
                           }
 
-                          if (_authUser!.avatarUrl != null) {
+                          if (_userAvatar.isNotEmpty) {
                             return Image.network(
-                              _authUser.avatarUrl!,
+                              _userAvatar,
                               width: MediaQuery.of(context).size.width * 0.5,
                               height: MediaQuery.of(context).size.width * 0.5,
                               fit: BoxFit.cover,
                             );
                           } else {
-                            Image.asset(
+                            return Image.asset(
                               AppIcons.avatar,
                               width: MediaQuery.of(context).size.width * 0.5,
                               height: MediaQuery.of(context).size.width * 0.5,

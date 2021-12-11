@@ -13,7 +13,7 @@ import '../ui/home/home.dart';
 import '../ui/nav_screen/nav_screen.dart';
 import '../ui/onboarding_screen.dart';
 import '../ui/player_screen/music_player_screen.dart';
-import '../ui/sign_in_screen/sign_in_screen.dart';
+import '../ui/sign_in_screen.dart';
 import '../ui/sign_up_screen.dart';
 import '../utils/route_exception.dart';
 import 'routes.dart';
