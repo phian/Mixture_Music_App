@@ -1,6 +1,7 @@
 enum SignInType {
   facebook,
   google,
+  authUser,
 }
 
 enum TextFieldType {
@@ -22,4 +23,17 @@ enum FeedbackType {
   contentReleaseFeedback,
   contentCooperationFeedback,
   anotherProblem,
+}
+
+enum CreateAccountState {
+  success,
+  failed,
+  emailAlreadyUsed,
+}
+
+enum SignInAccountState {
+  success,
+  notFound,
+  failed,
+  wrongPassword,
 }

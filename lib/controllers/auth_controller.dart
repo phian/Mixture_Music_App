@@ -4,13 +4,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
+import 'package:mixture_music_app/services/user_repo.dart';
 
 import '../repos/auth_repo.dart';
 
 class AuthController extends GetxController {
   final AuthRepo _authRepo = AuthRepo();
+  final _userRepo = UserRepo();
 
   User? get googleUser => _authRepo.googleUser;
 
@@ -18,6 +21,8 @@ class AuthController extends GetxController {
 
   AccessToken? get facebookAccessToken => _authRepo.facebookAccessToken;
   FacebookUserModel facebookUser = FacebookUserModel();
+
+  User? get currentAuthUser => FirebaseAuth.instance.currentUser;
 
   // Google
   Future<User?> signInWithGoogle() async {
@@ -66,24 +71,28 @@ class AuthController extends GetxController {
     return userModel;
   }
 
-  Future<void> addAuthUser({
+  Future<CreateAccountState> createAuthUser({
     required String userName,
     required String password,
     required String avatarUrl,
   }) async {
-    return await _authRepo.addAuthUser(userName: userName, password: password, avatarUrl: avatarUrl);
+    return await _authRepo.createAuthUser(userName: userName, password: password, avatarUrl: avatarUrl);
+  }
+
+  Future<SignInAccountState> signInWithAuthAccount(String userName, String password) async {
+    return await _authRepo.signInWithAuthAccount(userName, password);
+  }
+
+  Future<void> createSocialUser(String uid, String email, String avatarUrl, String userName) async {
+    return await _authRepo.createSocialUser(uid, email, avatarUrl, userName);
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
     return await _authRepo.getAllAccountFromFirebase();
   }
 
-  Future<bool> checkIfUserExisted(String userName) async {
-    return await _authRepo.checkIfUserExisted(userName);
-  }
-
-  Future<AuthUserModel?> getUserByUserName(String userName) async {
-    return await _authRepo.getUserByUserName(userName);
+  Future<AuthUserModel?> getUserByID(String userName) async {
+    return await _userRepo.getUserByID(userName);
   }
 
   Future<void> resetAccountPassword(String userName, String newPassword) async {
@@ -91,7 +100,7 @@ class AuthController extends GetxController {
   }
 
   Future<String> uploadAvatarToFirebase(File image) async {
-    return await _authRepo.uploadAvatarToFirebase(image);
+    return await _userRepo.uploadAvatarToFirebase(image);
   }
 
   Future<void> saveAuthType(String authType) async {
@@ -140,5 +149,25 @@ class AuthController extends GetxController {
 
   Future<int> removeAuthUserAvatar() async {
     return await _authRepo.removeAuthUserAvatar();
+  }
+
+  Future<String> getUserAvatarUrl(String userUID) async {
+    return await _userRepo.getUserAvatarUrl(userUID);
+  }
+
+  Future<void> updateGoogleUserAvatar(String avatarUrl) async {
+    return await _authRepo.updateGoogleUserAvatar(avatarUrl);
+  }
+
+  Future<void> updateGoogleUserName(String newName) async {
+    return await _authRepo.updateGoogleUserName(newName);
+  }
+
+  Future<void> updateGoogleUserPassword(String newPassword) async {
+    return await _authRepo.updateGoogleUserPassword(newPassword);
+  }
+
+  Future<void> updateGoogleUserOnFirebase(String uid, String email, String avatarUrl, String newName) async {
+    return await _authRepo.updateGoogleUserOnFirebase(uid, email, avatarUrl, newName);
   }
 }

@@ -226,20 +226,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       }
 
                       if (_signUpFormKey.currentState?.validate() == true) {
-                        print(_userNameController.text);
-                        _authController.checkIfUserExisted(_userNameController.text).then((value) async {
-                          print(value);
+                        String avatarUrl = '';
+                        if (_avatar != null) {
+                          avatarUrl = await _authController.uploadAvatarToFirebase(_avatar!);
+                        }
 
-                          if (!value) {
-                            String avatarUrl = '';
-                            if (_avatar != null) {
-                              avatarUrl = await _authController.uploadAvatarToFirebase(_avatar!);
-                            }
-                            await _authController.addAuthUser(
-                              userName: _userNameController.text.trim(),
-                              password: _passwordController.text.trim(),
-                              avatarUrl: avatarUrl,
-                            );
+                        var result = await _authController
+                            .createAuthUser(userName: _userNameController.text, password: _passwordController.text, avatarUrl: avatarUrl)
+                            .catchError(
+                          (err) {
+                            print(err);
+                          },
+                        );
+
+                        switch (result) {
+                          case CreateAccountState.success:
                             Fluttertoast.showToast(
                               msg: 'Create account success',
                               fontSize: 18.0,
@@ -247,15 +248,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               backgroundColor: Theme.of(context).primaryColor,
                             );
                             Get.back();
-                          } else {
+                            break;
+                          case CreateAccountState.failed:
+                            Fluttertoast.showToast(
+                              msg: 'Create account failed',
+                              fontSize: 18.0,
+                              toastLength: Toast.LENGTH_SHORT,
+                              backgroundColor: Theme.of(context).primaryColor,
+                            );
+                            break;
+                          case CreateAccountState.emailAlreadyUsed:
                             Fluttertoast.showToast(
                               msg: 'Account is already existed',
                               fontSize: 18.0,
                               toastLength: Toast.LENGTH_SHORT,
                               backgroundColor: Theme.of(context).primaryColor,
                             );
-                          }
-                        });
+                            break;
+                        }
                       }
                     },
                     buttonRadius: BorderRadius.circular(8.0),

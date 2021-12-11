@@ -38,6 +38,10 @@ class SharePrefService {
     var authUserBox = await Hive.openBox(_authUserName);
     var userName = authUserBox.get('userName');
 
+    if (userName == null) {
+      return '';
+    }
+
     return userName;
   }
 

@@ -62,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
         setState(() {});
         break;
       case 'google':
-        _googleUser = _authController.googleUser;
+        _googleUser = _authController.currentAuthUser;
         setState(() {});
         break;
       case 'authUser':
@@ -97,22 +97,39 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             const SizedBox(height: 24.0),
             InkWellWrapper(
               color: Colors.transparent,
-              onTap: _authType == 'authUser'
-                  ? () async {
-                      var res = await Get.toNamed(
-                        AppRoutes.editProfile,
-                        arguments: _authUser,
-                      );
+              onTap: _authType == 'facebook'
+                  ? null
+                  : () async {
+                      switch (_authType) {
+                        case 'authUser':
+                          var res = await Get.toNamed(
+                            AppRoutes.editProfile,
+                            arguments: _authUser,
+                          );
 
-                      if (res) {
-                        _authUser = AuthUserModel(
-                          userName: await _authController.getAuthUserName(),
-                          avatarUrl: await _authController.getAuthUserAvatar(),
-                        );
-                        setState(() {});
+                          if (res) {
+                            _authUser = AuthUserModel(
+                              userName: await _authController.getAuthUserName(),
+                              avatarUrl: await _authController.getAuthUserAvatar(),
+                            );
+                            setState(() {});
+                          }
+                          break;
+                        case 'facebook':
+                          break;
+                        case 'google':
+                          var res = await Get.toNamed(
+                            AppRoutes.editProfile,
+                            arguments: _googleUser,
+                          );
+
+                          if (res) {
+                            _googleUser = _authController.currentAuthUser;
+                            setState(() {});
+                          }
+                          break;
                       }
-                    }
-                  : null,
+                    },
               borderRadius: BorderRadius.zero,
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -144,9 +161,24 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                               fit: BoxFit.cover,
                             );
                           }
+                        } else if (_authType == 'google') {
+                          return Image.network(
+                            _googleUser?.photoURL ?? '',
+                            width: MediaQuery.of(context).size.width * 0.25,
+                            height: MediaQuery.of(context).size.width * 0.25,
+                            fit: BoxFit.cover,
+                            loadingBuilder: (_, child, chunkEvent) {
+                              if (chunkEvent == null) return child;
+
+                              return LoadingContainer(
+                                width: MediaQuery.of(context).size.width * 0.25,
+                                height: MediaQuery.of(context).size.width * 0.25,
+                              );
+                            },
+                          );
                         } else {
                           return Image.network(
-                            _authType == 'facebook' ? _facebookUser!.picture?.url ?? '' : _googleUser!.photoURL ?? '',
+                            _facebookUser?.picture?.url ?? '',
                             width: MediaQuery.of(context).size.width * 0.25,
                             height: MediaQuery.of(context).size.width * 0.25,
                             fit: BoxFit.cover,
@@ -169,23 +201,24 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
-                            _authType == 'facebook'
-                                ? _facebookUser!.name ?? ''
+                            _authType == 'authUser'
+                                ? _authUser!.userName ?? ''
                                 : _authType == 'google'
-                                    ? _googleUser!.displayName ?? ''
-                                    : _authUser!.userName ?? '',
+                                    ? _googleUser?.displayName ?? ''
+                                    : _facebookUser?.name ?? '',
                             style: Theme.of(context).textTheme.headline5?.copyWith(
                                   color: AppColors.black,
                                   fontWeight: FontWeight.bold,
+                                  fontSize: 20.0,
                                 ),
                           ),
                           const SizedBox(height: 4.0),
                           Text(
-                            _authType == 'facebook'
-                                ? _facebookUser!.email ?? ''
+                            _authType == 'authUser'
+                                ? _authUser!.userName ?? ''
                                 : _authType == 'google'
-                                    ? _googleUser!.email ?? ''
-                                    : _authUser!.userName ?? '',
+                                    ? _googleUser?.email ?? ''
+                                    : _facebookUser?.email ?? '',
                             style: Theme.of(context).textTheme.caption?.copyWith(
                                   color: AppColors.black,
                                   fontWeight: FontWeight.w100,
@@ -196,9 +229,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       ),
                     ),
                     Visibility(
-                      visible: _authType == 'authUser',
+                      visible: _authType != 'facebook',
                       child: const Icon(Icons.arrow_forward_ios, size: 20.0),
-                    ),
+                    )
                   ],
                 ),
               ),

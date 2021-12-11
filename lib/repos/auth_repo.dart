@@ -1,9 +1,8 @@
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:mixture_music_app/models/auth/auth_user_model.dart';
+import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
 import 'package:mixture_music_app/services/firebase_service.dart';
 import 'package:mixture_music_app/services/share_preference_service.dart';
@@ -75,49 +74,40 @@ class AuthRepo {
     return userModel;
   }
 
-  Future<void> addAuthUser({
+  Future<CreateAccountState> createAuthUser({
     required String userName,
     required String password,
     required String avatarUrl,
   }) async {
-    return await _authService.addAuthUser(userName: userName, password: password, avatarUrl: avatarUrl);
+    var result = await _authService.createAuthUser(userName: userName, password: password, avatarUrl: avatarUrl);
+
+    if (result) {
+      return CreateAccountState.success;
+    } else {
+      return CreateAccountState.failed;
+    }
+  }
+
+  Future<SignInAccountState> signInWithAuthAccount(String userName, String password) async {
+    var result = await _authService.signInWithAuthAccount(userName, password);
+
+    if (result == 'success') {
+      return SignInAccountState.success;
+    } else {
+      return SignInAccountState.failed;
+    }
+  }
+
+  Future<void> createSocialUser(String uid, String email, String avatarUrl, String userName) async {
+    return await _authService.createSocialUser(uid, email, avatarUrl, userName);
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
     return await _authService.getAllAccountFromFirebase();
   }
 
-  Future<bool> checkIfUserExisted(String userName) async {
-    var result = await _authService.getUserByUserName(userName);
-    print(result.exists);
-
-    return result.exists;
-  }
-
-  Future<AuthUserModel?> getUserByUserName(String userName) async {
-    var result = await _authService.getUserByUserName(userName);
-    var data = result.data();
-    AuthUserModel? user;
-
-    if (data != null) {
-      user = AuthUserModel(
-        userName: data['user_name'],
-        password: data['password'],
-        avatarUrl: data['avatar_url'],
-      );
-    }
-
-    return user;
-  }
-
   Future<void> resetAccountPassword(String userName, String newPassword) async {
     return await _authService.resetAccountPassword(userName, newPassword);
-  }
-
-  Future<String> uploadAvatarToFirebase(File image) async {
-    var res = await _firebaseService.uploadAvatarToFirebase(image);
-
-    return await res.ref.getDownloadURL();
   }
 
   Future<void> saveAuthType(String authType) async {
@@ -133,7 +123,7 @@ class AuthRepo {
   }
 
   Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
-    return await _authService.updateAuthUserData(oldUserName, newUserName, avatarUrl, password);
+    return await _firebaseService.updateAuthUserData(oldUserName, newUserName, avatarUrl, password);
   }
 
   Future<void> saveAuthUserName(String userName) async {
@@ -166,5 +156,21 @@ class AuthRepo {
 
   Future<int> removeAuthUserAvatar() async {
     return await _sharePrefService.removeAuthUserAvatar();
+  }
+
+  Future<void> updateGoogleUserAvatar(String avatarUrl) async {
+    return await _firebaseService.updateGoogleUserAvatar(avatarUrl);
+  }
+
+  Future<void> updateGoogleUserName(String newName) async {
+    return await _firebaseService.updateGoogleUserName(newName);
+  }
+
+  Future<void> updateGoogleUserPassword(String newPassword) async {
+    return await _firebaseService.updateGoogleUserPassword(newPassword);
+  }
+
+  Future<void> updateGoogleUserOnFirebase(String uid, String email, String avatarUrl, String newName) async {
+    return await _firebaseService.updateGoogleUserOnFirebase(uid, email, avatarUrl, newName);
   }
 }

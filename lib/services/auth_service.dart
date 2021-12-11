@@ -68,6 +68,13 @@ class AuthService {
       if (result.status == LoginStatus.success) {
         // User logged in
         _accessToken = result.accessToken!;
+        // Add facebook user to current user on Firebase
+        var credential = FacebookAuthProvider.credential(result.accessToken?.token ?? '');
+        await _auth.signInWithCredential(credential).then((value) {
+          print('current facebook user: ${value.user}');
+        }).catchError((err) {
+          print(err.toString());
+        });
       }
     } catch (ex) {
       print(ex.toString());
@@ -92,20 +99,64 @@ class AuthService {
     return userData;
   }
 
-  Future<void> addAuthUser({
+  Future<bool> createAuthUser({
     required String userName,
     required String password,
     required String avatarUrl,
   }) async {
-    var result = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).set(
-      {'user_name': userName, 'password': password, 'avatar_url': avatarUrl},
-    ).catchError(
-      (err) {
-        print(err);
-      },
-    );
+    var result = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).get();
 
-    return result;
+    if (!result.exists) {
+      await FirebaseFirestore.instance.collection('user_accounts').doc(userName).set(
+        {'user_name': userName, 'password': password, 'avatar_url': avatarUrl},
+      ).catchError(
+        (err) {
+          print(err);
+        },
+      );
+
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<void> createSocialUser(String uid, String email, String avatarUrl, String userName) async {
+    var isExisted = await _checkIfSocialUserExisted(uid);
+
+    if (!isExisted) {
+      await FirebaseFirestore.instance.collection('user_accounts').doc(uid).set(
+        {'user_name': userName, 'email': email, 'avatar_url': avatarUrl},
+      ).catchError(
+        (err) {
+          print(err);
+        },
+      );
+    }
+  }
+
+  Future<bool> _checkIfSocialUserExisted(String uid) async {
+    var result = await FirebaseFirestore.instance.collection('user_accounts').doc(uid).get();
+
+    if (result.exists) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<String> signInWithAuthAccount(String userName, String password) async {
+    var result = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).get();
+
+    if (!result.exists) {
+      await FirebaseFirestore.instance.collection('user_accounts').doc(userName).set(
+        {'user_name': userName, 'password': password},
+      );
+
+      return 'success';
+    } else {
+      return 'Account already in use';
+    }
   }
 
   Future<QuerySnapshot<dynamic>> getAllAccountFromFirebase() async {
@@ -114,20 +165,7 @@ class AuthService {
     });
   }
 
-  Future<DocumentSnapshot<Map<String, dynamic>>> getUserByUserName(String userName) async {
-    var res = await FirebaseFirestore.instance.collection('user_accounts').doc(userName).get();
-    print(res.data());
-    return res;
-  }
-
   Future<void> resetAccountPassword(String userName, String newPassword) async {
     return await FirebaseFirestore.instance.collection('user_accounts').doc(userName).update({'password': newPassword});
-  }
-
-  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
-    await FirebaseFirestore.instance.collection('user_accounts').doc(oldUserName).delete();
-    return await FirebaseFirestore.instance.collection('user_accounts').doc(newUserName).set(
-      {'user_name': newUserName, 'password': password, 'avatar_url': avatarUrl},
-    );
   }
 }
