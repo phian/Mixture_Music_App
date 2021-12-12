@@ -84,8 +84,9 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         buttonRadius: BorderRadius.circular(8.0),
                         onTap: () async {
                           var authUserName = await _authController.getAuthUserName();
+                          print('auth user name: $authUserName');
 
-                          if (_authController.currentAuthUser == null || authUserName.isEmpty) {
+                          if (_authController.currentAuthUser == null && authUserName.isEmpty) {
                             Get.toNamed(AppRoutes.signIn);
                           } else {
                             Get.toNamed(AppRoutes.navigationScreen);

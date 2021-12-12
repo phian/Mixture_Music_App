@@ -5,7 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   /// Google
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   User? _currentGoogleUser;
   GoogleSignIn? _googleSignIn;
   GoogleSignInAccount? _googleSignInAccount;
@@ -16,8 +16,6 @@ class AuthService {
   User? get googleUser => _currentGoogleUser;
 
   Future<User?> signInWithGoogle() async {
-    _auth = FirebaseAuth.instance;
-
     _googleSignIn = GoogleSignIn();
     _googleSignInAccount = await _googleSignIn?.signIn();
 
@@ -121,12 +119,12 @@ class AuthService {
     return false;
   }
 
-  Future<void> createSocialUser(String uid, String email, String avatarUrl, String userName) async {
+  Future<void> createSocialUser(String uid, String email, String avatarUrl, String username) async {
     var isExisted = await _checkIfSocialUserExisted(uid);
 
     if (!isExisted) {
       await FirebaseFirestore.instance.collection('user_accounts').doc(uid).set(
-        {'user_name': userName, 'email': email, 'avatar_url': avatarUrl},
+        {'user_name': username, 'email': email, 'avatar_url': avatarUrl},
       ).catchError(
         (err) {
           print(err);
@@ -138,11 +136,7 @@ class AuthService {
   Future<bool> _checkIfSocialUserExisted(String uid) async {
     var result = await FirebaseFirestore.instance.collection('user_accounts').doc(uid).get();
 
-    if (result.exists) {
-      return true;
-    } else {
-      return false;
-    }
+    return result.exists;
   }
 
   Future<String> signInWithAuthAccount(String userName, String password) async {
@@ -167,5 +161,60 @@ class AuthService {
 
   Future<void> resetAccountPassword(String userName, String newPassword) async {
     return await FirebaseFirestore.instance.collection('user_accounts').doc(userName).update({'password': newPassword});
+  }
+
+  Future<Map<String, dynamic>> createUserWithUsernamePassword(String email, String password, String avatarUrl, String username) async {
+    late UserCredential credential;
+    try {
+      credential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      return {
+        'code': e.code,
+        'credential': null,
+      };
+    } catch (e) {
+      print(e);
+      return {
+        'code': e.toString(),
+        'credential': null,
+      };
+    }
+
+    await credential.user?.updatePhotoURL(avatarUrl);
+    await credential.user?.updateDisplayName(username);
+
+    return {
+      'code': 'success',
+      'credential': credential,
+    };
+  }
+
+  Future<Map<String, dynamic>> signInWithUsernameAndPassword(String email, String password) async {
+    UserCredential credential;
+    try {
+      credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+    } on FirebaseAuthException catch (e) {
+      return {
+        'code': e.toString(),
+        'credential': null,
+      };
+    } catch (e) {
+      print(e);
+      return {
+        'code': e.toString(),
+        'credential': null,
+      };
+    }
+
+    return {
+      'code': 'success',
+      'credential': credential,
+    };
   }
 }

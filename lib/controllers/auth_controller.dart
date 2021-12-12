@@ -115,8 +115,8 @@ class AuthController extends GetxController {
     return await _authRepo.updateAuthType(newType);
   }
 
-  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
-    return await _authRepo.updateAuthUserData(oldUserName, newUserName, avatarUrl, password);
+  Future<void> updateAuthUserData(String uid, String newUserName, String avatarUrl, String email) async {
+    return await _authRepo.updateAuthUserData(uid, newUserName, avatarUrl, email);
   }
 
   Future<void> saveAuthUserName(String userName) async {
@@ -169,5 +169,13 @@ class AuthController extends GetxController {
 
   Future<void> updateGoogleUserOnFirebase(String uid, String email, String avatarUrl, String newName) async {
     return await _authRepo.updateGoogleUserOnFirebase(uid, email, avatarUrl, newName);
+  }
+
+  Future<Map<String, dynamic>> createUserWithUsernamePassword(String email, String password, String avatarUrl, String username) async {
+    return await _authRepo.createUserWithUsernamePassword(email, password, avatarUrl, username);
+  }
+
+  Future<Map<String, dynamic>> signInWithUsernameAndPassword(String email, String password) async {
+    return await _authRepo.signInWithUsernameAndPassword(email, password);
   }
 }

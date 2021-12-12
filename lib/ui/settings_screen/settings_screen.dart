@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/images/app_icons.dart';
-import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/settings_screen/constants/settings_screen_constants.dart';
@@ -30,7 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   String _appVersion = '';
   FacebookUserModel? _facebookUser;
   User? _googleUser;
-  AuthUserModel? _authUser;
+  User? _authUser;
   final _authController = Get.find<AuthController>();
   String _authType = '';
   final _settingsController = Get.put(SettingsScreenController());
@@ -66,10 +65,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
         setState(() {});
         break;
       case 'authUser':
-        _authUser = AuthUserModel(
-          userName: await _authController.getAuthUserName(),
-          avatarUrl: await _authController.getAuthUserAvatar(),
-        );
+        _authUser = _authController.currentAuthUser;
         setState(() {});
         break;
     }
@@ -108,10 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           );
 
                           if (res) {
-                            _authUser = AuthUserModel(
-                              userName: await _authController.getAuthUserName(),
-                              avatarUrl: await _authController.getAuthUserAvatar(),
-                            );
+                            _authUser = _authController.currentAuthUser;
                             setState(() {});
                           }
                           break;
@@ -138,9 +131,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                     ClipOval(
                       child: () {
                         if (_authType == 'authUser') {
-                          if (_authUser!.avatarUrl != null) {
+                          if (_authUser!.photoURL != null) {
                             return Image.network(
-                              _authUser!.avatarUrl!,
+                              _authUser!.photoURL!,
                               width: MediaQuery.of(context).size.width * 0.25,
                               height: MediaQuery.of(context).size.width * 0.25,
                               fit: BoxFit.cover,
@@ -202,7 +195,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                         children: [
                           Text(
                             _authType == 'authUser'
-                                ? _authUser!.userName ?? ''
+                                ? _authUser!.displayName ?? _authUser!.email ?? ''
                                 : _authType == 'google'
                                     ? _googleUser?.displayName ?? ''
                                     : _facebookUser?.name ?? '',
@@ -215,7 +208,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           const SizedBox(height: 4.0),
                           Text(
                             _authType == 'authUser'
-                                ? _authUser!.userName ?? ''
+                                ? _authUser!.email ?? ''
                                 : _authType == 'google'
                                     ? _googleUser?.email ?? ''
                                     : _facebookUser?.email ?? '',
@@ -383,8 +376,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                   Get.offAllNamed(AppRoutes.signIn);
                   break;
                 case 'authUser':
-                  await _authController.removeAuthUserName();
-                  await _authController.removeAuthUserAvatar();
+                  _authController.googleSignOut();
                   Get.offAllNamed(AppRoutes.signIn);
                   break;
               }

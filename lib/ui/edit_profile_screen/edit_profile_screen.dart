@@ -10,13 +10,13 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/images/app_icons.dart';
-import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/widgets/pick_image_dialog.dart';
 import 'package:mixture_music_app/widgets/base_app_bar.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/textfield_config.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/custom_textfield.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import 'package:mixture_music_app/widgets/loading_overlay_widget.dart';
 import 'package:mixture_music_app/widgets/unfocus_widget.dart';
 
 class EditProfileScreen extends StatefulWidget {
@@ -29,13 +29,14 @@ class EditProfileScreen extends StatefulWidget {
 class _EditProfileScreenState extends State<EditProfileScreen> {
   final _nameController = TextEditingController();
   bool _isEnableSave = false;
-  AuthUserModel _authUser = AuthUserModel();
+  User? _authUser;
   User? _googleUser;
   final _authController = Get.find<AuthController>();
   File? _avatar;
   String _userName = '';
   String _userAvatar = '';
   SignInType _authType = SignInType.authUser;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -46,7 +47,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   void _getUserName() {
     switch (_authType) {
       case SignInType.authUser:
-        _userName = _authUser.userName ?? '';
+        _userName = _authUser?.displayName ?? '';
         break;
       case SignInType.facebook:
         break;
@@ -71,7 +72,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         break;
       case SignInType.authUser:
         setState(() {
-          _userAvatar = _authUser.avatarUrl ?? '';
+          _userAvatar = _authUser?.photoURL ?? '';
         });
         break;
     }
@@ -82,7 +83,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
     switch (authType) {
       case 'authUser':
-        _authUser = Get.arguments as AuthUserModel;
+        _authUser = Get.arguments as User;
         _authType = SignInType.authUser;
         _getUserName();
         _getUserAvatar();
@@ -100,226 +101,254 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return UnFocusWidget(
-      child: Scaffold(
-        appBar: BaseAppBar(
-          title: Text(
-            'Edit profile',
-            style: Theme.of(context).textTheme.headline4?.copyWith(
-                  fontSize: 22.0,
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          centerTitle: true,
-          backgroundColor: AppColors.transparent,
-          elevation: 0.0,
-          leading: IconButton(
-            icon: Icon(
-              Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
-              color: AppColors.black,
+    return LoadingOverLayWidget(
+      isLoading: _isLoading,
+      child: UnFocusWidget(
+        child: Scaffold(
+          appBar: BaseAppBar(
+            title: Text(
+              'Edit profile',
+              style: Theme.of(context).textTheme.headline4?.copyWith(
+                    fontSize: 22.0,
+                    color: AppColors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            onPressed: () {
-              Get.back(result: true);
-            },
-          ),
-          actions: [
-            Align(
-              alignment: Alignment.center,
-              child: Container(
-                margin: const EdgeInsets.only(right: 8.0),
-                child: InkWellWrapper(
-                  onTap: _isEnableSave
-                      ? () async {
-                          if (_authType == SignInType.authUser) {
-                            String url = '';
-                            if (_avatar != null) {
-                              url = await _authController.uploadAvatarToFirebase(_avatar!);
-                              await _authController.updateAuthUserAvatar(url);
-                            }
+            centerTitle: true,
+            backgroundColor: AppColors.transparent,
+            elevation: 0.0,
+            leading: IconButton(
+              icon: Icon(
+                Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios,
+                color: AppColors.black,
+              ),
+              onPressed: () {
+                Get.back(result: true);
+              },
+            ),
+            actions: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 8.0),
+                  child: InkWellWrapper(
+                    onTap: _isEnableSave
+                        ? () async {
+                            if (_authType == SignInType.authUser) {
+                              setState(() {
+                                _isLoading = true;
+                              });
 
-                            var temp = await _authController.getUserByID(_userName);
-                            await _authController.updateAuthUserData(
-                              _userName,
-                              _nameController.text,
-                              url.isNotEmpty
-                                  ? url
-                                  : _authUser.avatarUrl?.isNotEmpty == true
-                                      ? _authUser.avatarUrl!
-                                      : '',
-                              temp?.password ?? '',
-                            );
-                            if (_userName != _nameController.text) {
-                              await _authController.updateAuthUserName(_nameController.text);
-                              _getUserName();
-                              _isEnableSave = false;
-                            }
-                            Fluttertoast.showToast(
-                              msg: 'Update profile success',
-                              fontSize: 18.0,
-                              toastLength: Toast.LENGTH_SHORT,
-                              backgroundColor: Theme.of(context).primaryColor,
-                            );
-                          } else {
-                            String url = '';
-                            if (_avatar != null) {
-                              url = await _authController.uploadAvatarToFirebase(_avatar!);
-                            }
+                              String url = '';
+                              if (_avatar != null) {
+                                url = await _authController.uploadAvatarToFirebase(_avatar!);
+                                await _authController.updateGoogleUserAvatar(url);
+                              }
 
-                            if (url.isNotEmpty) {
-                              await _authController.updateGoogleUserAvatar(url);
-                              _authController.updateGoogleUserOnFirebase(
-                                  _googleUser?.uid ?? '', _googleUser?.email ?? '', url, _googleUser?.displayName ?? '');
-                              _isEnableSave = false;
-                            }
-
-                            if ((_userName != _nameController.text.trim()) && _nameController.text.isNotEmpty) {
-                              await _authController.updateGoogleUserName(_nameController.text);
-                              _authController.updateGoogleUserOnFirebase(
-                                _googleUser?.uid ?? '',
-                                _googleUser?.email ?? '',
-                                _googleUser?.photoURL ?? '',
+                              await _authController.updateAuthUserData(
+                                _authUser?.uid ?? '',
                                 _nameController.text,
+                                url.isNotEmpty
+                                    ? url
+                                    : _authUser?.photoURL?.isNotEmpty == true
+                                        ? _authUser!.photoURL!
+                                        : '',
+                                _authUser?.email ?? '',
                               );
-                              _userName = _nameController.text;
-                              _isEnableSave = false;
+                              if ((_userName != _nameController.text.trim()) && _nameController.text.isNotEmpty) {
+                                await _authController.updateGoogleUserName(_nameController.text);
+                                _authController.updateGoogleUserOnFirebase(
+                                  _googleUser?.uid ?? '',
+                                  _googleUser?.email ?? '',
+                                  _googleUser?.photoURL ?? '',
+                                  _nameController.text,
+                                );
+
+                                _authUser = _authController.currentAuthUser;
+                                _getUserName();
+                                _isEnableSave = false;
+                              }
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              Fluttertoast.showToast(
+                                msg: 'Update profile success',
+                                fontSize: 18.0,
+                                toastLength: Toast.LENGTH_SHORT,
+                                backgroundColor: Theme.of(context).primaryColor,
+                              );
+                            } else {
+                              setState(() {
+                                _isLoading = true;
+                              });
+
+                              String url = '';
+                              if (_avatar != null) {
+                                url = await _authController.uploadAvatarToFirebase(_avatar!);
+                              }
+
+                              if (url.isNotEmpty) {
+                                await _authController.updateGoogleUserAvatar(url);
+                                _authController.updateGoogleUserOnFirebase(
+                                    _googleUser?.uid ?? '', _googleUser?.email ?? '', url, _googleUser?.displayName ?? '');
+                                _isEnableSave = false;
+                              }
+
+                              if ((_userName != _nameController.text.trim()) && _nameController.text.isNotEmpty) {
+                                await _authController.updateGoogleUserName(_nameController.text);
+                                _authController.updateGoogleUserOnFirebase(
+                                  _googleUser?.uid ?? '',
+                                  _googleUser?.email ?? '',
+                                  _googleUser?.photoURL ?? '',
+                                  _nameController.text,
+                                );
+
+                                _googleUser = _authController.currentAuthUser;
+                                _getUserName();
+                                _isEnableSave = false;
+                              }
+
+                              setState(() {
+                                _isLoading = false;
+                              });
+                              Fluttertoast.showToast(
+                                msg: 'Update profile success',
+                                fontSize: 18.0,
+                                toastLength: Toast.LENGTH_SHORT,
+                                backgroundColor: Theme.of(context).primaryColor,
+                              );
+                            }
+                          }
+                        : null,
+                    color: Colors.transparent,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                      child: Text(
+                        'Save',
+                        style: Theme.of(context).textTheme.headline5?.copyWith(
+                              fontSize: 20.0,
+                            ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                Align(
+                  alignment: Alignment.center,
+                  child: GestureDetector(
+                    onTap: () {
+                      Get.dialog(
+                        Dialog(
+                          child: PickImageDialog(
+                            onCameraTap: () {
+                              Get.back();
+                              _pickImage(ImageSource.camera);
+                            },
+                            onGalleryTap: () {
+                              Get.back();
+                              _pickImage(ImageSource.gallery);
+                            },
+                          ),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        barrierColor: Colors.transparent,
+                      );
+                    },
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ClipOval(
+                          child: () {
+                            if (_avatar != null) {
+                              return Image.file(
+                                _avatar!,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: MediaQuery.of(context).size.width * 0.5,
+                                fit: BoxFit.cover,
+                              );
                             }
 
-                            Fluttertoast.showToast(
-                              msg: 'Update profile success',
-                              fontSize: 18.0,
-                              toastLength: Toast.LENGTH_SHORT,
-                              backgroundColor: Theme.of(context).primaryColor,
-                            );
-                          }
-                        }
-                      : null,
-                  color: Colors.transparent,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                    child: Text(
-                      'Save',
+                            if (_userAvatar.isNotEmpty) {
+                              return Image.network(
+                                _userAvatar,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: MediaQuery.of(context).size.width * 0.5,
+                                fit: BoxFit.cover,
+                              );
+                            } else {
+                              return Image.asset(
+                                AppIcons.avatar,
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                height: MediaQuery.of(context).size.width * 0.5,
+                                fit: BoxFit.cover,
+                              );
+                            }
+                          }(),
+                        ),
+                        Icon(Icons.camera_enhance, size: 35.0, color: Theme.of(context).primaryColor),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16.0),
+                Text(
+                  'Change avatar',
+                  style: Theme.of(context).textTheme.headline5?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
+                ),
+                const SizedBox(height: 24.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: CustomTextField(
+                    textFieldType: TextFieldType.name,
+                    textFieldConfig: TextFieldConfig(
+                      textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headline5?.copyWith(
-                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                      controller: _nameController,
+                    ),
+                    onChanged: (value) {
+                      if ((value.trim() != _userName && _nameController.text.isNotEmpty) || _avatar != null) {
+                        setState(() {
+                          _isEnableSave = true;
+                        });
+                      } else {
+                        _isEnableSave = false;
+                      }
+                    },
+                    decorationConfig: TextFieldDecorationConfig(
+                      enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 0.1)),
+                      focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 0.1)),
+                      border: const UnderlineInputBorder(borderSide: BorderSide(width: 0.1)),
+                      hintText: 'Your name',
+                      hintStyle: Theme.of(context).textTheme.headline5?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.hintColor,
                           ),
                     ),
                   ),
                 ),
-              ),
+                const SizedBox(height: 24.0),
+                Text(
+                  'This is maybe your name or nickname.\nThis is how you appear on our app',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.caption?.copyWith(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14.0,
+                      ),
+                ),
+              ],
             ),
-          ],
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.05),
-              Align(
-                alignment: Alignment.center,
-                child: GestureDetector(
-                  onTap: () {
-                    Get.dialog(
-                      Dialog(
-                        child: PickImageDialog(
-                          onCameraTap: () {
-                            Get.back();
-                            _pickImage(ImageSource.camera);
-                          },
-                          onGalleryTap: () {
-                            Get.back();
-                            _pickImage(ImageSource.gallery);
-                          },
-                        ),
-                        backgroundColor: Colors.transparent,
-                      ),
-                      barrierColor: Colors.transparent,
-                    );
-                  },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      ClipOval(
-                        child: () {
-                          if (_avatar != null) {
-                            return Image.file(
-                              _avatar!,
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              height: MediaQuery.of(context).size.width * 0.5,
-                              fit: BoxFit.cover,
-                            );
-                          }
-
-                          if (_userAvatar.isNotEmpty) {
-                            return Image.network(
-                              _userAvatar,
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              height: MediaQuery.of(context).size.width * 0.5,
-                              fit: BoxFit.cover,
-                            );
-                          } else {
-                            return Image.asset(
-                              AppIcons.avatar,
-                              width: MediaQuery.of(context).size.width * 0.5,
-                              height: MediaQuery.of(context).size.width * 0.5,
-                              fit: BoxFit.cover,
-                            );
-                          }
-                        }(),
-                      ),
-                      Icon(Icons.camera_enhance, size: 35.0, color: Theme.of(context).primaryColor),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16.0),
-              Text(
-                'Change avatar',
-                style: Theme.of(context).textTheme.headline5?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16.0,
-                    ),
-              ),
-              const SizedBox(height: 24.0),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: CustomTextField(
-                  textFieldType: TextFieldType.name,
-                  textFieldConfig: TextFieldConfig(
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headline5?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                    controller: _nameController,
-                  ),
-                  onChanged: (value) {
-                    if ((value.trim() != _userName && _nameController.text.isNotEmpty) || _avatar != null) {
-                      setState(() {
-                        _isEnableSave = true;
-                      });
-                    } else {
-                      _isEnableSave = false;
-                    }
-                  },
-                  decorationConfig: TextFieldDecorationConfig(
-                    enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 0.1)),
-                    focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(width: 0.1)),
-                    border: const UnderlineInputBorder(borderSide: BorderSide(width: 0.1)),
-                    hintText: 'Your name',
-                    hintStyle: Theme.of(context).textTheme.headline5?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24.0),
-              Text(
-                'This is maybe your name or nickname.\nThis is how you appear on our app',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.caption?.copyWith(
-                      fontWeight: FontWeight.w300,
-                      fontSize: 14.0,
-                    ),
-              ),
-            ],
           ),
         ),
       ),
