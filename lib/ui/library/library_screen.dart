@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/library/views/mix_music_view.dart';
 import 'package:mixture_music_app/ui/library/views/recent_activity_view.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
 import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
 
 import '../../constants/app_colors.dart';
@@ -35,6 +36,11 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          Get.to(const TestAudioScreen());
+        },
+      ),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.only(
@@ -86,7 +92,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                         physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                         tabs: List.generate(
                           libraryTitle.length,
-                          (index) => Tab(
+                              (index) => Tab(
                             icon: Text(
                               libraryTitle[index],
                               style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
@@ -116,34 +122,34 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                 index: _selectedIndex,
                 children: List.generate(
                   libraryTitle.length,
-                  (index) => index == 1
+                      (index) => index == 1
                       ? const MixMusicView()
                       : index == libraryTitle.length - 1
-                          ? const Padding(
-                              child: RecentActivityView(),
-                              padding: EdgeInsets.only(top: 8.0),
-                            )
-                          : Container(
-                              margin: const EdgeInsets.only(
-                                left: 16.0,
-                                right: 16.0,
-                              ),
-                              child: AnimatedSwitcher(
-                                transitionBuilder: (child, anim) {
-                                  return FadeTransition(
-                                    opacity: anim,
-                                    child: ScaleTransition(
-                                      scale: anim,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                duration: const Duration(milliseconds: 300),
-                                child: _viewType == ViewType.list
-                                    ? _LibraryListView(libraries: libraryExampleModels)
-                                    : _LibraryGridView(libraries: libraryExampleModels),
-                              ),
-                            ),
+                      ? const Padding(
+                    child: RecentActivityView(),
+                    padding: EdgeInsets.only(top: 8.0),
+                  )
+                      : Container(
+                    margin: const EdgeInsets.only(
+                      left: 16.0,
+                      right: 16.0,
+                    ),
+                    child: AnimatedSwitcher(
+                      transitionBuilder: (child, anim) {
+                        return FadeTransition(
+                          opacity: anim,
+                          child: ScaleTransition(
+                            scale: anim,
+                            child: child,
+                          ),
+                        );
+                      },
+                      duration: const Duration(milliseconds: 300),
+                      child: _viewType == ViewType.list
+                          ? _LibraryListView(libraries: libraryExampleModels)
+                          : _LibraryGridView(libraries: libraryExampleModels),
+                    ),
+                  ),
                 ),
               ),
             ],

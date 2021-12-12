@@ -29,10 +29,10 @@ class FirebaseService {
     return res;
   }
 
-  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
-    await FirebaseFirestore.instance.collection('user_accounts').doc(oldUserName).delete();
-    return await FirebaseFirestore.instance.collection('user_accounts').doc(newUserName).set(
-      {'user_name': newUserName, 'password': password, 'avatar_url': avatarUrl},
+  Future<void> updateAuthUserData(String uid, String newUserName, String avatarUrl, String email) async {
+    await FirebaseFirestore.instance.collection('user_accounts').doc(uid).delete();
+    return await FirebaseFirestore.instance.collection('user_accounts').doc(uid).set(
+      {'user_name': newUserName, 'avatar_url': avatarUrl, 'email': email},
     );
   }
 

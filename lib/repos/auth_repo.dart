@@ -1,8 +1,8 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
+import 'package:mixture_music_app/models/auth/auth_user_model.dart';
 import 'package:mixture_music_app/models/auth/facebook/facebook_user_model.dart';
 import 'package:mixture_music_app/services/firebase_service.dart';
 import 'package:mixture_music_app/services/share_preference_service.dart';
@@ -122,8 +122,8 @@ class AuthRepo {
     return await _sharePrefService.updateAuthType(newType);
   }
 
-  Future<void> updateAuthUserData(String oldUserName, String newUserName, String avatarUrl, String password) async {
-    return await _firebaseService.updateAuthUserData(oldUserName, newUserName, avatarUrl, password);
+  Future<void> updateAuthUserData(String uid, String newUserName, String avatarUrl, String email) async {
+    return await _firebaseService.updateAuthUserData(uid, newUserName, avatarUrl, email);
   }
 
   Future<void> saveAuthUserName(String userName) async {
@@ -172,5 +172,71 @@ class AuthRepo {
 
   Future<void> updateGoogleUserOnFirebase(String uid, String email, String avatarUrl, String newName) async {
     return await _firebaseService.updateGoogleUserOnFirebase(uid, email, avatarUrl, newName);
+  }
+
+  Future<Map<String, dynamic>> createUserWithUsernamePassword(String email, String password, String avatarUrl, String username) async {
+    var result = await _authService.createUserWithUsernamePassword(email, password, avatarUrl, username);
+    late AuthUserModel user;
+
+    if (result['code'].contains('email-already-in-use')) {
+      return {
+        'state': CreateAccountState.emailAlreadyUsed,
+        'user': null,
+      };
+    } else if (result['code'].contains('email-already-in-use') == false && result['code'] != 'success') {
+      return {
+        'state': CreateAccountState.failed,
+        'user': null,
+      };
+    }
+
+    UserCredential credential = result['credential'];
+    user = AuthUserModel(
+      id: credential.user?.uid,
+      userName: credential.user?.displayName,
+      avatarUrl: credential.user?.photoURL,
+      email: credential.user?.email,
+    );
+
+    return {
+      'state': CreateAccountState.success,
+      'user': user,
+    };
+  }
+
+  Future<Map<String, dynamic>> signInWithUsernameAndPassword(String email, String password) async {
+    var result = await _authService.signInWithUsernameAndPassword(email, password);
+    late AuthUserModel user;
+
+    if (result['code'].contains('user-not-found')) {
+      return {
+        'state': SignInAccountState.notFound,
+        'user': null,
+      };
+    } else if (result['code'].contains('wrong-password')) {
+      return {
+        'state': SignInAccountState.wrongPassword,
+        'user': null,
+      };
+    } else if (result['code'].contains('user-not-found') == false &&
+        result['code'].contains('wrong-password') == false &&
+        result['code'].contains('success') == false) {
+      return {
+        'state': SignInAccountState.failed,
+        'user': null,
+      };
+    }
+
+    UserCredential credential = result['credential'];
+    user = AuthUserModel(
+      id: credential.user?.uid,
+      userName: credential.user?.displayName,
+      avatarUrl: credential.user?.photoURL,
+    );
+
+    return {
+      'state': SignInAccountState.success,
+      'user': user,
+    };
   }
 }
