@@ -1,118 +1,104 @@
+import 'dart:async';
+
 import 'package:audio_service/audio_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:mixture_music_app/ui/test_audio_screen/model/custom_audio_handler.dart';
-import 'package:mixture_music_app/ui/test_audio_screen/model/position_data.dart';
-import 'package:mixture_music_app/ui/test_audio_screen/sections/control_buttons.dart';
-import 'package:mixture_music_app/ui/test_audio_screen/widgets/custom_audio_service_widget.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/model/media_state.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/widgets/seek_bar.dart';
 import 'package:rxdart/rxdart.dart';
 
-class TestAudioScreen extends StatefulWidget {
+// You might want to provide this using dependency injection rather than a
+// global variable.
+late AudioHandler _audioHandler;
+
+Future<void> initAudioHandler() async {
+  _audioHandler = await AudioService.init(
+    builder: () => AudioPlayerHandler(),
+    config: const AudioServiceConfig(
+      androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
+      androidNotificationChannelName: 'Audio playback',
+      androidNotificationOngoing: true,
+    ),
+  );
+}
+
+class TestAudioScreen extends StatelessWidget {
   const TestAudioScreen({Key? key}) : super(key: key);
 
   @override
-  _TestAudioScreenState createState() => _TestAudioScreenState();
-}
-
-class _TestAudioScreenState extends State<TestAudioScreen> with WidgetsBindingObserver {
-  late final CustomAudioHandler _audioHandler = CustomAudioHandler();
-  final AudioPlayer _audioPlayer = AudioPlayer();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance?.addObserver(this);
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.black));
-    initAudioService();
-    AudioService.init(builder: () => _audioHandler);
-    _audioHandler.init();
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance?.removeObserver(this);
-    // Release decoders and buffers back to the operating system making them
-    // available for other apps to use.
-    _audioHandler.player.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      // Release the player's resources when not in use. We use "stop" so that
-      // if the app resumes later, it will still remember what position to
-      // resume from.
-      _audioHandler.player.stop();
-    }
-  }
-
-  /// Collects the data useful for displaying in a seek bar, using a handy
-  /// feature of rx_dart to combine the 3 streams of interest into one.
-  Stream<PositionData> get _positionDataStream => Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-        _audioHandler.player.positionStream,
-        _audioHandler.player.bufferedPositionStream,
-        _audioHandler.player.durationStream,
-        (position, bufferedPosition, duration) => PositionData(
-          position: position,
-          bufferedPosition: bufferedPosition,
-          duration: duration ?? Duration.zero,
-        ),
-      );
-
-  @override
   Widget build(BuildContext context) {
-    return CustomAudioServiceWidget(
-      audioHandler: _audioHandler,
-      child: Scaffold(
-        body: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Display play/pause button and volume/speed sliders.
-              ControlButtons(audioHandler: _audioHandler),
-              // Display seek bar. Using StreamBuilder, this widget rebuilds
-              // each time the position, buffered position or duration changes.
-              StreamBuilder<MediaItem?>(
-                stream: _audioHandler.mediaItem,
-                builder: (context, snapshot) {
-                  final duration = snapshot.data?.duration ?? Duration.zero;
-                  return StreamBuilder<PlaybackState>(
-                    stream: _audioHandler.playbackState,
-                    builder: (context, snapshot) {
-                      final playbackState = snapshot.data;
-                      final positionData = PositionData(
-                          position: playbackState?.position ?? Duration.zero, bufferedPosition: playbackState?.bufferedPosition ?? Duration.zero);
-                      var position = positionData.position;
-                      if (position > duration) {
-                        position = duration;
-                      }
-                      var bufferedPosition = positionData.bufferedPosition;
-                      if (bufferedPosition > duration) {
-                        bufferedPosition = duration;
-                      }
-                      return Container(
-                        margin: const EdgeInsets.only(top: 32.0),
-                        child: SeekBar(
-                          duration: duration,
-                          position: position,
-                          bufferedPosition: bufferedPosition,
-                          onChangeEnd: (newPosition) {
-                            _audioHandler.seek(newPosition);
-                          },
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
-            ],
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Audio Service Demo'),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Show media item title
+            StreamBuilder<MediaItem?>(
+              stream: _audioHandler.mediaItem,
+              builder: (context, snapshot) {
+                final mediaItem = snapshot.data;
+                return Text(mediaItem?.title ?? '');
+              },
+            ),
+            // Play/pause/stop buttons.
+            StreamBuilder<bool>(
+              stream: _audioHandler.playbackState.map((state) => state.playing).distinct(),
+              builder: (context, snapshot) {
+                final playing = snapshot.data ?? false;
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _button(Icons.fast_rewind, _audioHandler.rewind),
+                    if (playing) _button(Icons.pause, _audioHandler.pause) else _button(Icons.play_arrow, _audioHandler.play),
+                    _button(Icons.stop, _audioHandler.stop),
+                    _button(Icons.fast_forward, _audioHandler.fastForward),
+                  ],
+                );
+              },
+            ),
+            // A seek bar.
+            StreamBuilder<MediaState>(
+              stream: _mediaStateStream,
+              builder: (context, snapshot) {
+                final mediaState = snapshot.data;
+                return SeekBar(
+                  duration: mediaState?.mediaItem?.duration ?? Duration.zero,
+                  position: mediaState?.position ?? Duration.zero,
+                  onChangeEnd: (newPosition) {
+                    _audioHandler.seek(newPosition);
+                  },
+                );
+              },
+            ),
+            // Display the processing state.
+            StreamBuilder<AudioProcessingState>(
+              stream: _audioHandler.playbackState.map((state) => state.processingState).distinct(),
+              builder: (context, snapshot) {
+                final processingState = snapshot.data ?? AudioProcessingState.idle;
+                return Text('Processing state: ${describeEnum(processingState)}');
+              },
+            ),
+          ],
         ),
       ),
     );
   }
+
+  /// A stream reporting the combined state of the current media item and its
+  /// current position.
+  Stream<MediaState> get _mediaStateStream => Rx.combineLatest2<MediaItem?, Duration, MediaState>(
+        _audioHandler.mediaItem,
+        AudioService.position,
+        (mediaItem, position) => MediaState(mediaItem, position),
+      );
+
+  IconButton _button(IconData iconData, VoidCallback onPressed) => IconButton(
+        icon: Icon(iconData),
+        iconSize: 64.0,
+        onPressed: onPressed,
+      );
 }
