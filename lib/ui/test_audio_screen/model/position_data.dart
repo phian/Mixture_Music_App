@@ -1,7 +1,7 @@
 class PositionData {
   final Duration position;
   final Duration bufferedPosition;
-  final Duration? duration;
+  final Duration duration;
 
-  PositionData({required this.position, required this.bufferedPosition, this.duration});
+  PositionData(this.position, this.bufferedPosition, this.duration);
 }

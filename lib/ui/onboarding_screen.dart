@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -83,13 +82,10 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                         content: 'GET STARTED',
                         buttonRadius: BorderRadius.circular(8.0),
                         onTap: () async {
-                          var authUserName = await _authController.getAuthUserName();
-                          print('auth user name: $authUserName');
-
-                          if (_authController.currentAuthUser == null && authUserName.isEmpty) {
+                          if (_authController.currentAuthUser == null) {
                             Get.toNamed(AppRoutes.signIn);
                           } else {
-                            Get.toNamed(AppRoutes.navigationScreen);
+                            Get.offAllNamed(AppRoutes.navigationScreen);
                           }
                         },
                       ),

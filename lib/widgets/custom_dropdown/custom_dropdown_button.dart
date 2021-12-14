@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/widgets/custom_dropdown/config/dropdown_style.dart';
 import 'package:mixture_music_app/widgets/custom_dropdown/widgets/dropdown_item.dart';

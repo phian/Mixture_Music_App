@@ -37,7 +37,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
+        onPressed: () {
           Get.to(const TestAudioScreen());
         },
       ),
@@ -122,34 +122,34 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                 index: _selectedIndex,
                 children: List.generate(
                   libraryTitle.length,
-                      (index) => index == 1
+                  (index) => index == 1
                       ? const MixMusicView()
                       : index == libraryTitle.length - 1
-                      ? const Padding(
-                    child: RecentActivityView(),
-                    padding: EdgeInsets.only(top: 8.0),
-                  )
-                      : Container(
-                    margin: const EdgeInsets.only(
-                      left: 16.0,
-                      right: 16.0,
-                    ),
-                    child: AnimatedSwitcher(
-                      transitionBuilder: (child, anim) {
-                        return FadeTransition(
-                          opacity: anim,
-                          child: ScaleTransition(
-                            scale: anim,
-                            child: child,
-                          ),
-                        );
-                      },
-                      duration: const Duration(milliseconds: 300),
-                      child: _viewType == ViewType.list
-                          ? _LibraryListView(libraries: libraryExampleModels)
-                          : _LibraryGridView(libraries: libraryExampleModels),
-                    ),
-                  ),
+                          ? const Padding(
+                              child: RecentActivityView(),
+                              padding: EdgeInsets.only(top: 8.0),
+                            )
+                          : Container(
+                              margin: const EdgeInsets.only(
+                                left: 16.0,
+                                right: 16.0,
+                              ),
+                              child: AnimatedSwitcher(
+                                transitionBuilder: (child, anim) {
+                                  return FadeTransition(
+                                    opacity: anim,
+                                    child: ScaleTransition(
+                                      scale: anim,
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                duration: const Duration(milliseconds: 300),
+                                child: _viewType == ViewType.list
+                                    ? _LibraryListView(libraries: libraryExampleModels)
+                                    : _LibraryGridView(libraries: libraryExampleModels),
+                              ),
+                            ),
                 ),
               ),
             ],
