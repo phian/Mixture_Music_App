@@ -1,35 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/models/playlist_model2.dart';
 
+
+import '../../../models/playlist_model.dart';
 import '../../create_playlist_screen.dart';
 
 class ListPlayList extends StatelessWidget {
   ListPlayList({Key? key}) : super(key: key);
 
   final listPlaylist = [
-    PlaylistModel2(
-      id: 01,
-      title: 'Ngày Mưa',
-      totalSong: 14,
-      coverURL:
+    PlaylistModel(
+      playListId: 01,
+      playlistName: 'Ngày Mưa',
+      totalTrack: 14,
+      imageUrl:
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     ),
-    PlaylistModel2(
-      id: 01,
-      title: 'Ngày Nắng',
-      totalSong: 17,
-      coverURL:
+    PlaylistModel(
+      playListId: 01,
+      playlistName: 'Ngày Mưa',
+      totalTrack: 14,
+      imageUrl:
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     ),
-    PlaylistModel2(
-      id: 01,
-      title: 'Nóng như thế này',
-      totalSong: 20,
-      coverURL:
+    PlaylistModel(
+      playListId: 01,
+      playlistName: 'Ngày Mưa',
+      totalTrack: 14,
+      imageUrl:
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     ),
+    
   ];
 
   @override
@@ -86,16 +88,16 @@ class ListPlayList extends StatelessWidget {
                         leading: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: Image.network(
-                            listPlaylist[index].coverURL,
+                            listPlaylist[index].imageUrl!,
                             height: 50,
                             width: 50,
                           ),
                         ),
                         title: Text(
-                          listPlaylist[index].title,
+                          listPlaylist[index].playlistName!,
                         ),
                         subtitle: Text(
-                          listPlaylist[index].totalSong.toString() + ' Tracks',
+                          listPlaylist[index].totalTrack.toString() + ' Tracks',
                         ),
                         trailing: Checkbox(
                           value: true,

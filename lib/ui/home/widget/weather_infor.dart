@@ -72,7 +72,9 @@ class LocationInfor extends StatelessWidget {
         children: [
           Text(
             current.weather[0].description,
-            style: Theme.of(context).textTheme.headline4,
+            style: Theme.of(context).textTheme.headline4!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           Text(
             'In $location',

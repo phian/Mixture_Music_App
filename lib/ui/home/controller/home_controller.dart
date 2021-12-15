@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/theme_controller.dart';
 
 import '../../../constants/app_colors.dart';
-import '../../../constants/app_theme.dart';
 import '../../../controllers/weather_controller.dart';
 import '../../../models/weather/weather_model.dart';
 
@@ -14,7 +13,8 @@ class HomeController extends GetxController {
   var playingSongIndex = Rxn<int>();
 
   late Position _pos;
-  final WeatherController _weatherController = WeatherController();
+  final _weatherController = WeatherController();
+  final _themeController = Get.put(ThemeController());
 
   bool hasLoaded = false;
 
@@ -38,20 +38,16 @@ class HomeController extends GetxController {
 
   void setTheme() {
     var temp = weatherModel.value!.current.temp;
-    ThemeData theme;
-    bool isDarkMode = false;
 
     if (temp <= 5) {
-      theme = AppThemes.buildTheme(AppColors.coldColor, isDarkMode);
+      _themeController.setThemeColor(AppColors.coldColor);
     } else if (temp > 5 && temp <= 17) {
-      theme = AppThemes.buildTheme(AppColors.coolColor, isDarkMode);
+      _themeController.setThemeColor(AppColors.coolColor);
     } else if (temp > 17 && temp <= 25) {
-      theme = AppThemes.buildTheme(AppColors.warmColor, isDarkMode);
+      _themeController.setThemeColor(AppColors.warmColor);
     } else {
-      theme = AppThemes.buildTheme(AppColors.hotColor, isDarkMode);
+      _themeController.setThemeColor(AppColors.hotColor);
     }
-
-    Get.changeTheme(theme);
   }
 
   Future<String> getLocationName() async {

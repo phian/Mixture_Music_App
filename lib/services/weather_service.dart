@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:http/http.dart' as http;
 
@@ -16,7 +15,7 @@ class WeatherService {
 
     Map<String, dynamic> jsonData =
         jsonDecode(response.body) as Map<String, dynamic>;
-    log(jsonData.toString());
+
     return jsonData;
   }
 }

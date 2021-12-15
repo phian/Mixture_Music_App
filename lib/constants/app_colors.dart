@@ -23,9 +23,9 @@ class AppColors {
   /// primary color: màu dựa theo nhiệt độ
   ///
   // <6 : 0xFF163E72
-  static const coldColor = Color(0xFF7986CB);
+  static const coldColor = Colors.indigo;
   // 6 - 17 : 0xFF4680C0
-  static const coolColor = Colors.indigo;
+  static const coolColor = Color(0xFF7986CB);
   // 18 - 25 : 0xFFF38B54
   static const warmColor = Color(0xFFFFB74D);
   // > 25 : 0xFFF6B235
