@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:mixture_music_app/controllers/theme_controller.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
 
 import 'routing/route_generator.dart';
-import 'ui/home/controller/home_controller.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -28,18 +28,20 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  final homeController = Get.put(HomeController());
+  final themeController = Get.put(ThemeController());
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      // home: const SplashScreen(),
-      // onGenerateRoute: RouteGenerator().onGenerateRoute,
-      debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
-      getPages: RouteGenerator.pages(),
-      initialRoute: AppRoutes.splash,
-      smartManagement: SmartManagement.keepFactory,
+    return Obx(
+      () => GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.light,
+        theme: themeController.light.value,
+        darkTheme: themeController.dark.value,
+        getPages: RouteGenerator.pages(),
+        initialRoute: AppRoutes.splash,
+        smartManagement: SmartManagement.keepFactory,
+      ),
     );
   }
 }

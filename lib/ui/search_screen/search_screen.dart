@@ -22,7 +22,14 @@ class SearchScreen extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  Expanded(child: Text('Search', style: theme.textTheme.headline4)),
+                  Expanded(
+                    child: Text(
+                      'Search',
+                      style: theme.textTheme.headline4!.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
                   IconButton(
                     onPressed: () {
                       Get.toNamed(AppRoutes.scanQrCode);
@@ -42,7 +49,9 @@ class SearchScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: theme.colorScheme.brightness == Brightness.light ? Colors.grey[200] : Colors.white24,
+                    color: theme.colorScheme.brightness == Brightness.light
+                        ? Colors.grey[200]
+                        : Colors.white24,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Row(
@@ -64,10 +73,13 @@ class SearchScreen extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    for (int i = 0; i < controller.limitLenghtRecentSearch(); i++)
+                    for (int i = 0;
+                        i < controller.limitLenghtRecentSearch();
+                        i++)
                       GestureDetector(
                         onTap: () {
-                          Get.to(() => RealSearchScreen(searchKeyWord: controller.listRecentSearch[i]));
+                          Get.to(() => RealSearchScreen(
+                              searchKeyWord: controller.listRecentSearch[i]));
                         },
                         child: Chip(
                           label: Text(controller.listRecentSearch[i]),
