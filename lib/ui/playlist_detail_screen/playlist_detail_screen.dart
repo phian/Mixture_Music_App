@@ -104,7 +104,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ImageGridWidget(
-                imageUrls: listSong.map((e) => e.coverImageUrl).toList(),
+                imageUrls: listSong.map((e) => e.imgURL).toList(),
                 gridRadius: BorderRadius.circular(4.0),
               ),
               const SizedBox(height: 32.0),

@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
+import 'package:mixture_music_app/models/song_model.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../controllers/weather_controller.dart';
@@ -11,17 +13,62 @@ class HomeController extends GetxController {
   var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
   var playingSongIndex = Rxn<int>();
+  var suggestedPlaylist = <SongModel>[].obs;
+
+  final limitedSong = 10;
 
   late Position _pos;
   final _weatherController = WeatherController();
   final _themeController = Get.put(ThemeController());
 
-  bool hasLoaded = false;
-
   @override
   void onInit() async {
     super.onInit();
     await getLocationAndWeather();
+    await getSuggestPlaylist();
+  }
+
+  Future<void> getSuggestPlaylist() async {
+    String currentWeatherType;
+    switch (weatherModel.value!.current.weather[0].main) {
+      case 'Drizzle':
+      case 'Mist':
+      case 'Haze':
+      case 'Fog':
+      case 'Rain':
+        currentWeatherType = 'Rain';
+        break;
+
+      case 'Tornado':
+      case 'Thunderstorm':
+        currentWeatherType = 'Thunderstorm';
+        break;
+
+      case 'Clear':
+        currentWeatherType = 'Sun';
+        break;
+
+      case 'Clouds':
+        currentWeatherType = 'Cloud';
+        break;
+
+      default:
+        currentWeatherType = 'Snow';
+    }
+
+    FirebaseFirestore.instance
+        .collection('songs')
+        .where('suitable_weather', arrayContains: currentWeatherType)
+        .get()
+        .then((value) {
+      var songs = value.docs;
+      songs.shuffle();
+      songs = songs.sublist(0, limitedSong);
+      suggestedPlaylist.clear();
+      for (var song in songs) {
+        suggestedPlaylist.add(SongModel.fromMap(song.data(), song.id));
+      }
+    });
   }
 
   Future<void> getLocationAndWeather() async {
@@ -31,9 +78,7 @@ class HomeController extends GetxController {
       lat: _pos.latitude,
       lon: _pos.longitude,
     );
-    hasLoaded = true;
     setTheme();
-    update();
   }
 
   void setTheme() {

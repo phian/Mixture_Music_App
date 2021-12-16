@@ -64,7 +64,7 @@ class MusicPlayerScreen extends StatelessWidget {
                       child: Hero(
                         tag: 'Artwork',
                         child: Image.network(
-                          controller.selectedSong.value!.coverImageUrl ?? '',
+                          controller.selectedSong.value!.imgURL,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
@@ -75,38 +75,32 @@ class MusicPlayerScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: MarqueeText(
-                            controller.selectedSong.value!.title ?? '',
-                            style: Theme.of(context).textTheme.headline6!.copyWith(
-                                  fontSize: 26,
-                                ),
+                            controller.selectedSong.value!.title,
+                            style:
+                                Theme.of(context).textTheme.headline6!.copyWith(
+                                      fontSize: 26,
+                                    ),
                             horizontalPadding: 10,
                           ),
                         ),
-                        Obx(
-                          () => CupertinoButton(
-                            onPressed: () {
-                              controller.selectedSong.update((song) {
-                                song!.isFavorite = !song.isFavorite;
-                              });
-                            },
-                            child: Icon(
-                              controller.selectedSong.value!.isFavorite
-                                  ? Icons.favorite
-                                  : Icons.favorite_border,
-                              color: controller.selectedSong.value!.isFavorite
-                                  ? theme.primaryColor
-                                  : theme.colorScheme.onBackground,
-                            ),
+                        CupertinoButton(
+                          onPressed: () {
+                            // controller.selectedSong.update((song) {
+                            //   song!.isFavorite = !song.isFavorite;
+                            // });
+                          },
+                          child: Icon(
+                            Icons.favorite_border,
+                            color: theme.colorScheme.onBackground,
                           ),
                         ),
                       ],
                     ),
                     MarqueeText(
-                      controller.selectedSong.value!.artist ?? '',
+                      controller.selectedSong.value!.artist,
                       style: theme.textTheme.caption!.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
-                        //color: theme.textTheme.subtitle1!.color!.withOpacity(0.7),
                       ),
                       horizontalPadding: 10,
                     ),

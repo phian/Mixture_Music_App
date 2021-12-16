@@ -75,7 +75,7 @@ class _AddSongCardState extends State<AddSongCard> with SingleTickerProviderStat
               ClipRRect(
                 borderRadius: widget.imageRadius ?? BorderRadius.zero,
                 child: Image.network(
-                  widget.song.coverImageUrl ?? '',
+                  widget.song.imgURL,
                   width: widget.imageWidth,
                   height: widget.imageHeight,
                   loadingBuilder: (_, child, chunkEvent) {
@@ -95,9 +95,9 @@ class _AddSongCardState extends State<AddSongCard> with SingleTickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(widget.song.title ?? 'Song Name', style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20.0)),
+              Text(widget.song.title, style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20.0)),
               const SizedBox(height: 4.0),
-              Text(widget.song.artist ?? 'Artist Name', style: Theme.of(context).textTheme.caption?.copyWith(fontSize: 14.0)),
+              Text(widget.song.artist, style: Theme.of(context).textTheme.caption?.copyWith(fontSize: 14.0)),
             ],
           ),
         ),

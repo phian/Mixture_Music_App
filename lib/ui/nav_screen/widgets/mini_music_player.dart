@@ -51,7 +51,7 @@ class MiniMusicPlayer extends StatelessWidget {
                       Hero(
                         tag: 'Artwork',
                         child: Image.network(
-                          song?.coverImageUrl ?? '',
+                          song?.imgURL ?? '',
                           width: 45,
                           height: 45,
                           fit: BoxFit.cover,

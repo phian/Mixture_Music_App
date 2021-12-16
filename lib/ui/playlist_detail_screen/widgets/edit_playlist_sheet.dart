@@ -142,7 +142,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                       alignment: Alignment.center,
                       children: [
                         ImageGridWidget(
-                          imageUrls: listSong.map((e) => e.coverImageUrl).toList(),
+                          imageUrls: listSong.map((e) => e.imgURL).toList(),
                           gridRadius: BorderRadius.circular(4.0),
                         ),
                         Container(

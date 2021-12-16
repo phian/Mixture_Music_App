@@ -78,7 +78,7 @@ class _SongTileState extends State<SongTile> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: Image.network(
-                  widget.songModel.coverImageUrl ?? '',
+                  widget.songModel.imgURL,
                   loadingBuilder: (context, child, chunkEvent) {
                     if (chunkEvent == null) return child;
 
@@ -94,7 +94,7 @@ class _SongTileState extends State<SongTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '${widget.songModel.title}',
+                    widget.songModel.title,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: theme.textTheme.headline6?.copyWith(
@@ -103,7 +103,7 @@ class _SongTileState extends State<SongTile> {
                     ),
                   ),
                   Text(
-                    '${widget.songModel.artist}',
+                    widget.songModel.artist,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: theme.textTheme.caption!.copyWith(

@@ -28,16 +28,18 @@ class PlaylistHeader extends StatelessWidget {
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: GridView.builder(
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                       ),
-                      itemCount: 4,
+                      itemCount:
+                          coverImageUrl.length > 4 ? 4 : coverImageUrl.length,
                       itemBuilder: (context, index) => Image.network(
                         coverImageUrl[index],
                         loadingBuilder: (context, child, chunkEvent) {
                           if (chunkEvent == null) return child;
-
-                          return const LoadingContainer(width: 30.0, height: 30.0);
+                          return const LoadingContainer(
+                              width: 30.0, height: 30.0);
                         },
                       ),
                     ),

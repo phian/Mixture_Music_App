@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
 import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/ui/home/controller/home_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
 
 import 'routing/route_generator.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
   final themeController = Get.put(ThemeController());
+  final homeController = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
