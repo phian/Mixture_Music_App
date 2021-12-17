@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
-import 'package:mixture_music_app/models/song_model.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 
 import 'app_colors.dart';
 
 class AppConstants {
   static const double playerMinHeight = 60;
 }
+
+const defaultImg =
+    'https://firebasestorage.googleapis.com/v0/b/mixturemusic-f0b97.appspot.com/o/coverImge%2Fdefault_img.jpg?alt=media&token=8bf1736d-96c1-4d7c-984a-ab4836753859';
 
 const libraryTitle = [
   'Favourites',

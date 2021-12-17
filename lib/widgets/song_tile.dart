@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
-import '../models/song_model.dart';
+import '../models/song/song_model.dart';
 
 class SongTile extends StatefulWidget {
   const SongTile({

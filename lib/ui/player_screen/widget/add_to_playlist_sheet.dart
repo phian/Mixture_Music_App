@@ -2,12 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 import '../../../models/playlist_model.dart';
 import '../../create_playlist_screen.dart';
 
-class ListPlayList extends StatelessWidget {
-  ListPlayList({Key? key}) : super(key: key);
+class AddToPlaylistSheet extends StatelessWidget {
+  AddToPlaylistSheet({Key? key}) : super(key: key);
 
   final listPlaylist = [
     PlaylistModel(
@@ -31,7 +30,6 @@ class ListPlayList extends StatelessWidget {
       imageUrl:
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     ),
-    
   ];
 
   @override
@@ -76,7 +74,9 @@ class ListPlayList extends StatelessWidget {
                   color: theme.primaryColor,
                   child: Text(
                     'New playlist',
-                    style: theme.textTheme.headline6,
+                    style: theme.textTheme.headline6!.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -116,5 +116,3 @@ class ListPlayList extends StatelessWidget {
     );
   }
 }
-
-

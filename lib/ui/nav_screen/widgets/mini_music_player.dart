@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_constants.dart';
-import '../../../models/song_model.dart';
+import '../../../models/song/song_model.dart';
 import '../../../widgets/marquee_text.dart';
 
 class MiniMusicPlayer extends StatelessWidget {

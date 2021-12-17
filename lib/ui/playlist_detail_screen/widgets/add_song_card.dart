@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/models/song_model.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 import 'package:mixture_music_app/widgets/rounded_inkwell_wrapper.dart';

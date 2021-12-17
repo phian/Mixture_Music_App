@@ -41,7 +41,9 @@ class CreatePlaylistScreen extends StatelessWidget {
                   color: theme.primaryColor,
                   child: Text(
                     'Create',
-                    style: theme.textTheme.headline6,
+                    style: theme.textTheme.headline6!.copyWith(
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ],

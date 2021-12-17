@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
-import 'package:mixture_music_app/models/song_model.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_card.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/textfield_config.dart';

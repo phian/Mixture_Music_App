@@ -1,4 +1,4 @@
-import 'dart:convert';
+import 'package:mixture_music_app/constants/app_constants.dart';
 
 class SongModel {
   String id;
@@ -17,7 +17,6 @@ class SongModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'artist': artist,
       'audio_url': audioURL,
@@ -25,13 +24,13 @@ class SongModel {
     };
   }
 
-  factory SongModel.fromMap(Map<String, dynamic> map, String id) {
+  factory SongModel.fromMap(Map<String, dynamic> map,String id) {
     return SongModel(
-      id: map['id'] ?? id,
-      title: map['title'] ?? '',
-      artist: map['artist'] ?? '',
+      id: id,
+      title: map['title'] ?? 'Unknow',
+      artist: map['artist'] ?? 'Unknow',
       audioURL: map['audio_url'] ?? '',
-      imgURL: map['img_url'] ?? '',
+      imgURL: map['img_url'] ?? defaultImg,
     );
   }
 }

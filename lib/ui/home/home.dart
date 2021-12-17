@@ -1,6 +1,7 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/song_controller.dart';
 
 import '../../widgets/song_tile.dart';
 import '../player_screen/controller/music_player_controller.dart';
@@ -32,8 +33,7 @@ class Home extends StatelessWidget {
             );
           },
           onRefresh: () async {
-            await controller.getLocationAndWeather();
-            await controller.getSuggestPlaylist();
+            await controller.onPullToRefresh();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
                   indent: 16,
                   endIndent: 16,
                   thickness: 0.5,
-                  height: 16,
+                  height: 1,
                 ),
                 ListView.separated(
                   shrinkWrap: true,
@@ -81,9 +81,16 @@ class Home extends StatelessWidget {
                   itemBuilder: (context, index) {
                     return Obx(
                       () => SongTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 8,
+                          horizontal: 16,
+                        ),
                         songModel: controller.suggestedPlaylist[index],
-                        isPlaying: index == controller.playingSongIndex.value
-                            ? true
+                        isPlaying: musicController.playingSong.value != null
+                            ? musicController.playingSong.value!.id ==
+                                    controller.suggestedPlaylist[index].id
+                                ? true
+                                : false
                             : false,
                         onTap: () {
                           controller.playingSongIndex.value = index;
@@ -95,7 +102,7 @@ class Home extends StatelessWidget {
                     );
                   },
                   separatorBuilder: (context, index) => const Divider(
-                    height: 16,
+                    height: 1,
                     thickness: 0.5,
                   ),
                 ),

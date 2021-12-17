@@ -27,11 +27,9 @@ class AppColors {
   // 6 - 17 : 0xFF4680C0
   static const coolColor = Color(0xFF7986CB);
   // 18 - 25 : 0xFFF38B54
-  static const warmColor = Color(0xFFFFB74D);
+  static const warmColor = Colors.green;
   // > 25 : 0xFFF6B235
   static const hotColor = Colors.orange;
-
-  
 
   static const captionTextColor = Color(0xFF334449);
 

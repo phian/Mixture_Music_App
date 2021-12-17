@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
-import 'package:mixture_music_app/models/song_model.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../controllers/weather_controller.dart';
@@ -20,6 +21,7 @@ class HomeController extends GetxController {
   late Position _pos;
   final _weatherController = WeatherController();
   final _themeController = Get.put(ThemeController());
+  final _songController = SongController();
 
   @override
   void onInit() async {
@@ -28,47 +30,40 @@ class HomeController extends GetxController {
     await getSuggestPlaylist();
   }
 
-  Future<void> getSuggestPlaylist() async {
-    String currentWeatherType;
+  String getWeatherType() {
     switch (weatherModel.value!.current.weather[0].main) {
       case 'Drizzle':
       case 'Mist':
       case 'Haze':
       case 'Fog':
       case 'Rain':
-        currentWeatherType = 'Rain';
-        break;
+        return 'Rain';
 
       case 'Tornado':
       case 'Thunderstorm':
-        currentWeatherType = 'Thunderstorm';
-        break;
+        return 'Thunderstorm';
 
       case 'Clear':
-        currentWeatherType = 'Sun';
-        break;
+        return 'Sun';
 
       case 'Clouds':
-        currentWeatherType = 'Cloud';
-        break;
+        return 'Cloud';
 
       default:
-        currentWeatherType = 'Snow';
+        return 'Snow';
     }
+  }
 
-    FirebaseFirestore.instance
-        .collection('songs')
-        .where('suitable_weather', arrayContains: currentWeatherType)
-        .get()
-        .then((value) {
-      var songs = value.docs;
-      songs.shuffle();
-      songs = songs.sublist(0, limitedSong);
-      suggestedPlaylist.clear();
-      for (var song in songs) {
-        suggestedPlaylist.add(SongModel.fromMap(song.data(), song.id));
-      }
-    });
+  Future<void> onPullToRefresh() async {
+    await getLocationAndWeather();
+    await getSuggestPlaylist();
+    playingSongIndex.value = null;
+  }
+
+  Future<void> getSuggestPlaylist() async {
+    suggestedPlaylist.value = await _songController.getSuggestedPlaylist(
+      getWeatherType(),
+    );
   }
 
   Future<void> getLocationAndWeather() async {
