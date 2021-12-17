@@ -1,11 +1,11 @@
 import 'package:get/get.dart';
-import '../../../models/song_model.dart';
+import '../../../models/song/song_model.dart';
 
 class MusicPlayerController extends GetxController {
-  var selectedSong = Rxn<SongModel>();
+  var playingSong = Rxn<SongModel>();
   
 
   void setSong(SongModel songModel) {
-    selectedSong.value = songModel;
+    playingSong.value = songModel;
   }
 }

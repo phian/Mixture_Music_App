@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../controllers/weather_controller.dart';
@@ -11,17 +14,56 @@ class HomeController extends GetxController {
   var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
   var playingSongIndex = Rxn<int>();
+  var suggestedPlaylist = <SongModel>[].obs;
+
+  final limitedSong = 10;
 
   late Position _pos;
   final _weatherController = WeatherController();
   final _themeController = Get.put(ThemeController());
-
-  bool hasLoaded = false;
+  final _songController = SongController();
 
   @override
   void onInit() async {
     super.onInit();
     await getLocationAndWeather();
+    await getSuggestPlaylist();
+  }
+
+  String getWeatherType() {
+    switch (weatherModel.value!.current.weather[0].main) {
+      case 'Drizzle':
+      case 'Mist':
+      case 'Haze':
+      case 'Fog':
+      case 'Rain':
+        return 'Rain';
+
+      case 'Tornado':
+      case 'Thunderstorm':
+        return 'Thunderstorm';
+
+      case 'Clear':
+        return 'Sun';
+
+      case 'Clouds':
+        return 'Cloud';
+
+      default:
+        return 'Snow';
+    }
+  }
+
+  Future<void> onPullToRefresh() async {
+    await getLocationAndWeather();
+    await getSuggestPlaylist();
+    playingSongIndex.value = null;
+  }
+
+  Future<void> getSuggestPlaylist() async {
+    suggestedPlaylist.value = await _songController.getSuggestedPlaylist(
+      getWeatherType(),
+    );
   }
 
   Future<void> getLocationAndWeather() async {
@@ -31,9 +73,7 @@ class HomeController extends GetxController {
       lat: _pos.latitude,
       lon: _pos.longitude,
     );
-    hasLoaded = true;
     setTheme();
-    update();
   }
 
   void setTheme() {

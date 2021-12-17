@@ -64,7 +64,7 @@ class _NavScreenState extends State<NavScreen> {
               ),
             ),
             MiniMusicPlayer(
-              song: musicController.selectedSong.value,
+              song: musicController.playingSong.value,
               onTap: () {
                 Get.toNamed(AppRoutes.musicPlayerScreen);
               },

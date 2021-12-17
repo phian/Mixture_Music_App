@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_constants.dart';
-import '../../../models/song_model.dart';
+import '../../../models/song/song_model.dart';
 import '../../../widgets/marquee_text.dart';
 
 class MiniMusicPlayer extends StatelessWidget {
@@ -51,7 +51,7 @@ class MiniMusicPlayer extends StatelessWidget {
                       Hero(
                         tag: 'Artwork',
                         child: Image.network(
-                          song?.coverImageUrl ?? '',
+                          song?.imgURL ?? '',
                           width: 45,
                           height: 45,
                           fit: BoxFit.cover,
