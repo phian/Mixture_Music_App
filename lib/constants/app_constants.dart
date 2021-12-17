@@ -127,7 +127,7 @@ final libraryExampleModels = [
 ];
 
 final listSong = [
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Trời hôm nay nhiều mây cực cực cực cực cực cực',
@@ -138,7 +138,7 @@ final listSong = [
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Vết mưa',
@@ -149,7 +149,7 @@ final listSong = [
           'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Cơn mưa ngang qua',
@@ -160,7 +160,7 @@ final listSong = [
           'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Gọi mưa',
@@ -171,7 +171,7 @@ final listSong = [
           'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Trời hôm nay nhiều mây cực',
@@ -182,7 +182,7 @@ final listSong = [
           'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Dấu mưa',
@@ -193,7 +193,7 @@ final listSong = [
           'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Cơn mưa ngang qua',
@@ -204,7 +204,7 @@ final listSong = [
           'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Vết mưa',
@@ -215,7 +215,7 @@ final listSong = [
           'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Gọi mưa',
@@ -226,7 +226,7 @@ final listSong = [
           'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
     ),
   ),
-  Song(
+  SongModel(
     id: 'id',
     data: SongData(
       title: 'Dấu mưa',

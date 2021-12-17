@@ -2,10 +2,10 @@
 
 import 'package:mixture_music_app/models/song/song_data.dart';
 
-class Song {
+class SongModel {
   String id;
   SongData data;
-  Song({
+  SongModel({
     required this.id,
     required this.data,
   });
@@ -17,11 +17,11 @@ class Song {
     };
   }
 
-  factory Song.from({
+  factory SongModel.from({
     required Map<String, dynamic> data,
     required String id,
   }) {
-    return Song(
+    return SongModel(
       id: id,
       data: SongData.fromMap(data),
     );

@@ -15,7 +15,7 @@ class HomeController extends GetxController {
   var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
   var playingSongIndex = Rxn<int>();
-  var suggestedPlaylist = <Song>[].obs;
+  var suggestedPlaylist = <SongModel>[].obs;
 
   final limitedSong = 10;
 

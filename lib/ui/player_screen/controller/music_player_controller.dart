@@ -3,10 +3,10 @@ import 'package:mixture_music_app/models/song/song_model.dart';
 
 
 class MusicPlayerController extends GetxController {
-  var playingSong = Rxn<Song>();
+  var playingSong = Rxn<SongModel>();
   
 
-  void setSong(Song songModel) {
+  void setSong(SongModel songModel) {
     playingSong.value = songModel;
   }
 }

@@ -18,8 +18,8 @@ class AddSongCard extends StatefulWidget {
     this.isPlaying = false,
   }) : super(key: key);
 
-  final Song song;
-  final void Function(Song song) onAddButtonTap;
+  final SongModel song;
+  final void Function(SongModel song) onAddButtonTap;
   final void Function(bool isPlaying) onPlayTap;
   final double imageWidth;
   final double imageHeight;

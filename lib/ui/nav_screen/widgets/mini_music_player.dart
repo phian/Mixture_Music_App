@@ -14,7 +14,7 @@ class MiniMusicPlayer extends StatelessWidget {
     required this.onPrevious,
   }) : super(key: key);
 
-  final Song? song;
+  final SongModel? song;
   final Function() onTap;
   final Function() onPlayPause;
   final Function() onNext;

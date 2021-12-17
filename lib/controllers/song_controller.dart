@@ -5,8 +5,8 @@ import 'package:mixture_music_app/models/song/song_data.dart';
 class SongController {
   final limitSuggestedSong = 10;
 
-  Future<List<Song>> getSuggestedPlaylist(String weatherType) async {
-    var playlist = <Song>[];
+  Future<List<SongModel>> getSuggestedPlaylist(String weatherType) async {
+    var playlist = <SongModel>[];
 
     await FirebaseFirestore.instance
         .collection('songs')
@@ -19,7 +19,7 @@ class SongController {
 
       for (var song in songs) {
         // playlist.add(SongData.fromMap(song.data(), song.id));
-        playlist.add(Song.from(data: song.data(), id: song.id));
+        playlist.add(SongModel.from(data: song.data(), id: song.id));
       }
     });
     return playlist;

@@ -23,7 +23,7 @@ class SongTile extends StatefulWidget {
   }) : super(key: key);
 
   final bool isPlaying;
-  final Song songModel;
+  final SongModel songModel;
   final Function() onTap;
   final BoxBorder? border;
   final EdgeInsetsGeometry? contentPadding;

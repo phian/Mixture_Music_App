@@ -29,9 +29,9 @@ class EditPlaylistSheet extends StatefulWidget {
   }) : super(key: key);
 
   final PlaylistModel playlistModel;
-  final List<Song> songs;
-  final void Function(List<Song> deleteSongs)? onDeleteSongButtonTap;
-  final void Function(List<Song> songs)? onChanged;
+  final List<SongModel> songs;
+  final void Function(List<SongModel> deleteSongs)? onDeleteSongButtonTap;
+  final void Function(List<SongModel> songs)? onChanged;
   final double? sheetHeight;
 
   @override
@@ -39,8 +39,8 @@ class EditPlaylistSheet extends StatefulWidget {
 }
 
 class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
-  final List<Song> _selectedSong = [];
-  late final List<Song> _songs = widget.songs;
+  final List<SongModel> _selectedSong = [];
+  late final List<SongModel> _songs = widget.songs;
   late final TextEditingController _playlistNameController =
       TextEditingController(text: widget.playlistModel.playlistName);
   final List<String> _sortTypes = [
