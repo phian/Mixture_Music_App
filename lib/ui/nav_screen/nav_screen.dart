@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/auth_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/search_screen.dart';
 
 import '../../routing/routes.dart';
@@ -28,19 +28,7 @@ class _NavScreenState extends State<NavScreen> {
   ];
 
   final musicController = Get.put(MusicPlayerController());
-  final _authController = Get.find<AuthController>();
-
-  @override
-  void initState() {
-    super.initState();
-    print(_authController.googleUser);
-    _getFbUserData();
-  }
-
-  void _getFbUserData() async {
-    var res = await _authController.getFacebookUserData();
-    print(res.name);
-  }
+  final userDataController = Get.put(UserDataController());
 
   @override
   Widget build(BuildContext context) {
