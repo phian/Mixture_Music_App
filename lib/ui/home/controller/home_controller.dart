@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
-import 'package:mixture_music_app/models/song/song_data.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../controllers/weather_controller.dart';

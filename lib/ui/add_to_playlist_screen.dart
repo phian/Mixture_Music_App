@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/playlist_model.dart';
-import '../../create_playlist_screen.dart';
+import '../models/playlist_model.dart';
+import 'create_playlist_screen.dart';
 
 class AddToPlaylistSheet extends StatelessWidget {
   AddToPlaylistSheet({Key? key}) : super(key: key);

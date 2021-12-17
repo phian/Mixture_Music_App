@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/ui/player_screen/widget/add_to_playlist_sheet.dart';
+import 'package:mixture_music_app/ui/add_to_playlist_screen.dart';
 
 import '../../widgets/marquee_text.dart';
 import 'controller/music_player_controller.dart';

@@ -6,7 +6,6 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
-import 'package:mixture_music_app/models/song/song_data.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/widgets/pick_image_dialog.dart';
 import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';

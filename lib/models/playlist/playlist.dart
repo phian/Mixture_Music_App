@@ -25,7 +25,9 @@ class Playlist {
       createdTime: map['created_time']?.toInt() ?? 0,
       title: map['title'] ?? 'Untitled',
       songs: List<SongModel>.from(
-        map['songs']?.map((x) => SongModel.from(id: x['id'], data: x['data'])),
+        map['songs']?.map(
+          (x) => SongModel(id: x['id'], data: SongData.fromMap(x['data'])),
+        ),
       ),
     );
   }

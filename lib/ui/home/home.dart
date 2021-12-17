@@ -1,7 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/song_controller.dart';
 
 import '../../widgets/song_tile.dart';
 import '../player_screen/controller/music_player_controller.dart';

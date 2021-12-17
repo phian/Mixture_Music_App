@@ -13,17 +13,7 @@ class SongModel {
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'song_data': data.toMap(),
+      'data': data.toMap(),
     };
-  }
-
-  factory SongModel.from({
-    required Map<String, dynamic> data,
-    required String id,
-  }) {
-    return SongModel(
-      id: id,
-      data: SongData.fromMap(data),
-    );
   }
 }

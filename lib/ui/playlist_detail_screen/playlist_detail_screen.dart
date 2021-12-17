@@ -11,7 +11,6 @@ import 'package:mixture_music_app/widgets/base_app_bar.dart';
 import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
 import 'package:mixture_music_app/widgets/image_grid_widget.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
-import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class PlayListDetailScreen extends StatefulWidget {
   const PlayListDetailScreen({Key? key}) : super(key: key);
