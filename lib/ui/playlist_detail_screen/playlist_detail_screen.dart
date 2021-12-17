@@ -104,7 +104,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ImageGridWidget(
-                imageUrls: listSong.map((e) => e.imgURL).toList(),
+                imageUrls: listSong.map((e) => e.data.imgURL).toList(),
                 gridRadius: BorderRadius.circular(4.0),
               ),
               const SizedBox(height: 32.0),
@@ -161,27 +161,27 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                 ),
               ),
               const SizedBox(height: 8.0),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ...List.generate(
-                    listSong.length,
-                    (index) => SongTile(
-                      songModel: listSong[index],
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      onTap: () {},
-                      border: index == 0
-                          ? const Border.symmetric(
-                              horizontal: BorderSide(color: AppColors.c7A7C81),
-                            )
-                          : const Border(
-                              bottom: BorderSide(color: AppColors.c7A7C81),
-                            ),
-                    ),
-                  ),
-                  const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-                ],
-              )
+              // Column(
+              //   mainAxisSize: MainAxisSize.min,
+              //   children: [
+              //     ...List.generate(
+              //       listSong.length,
+              //       (index) => SongTile(
+              //         songModel: listSong[index],
+              //         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+              //         onTap: () {},
+              //         border: index == 0
+              //             ? const Border.symmetric(
+              //                 horizontal: BorderSide(color: AppColors.c7A7C81),
+              //               )
+              //             : const Border(
+              //                 bottom: BorderSide(color: AppColors.c7A7C81),
+              //               ),
+              //       ),
+              //     ),
+              //     const SizedBox(height: kBottomNavigationBarHeight + 32.0),
+              //   ],
+              // )
             ],
           ),
         ),

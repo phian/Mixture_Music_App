@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
+import 'package:mixture_music_app/models/song/song_data.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
@@ -75,7 +76,7 @@ class _AddSongCardState extends State<AddSongCard> with SingleTickerProviderStat
               ClipRRect(
                 borderRadius: widget.imageRadius ?? BorderRadius.zero,
                 child: Image.network(
-                  widget.song.imgURL,
+                  widget.song.data.imgURL,
                   width: widget.imageWidth,
                   height: widget.imageHeight,
                   loadingBuilder: (_, child, chunkEvent) {
@@ -95,9 +96,9 @@ class _AddSongCardState extends State<AddSongCard> with SingleTickerProviderStat
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(widget.song.title, style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20.0)),
+              Text(widget.song.data.title, style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20.0)),
               const SizedBox(height: 4.0),
-              Text(widget.song.artist, style: Theme.of(context).textTheme.caption?.copyWith(fontSize: 14.0)),
+              Text(widget.song.data.artist, style: Theme.of(context).textTheme.caption?.copyWith(fontSize: 14.0)),
             ],
           ),
         ),

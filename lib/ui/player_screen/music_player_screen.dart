@@ -64,7 +64,7 @@ class MusicPlayerScreen extends StatelessWidget {
                       child: Hero(
                         tag: 'Artwork',
                         child: Image.network(
-                          controller.playingSong.value!.imgURL,
+                          controller.playingSong.value!.data.imgURL,
                           width: double.infinity,
                           fit: BoxFit.cover,
                         ),
@@ -75,7 +75,7 @@ class MusicPlayerScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: MarqueeText(
-                            controller.playingSong.value!.title,
+                            controller.playingSong.value!.data.title,
                             style:
                                 Theme.of(context).textTheme.headline6!.copyWith(
                                       fontSize: 26,
@@ -97,7 +97,7 @@ class MusicPlayerScreen extends StatelessWidget {
                       ],
                     ),
                     MarqueeText(
-                      controller.playingSong.value!.artist,
+                      controller.playingSong.value!.data.artist,
                       style: theme.textTheme.caption!.copyWith(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,

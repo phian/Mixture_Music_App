@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
-import '../models/song/song_model.dart';
+import '../models/song/song_data.dart';
 
 class SongTile extends StatefulWidget {
   const SongTile({
@@ -78,7 +79,7 @@ class _SongTileState extends State<SongTile> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: Image.network(
-                  widget.songModel.imgURL,
+                  widget.songModel.data.imgURL,
                   loadingBuilder: (context, child, chunkEvent) {
                     if (chunkEvent == null) return child;
 
@@ -94,7 +95,7 @@ class _SongTileState extends State<SongTile> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.songModel.title,
+                    widget.songModel.data.title,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: theme.textTheme.headline6?.copyWith(
@@ -103,7 +104,7 @@ class _SongTileState extends State<SongTile> {
                     ),
                   ),
                   Text(
-                    widget.songModel.artist,
+                    widget.songModel.data.artist,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                     style: theme.textTheme.caption!.copyWith(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
+import 'package:mixture_music_app/models/song/song_data.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 
 import 'app_colors.dart';
@@ -127,93 +128,113 @@ final libraryExampleModels = [
 
 final listSong = [
   SongModel(
-    id: '01',
-    title: 'Trời hôm nay nhiều mây cực cực cực cực cực cực',
-    artist: 'Đen Vâu',
-    imgURL:
-        'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-    audioURL:
-        'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Trời hôm nay nhiều mây cực cực cực cực cực cực',
+      artist: 'Đen Vâu',
+      imgURL:
+          'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+      audioURL:
+          'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+    ),
   ),
   SongModel(
-    id: '02',
-    title: 'Gọi mưa',
-    artist: 'Trung Quân Idol',
-    imgURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
-    audioURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Vết mưa',
+      artist: 'Vũ Cát Tường',
+      imgURL:
+          'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
+      audioURL:
+          'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
+    ),
   ),
   SongModel(
-    id: '03',
-    title: 'Vết mưa',
-    artist: 'Vũ Cát Tường',
-    imgURL:
-        'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
-    audioURL:
-        'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Cơn mưa ngang qua',
+      artist: 'Sơn Tùng MTP',
+      imgURL:
+          'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
+      audioURL:
+          'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
+    ),
   ),
   SongModel(
-    id: '04',
-    title: 'Cơn mưa ngang qua',
-    artist: 'Sơn Tùng MTP',
-    audioURL:
-        'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
-    imgURL:
-        'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Gọi mưa',
+      artist: 'Trung Quân Idol',
+      imgURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+      audioURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+    ),
   ),
   SongModel(
-    id: '05',
-    title: 'Dấu mưa',
-    artist: 'Trung Quân Idol',
-    imgURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
-    audioURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Trời hôm nay nhiều mây cực',
+      artist: 'Đen Vâu',
+      imgURL:
+          'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+      audioURL:
+          'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+    ),
   ),
   SongModel(
-    id: '06',
-    title: 'Trời hôm nay nhiều mây cực',
-    artist: 'Đen Vâu',
-    imgURL:
-        'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-    audioURL:
-        'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Dấu mưa',
+      artist: 'Trung Quân Idol',
+      imgURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
+      audioURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
+    ),
   ),
   SongModel(
-    id: '07',
-    title: 'Gọi mưa',
-    artist: 'Trung Quân Idol',
-    imgURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
-    audioURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Cơn mưa ngang qua',
+      artist: 'Sơn Tùng MTP',
+      audioURL:
+          'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
+      imgURL:
+          'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
+    ),
   ),
   SongModel(
-    id: '08',
-    title: 'Vết mưa',
-    artist: 'Vũ Cát Tường',
-    imgURL:
-        'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
-    audioURL:
-        'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Vết mưa',
+      artist: 'Vũ Cát Tường',
+      imgURL:
+          'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
+      audioURL:
+          'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
+    ),
   ),
   SongModel(
-    id: '09',
-    title: 'Cơn mưa ngang qua',
-    artist: 'Sơn Tùng MTP',
-    imgURL:
-        'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
-    audioURL:
-        'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Gọi mưa',
+      artist: 'Trung Quân Idol',
+      imgURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+      audioURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+    ),
   ),
   SongModel(
-    id: '10',
-    title: 'Dấu mưa',
-    artist: 'Trung Quân Idol',
-    imgURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
-    audioURL:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
+    id: 'id',
+    data: SongData(
+      title: 'Dấu mưa',
+      artist: 'Trung Quân Idol',
+      imgURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
+      audioURL:
+          'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
+    ),
   ),
 ];
