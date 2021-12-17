@@ -3,14 +3,25 @@ import 'package:just_audio/just_audio.dart';
 
 /// An [AudioHandler] for playing a single item.
 class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
-  static final _item = MediaItem(
-    id: 'https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3',
-    album: 'Science Friday',
-    title: 'A Salute To Head-Scratching Science',
-    artist: 'Science Friday and WNYC Studios',
-    duration: const Duration(milliseconds: 5739820),
-    artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
-  );
+  final List<MediaItem> _items = [
+    MediaItem(
+      // This can be any unique id, but we use the audio URL for convenience.
+      id: 'https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3',
+      album: 'Science Friday 1',
+      title: 'A Salute To Head-Scratching Science',
+      artist: 'Science Friday and WNYC Studios',
+      duration: const Duration(milliseconds: 5739820),
+      artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
+    ),
+    MediaItem(
+      id: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+      album: 'Science Friday 2',
+      title: 'From Cat Rheology To Operatic Incompetence',
+      artist: "Science Friday and NYC Studios",
+      duration: const Duration(milliseconds: 2856950),
+      artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
+    ),
+  ];
 
   final _player = AudioPlayer();
 
@@ -21,10 +32,36 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     // playback state changes as they happen via playbackState...
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
     // ... and also the current media item via mediaItem.
-    mediaItem.add(_item);
+    mediaItem.add(_items[0]);
 
     // Load the player.
-    _player.setAudioSource(AudioSource.uri(Uri.parse(_item.id)));
+    _player.setAudioSource(
+      ConcatenatingAudioSource(
+        children: List.generate(_items.length, (index) => AudioSource.uri(Uri.parse(_items[index].id))),
+      ),
+    );
+  }
+
+  @override
+  Future<void> skipToNext() {
+    _player.seekToNext();
+    if (_player.hasNext) {
+      if (_player.currentIndex != null) {
+        mediaItem.add(_items[_player.currentIndex! + 1]);
+      }
+    }
+    return super.skipToNext();
+  }
+
+  @override
+  Future<void> skipToPrevious() {
+    _player.seekToPrevious();
+    if (_player.hasPrevious) {
+      if (_player.currentIndex != null) {
+        mediaItem.add(_items[_player.currentIndex! - 1]);
+      }
+    }
+    return super.skipToPrevious();
   }
 
   // In this simple example, we handle only 4 actions: play, pause, seek and
@@ -52,10 +89,10 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   PlaybackState _transformEvent(PlaybackEvent event) {
     return PlaybackState(
       controls: [
-        MediaControl.rewind,
+        MediaControl.skipToPrevious,
         if (_player.playing) MediaControl.pause else MediaControl.play,
         MediaControl.stop,
-        MediaControl.fastForward,
+        MediaControl.skipToNext,
       ],
       systemActions: const {
         MediaAction.seek,

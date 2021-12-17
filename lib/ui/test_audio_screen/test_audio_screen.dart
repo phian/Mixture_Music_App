@@ -52,10 +52,10 @@ class TestAudioScreen extends StatelessWidget {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _button(Icons.fast_rewind, _audioHandler.rewind),
+                    _button(Icons.skip_previous, _audioHandler.skipToPrevious),
                     if (playing) _button(Icons.pause, _audioHandler.pause) else _button(Icons.play_arrow, _audioHandler.play),
                     _button(Icons.stop, _audioHandler.stop),
-                    _button(Icons.fast_forward, _audioHandler.fastForward),
+                    _button(Icons.skip_next, _audioHandler.skipToNext),
                   ],
                 );
               },
