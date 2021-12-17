@@ -1,36 +1,29 @@
-import 'package:mixture_music_app/constants/app_constants.dart';
 
-class SongModel {
+
+import 'package:mixture_music_app/models/song/song_data.dart';
+
+class Song {
   String id;
-  String title;
-  String artist;
-  String audioURL;
-  String imgURL;
-
-  SongModel({
+  SongData data;
+  Song({
     required this.id,
-    required this.title,
-    required this.artist,
-    required this.audioURL,
-    required this.imgURL,
+    required this.data,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'title': title,
-      'artist': artist,
-      'audio_url': audioURL,
-      'img_url': imgURL,
+      'id': id,
+      'song_data': data.toMap(),
     };
   }
 
-  factory SongModel.fromMap(Map<String, dynamic> map,String id) {
-    return SongModel(
+  factory Song.from({
+    required Map<String, dynamic> data,
+    required String id,
+  }) {
+    return Song(
       id: id,
-      title: map['title'] ?? 'Unknow',
-      artist: map['artist'] ?? 'Unknow',
-      audioURL: map['audio_url'] ?? '',
-      imgURL: map['img_url'] ?? defaultImg,
+      data: SongData.fromMap(data),
     );
   }
 }

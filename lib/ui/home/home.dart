@@ -59,7 +59,7 @@ class Home extends StatelessWidget {
                 Obx(() {
                   return PlaylistHeader(
                     coverImageUrl: controller.suggestedPlaylist
-                        .map((e) => e.imgURL)
+                        .map((e) => e.data.imgURL)
                         .toList(),
                   );
                 }),

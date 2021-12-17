@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
+import 'package:mixture_music_app/models/song/song_data.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../controllers/weather_controller.dart';
@@ -14,7 +15,7 @@ class HomeController extends GetxController {
   var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
   var playingSongIndex = Rxn<int>();
-  var suggestedPlaylist = <SongModel>[].obs;
+  var suggestedPlaylist = <Song>[].obs;
 
   final limitedSong = 10;
 

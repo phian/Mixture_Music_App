@@ -38,7 +38,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       (index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: Image.network(
-                      listSong[index].imgURL,
+                      listSong[index].data.imgURL,
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, chunkEvent) {
                         if (chunkEvent == null) return child;

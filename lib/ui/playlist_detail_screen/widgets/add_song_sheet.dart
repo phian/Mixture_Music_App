@@ -4,6 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
+import 'package:mixture_music_app/models/song/song_data.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_card.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
@@ -20,10 +21,10 @@ class AddSongSheet extends StatefulWidget {
     this.sheetRadius,
   }) : super(key: key);
 
-  final List<SongModel> songs;
+  final List<Song> songs;
   final double? sheetHeight;
-  final void Function(List<SongModel> songs) onAddingSongs;
-  final void Function(SongModel playingSong) onPlayingSong;
+  final void Function(List<Song> songs) onAddingSongs;
+  final void Function(Song playingSong) onPlayingSong;
   final BorderRadius? sheetRadius;
 
   @override
@@ -35,8 +36,8 @@ class _AddSongSheetState extends State<AddSongSheet> {
     'Recently played',
     'Favourite',
   ];
-  final List<SongModel> _addedSongs = [];
-  late final List<SongModel> _songs = widget.songs;
+  final List<Song> _addedSongs = [];
+  late final List<Song> _songs = widget.songs;
   int _playingIndex = -1;
 
   @override
