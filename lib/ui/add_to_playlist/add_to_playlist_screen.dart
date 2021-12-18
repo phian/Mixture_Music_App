@@ -44,7 +44,7 @@ class AddToPlaylistSheet extends StatelessWidget {
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
                       builder: (context) {
-                        return const CreatePlaylistScreen();
+                        return CreatePlaylistScreen();
                       },
                     );
                   },

@@ -23,4 +23,14 @@ class PlaylistController {
 
     return playlists;
   }
+
+  Future<void> createPlaylist(Playlist playlist) async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection('user_accounts')
+          .doc(user.uid)
+          .collection('created_playlists').add(playlist.toMap());
+    }
+  }
 }
