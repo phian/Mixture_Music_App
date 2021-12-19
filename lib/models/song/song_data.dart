@@ -27,7 +27,26 @@ class SongData {
       title: map['title'] ?? 'Unknow',
       artist: map['artist'] ?? 'Unknow',
       audioURL: map['audio_url'] ?? '',
-      imgURL: map['img_url'] ?? defaultImg,
+      imgURL: map['img_url'] ?? defaultImgURL,
     );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is SongData &&
+      other.title == title &&
+      other.artist == artist &&
+      other.audioURL == audioURL &&
+      other.imgURL == imgURL;
+  }
+
+  @override
+  int get hashCode {
+    return title.hashCode ^
+      artist.hashCode ^
+      audioURL.hashCode ^
+      imgURL.hashCode;
   }
 }

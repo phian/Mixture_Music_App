@@ -4,7 +4,7 @@ import 'package:mixture_music_app/repos/song_repo.dart';
 
 class SearchController extends GetxController {
   RxList<String> listRecentSearch = <String>[].obs;
-  final SongRepo _songRepo = const SongRepo();
+  final SongRepo _songRepo = SongRepo();
   RxList<SongModel> songs = <SongModel>[].obs;
   RxList<SongModel> searchSongs = <SongModel>[].obs;
 

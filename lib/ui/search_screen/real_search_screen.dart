@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/controller/search_controller.dart';
+import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class RealSearchScreen extends StatefulWidget {
   const RealSearchScreen({

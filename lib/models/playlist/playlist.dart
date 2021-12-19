@@ -3,6 +3,7 @@ import 'package:mixture_music_app/models/song/song_data.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 
 class Playlist {
+  String? id;
   Timestamp createdTime;
   String title;
   List<SongModel> songs;
@@ -11,6 +12,7 @@ class Playlist {
     required this.createdTime,
     required this.title,
     required this.songs,
+    this.id,
   });
 
   Map<String, dynamic> toMap() {
@@ -21,12 +23,13 @@ class Playlist {
     };
   }
 
-  factory Playlist.fromMap(Map<String, dynamic> map) {
+  factory Playlist.fromSnapshot(DocumentSnapshot snapshot) {
     return Playlist(
-      createdTime: map['created_time'] as Timestamp,
-      title: map['title'] ?? 'Untitled',
+      id: snapshot.id,
+      createdTime: snapshot['created_time'] as Timestamp,
+      title: snapshot['title'] ?? 'Untitled',
       songs: List<SongModel>.from(
-        map['songs'].map(
+        snapshot['songs'].map(
           (x) => SongModel(id: x['id'], data: SongData.fromMap(x['data'])),
         ),
       ),

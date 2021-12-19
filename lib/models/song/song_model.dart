@@ -16,4 +16,16 @@ class SongModel {
       'data': data.toMap(),
     };
   }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is SongModel &&
+      other.id == id &&
+      other.data == data;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ data.hashCode;
 }
