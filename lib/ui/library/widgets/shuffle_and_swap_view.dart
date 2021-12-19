@@ -23,7 +23,7 @@ class ShuffleAndSwapView extends StatefulWidget {
 
 class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTickerProviderStateMixin {
   bool _isList = true;
-  AnimationController? _aniController;
+  late AnimationController _aniController;
 
   @override
   void initState() {
@@ -32,6 +32,12 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _aniController.dispose();
   }
 
   @override
@@ -71,10 +77,10 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
                     setState(() {
                       _isList = !_isList;
                       if (_isList) {
-                        _aniController!.reverse();
+                        _aniController.reverse();
                         widget.onSwapViewTap?.call(ViewType.list);
                       } else {
-                        _aniController!.forward();
+                        _aniController.forward();
                         widget.onSwapViewTap?.call(ViewType.grid);
                       }
                     });
@@ -85,7 +91,7 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
               padding: const EdgeInsets.all(12.0),
               child: AnimatedIcon(
                 icon: AnimatedIcons.view_list,
-                progress: _aniController!,
+                progress: _aniController,
               ),
             ),
           ),

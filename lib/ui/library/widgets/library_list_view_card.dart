@@ -18,6 +18,7 @@ class LibraryListViewCard extends StatefulWidget {
     this.subtitleStyle,
     this.isPlaying = false,
     this.cardBorder,
+    this.contentPadding,
   }) : super(key: key);
 
   final LibraryModel libraryModel;
@@ -29,6 +30,7 @@ class LibraryListViewCard extends StatefulWidget {
   final TextStyle? subtitleStyle;
   final bool isPlaying;
   final BoxBorder? cardBorder;
+  final EdgeInsets? contentPadding;
 
   @override
   State<LibraryListViewCard> createState() => _LibraryListViewCardState();
@@ -78,7 +80,7 @@ class _LibraryListViewCardState extends State<LibraryListViewCard> with SingleTi
       color: widget.cardColor ?? AppColors.black12,
       borderRadius: widget.borderRadius,
       child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+        padding: widget.contentPadding ?? const EdgeInsets.symmetric(vertical: 8.0, horizontal: 24.0),
         decoration: BoxDecoration(border: widget.cardBorder),
         child: Row(
           children: [

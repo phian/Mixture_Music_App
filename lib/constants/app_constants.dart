@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
+import 'package:mixture_music_app/models/artist_model.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
 import 'package:mixture_music_app/models/song/song_data.dart';
@@ -61,16 +62,42 @@ final mixedSongUrls = [
   'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
 ];
 
+final artistModels = [
+  ArtistModel(
+    artistId: '0',
+    artistName: 'Erik',
+    imageUrl: 'https://media-cdn.laodong.vn/Storage/NewsPortal/2021/8/3/937782/118654438_7452735827.jpg',
+  ),
+  ArtistModel(
+    artistId: '1',
+    artistName: 'Đức Phúc',
+    imageUrl: 'https://image.thanhnien.vn/768/uploaded/hienth/2020_01_23/53167553_2122687297838771_6964634450827149312_o_gnbk.jpg',
+  ),
+  ArtistModel(
+    artistId: '2',
+    artistName: 'Soobin Hoàng Sơn',
+    imageUrl: 'https://vnn-imgs-f.vgcloud.vn/2019/02/22/09/img-3722.jpg',
+  ),
+  ArtistModel(
+    artistId: '3',
+    artistName: 'Đen Vâu',
+    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+  ),
+  ArtistModel(
+    artistId: '4',
+    artistName: 'Trung Quân idol',
+    imageUrl: 'https://znews-stc.zdn.vn/static/topic/person/trungquan.jpg',
+  ),
+];
+
 final personalSuggestPlaylists = [
   PlaylistModel(
-    imageUrl:
-        'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
+    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
     playlistName: 'Đen Vâu',
     owner: 'Nguyễn Phi Ân',
   ),
   PlaylistModel(
-    imageUrl:
-        'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
+    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
     playlistName: 'Trung Quân idol',
     owner: 'Nguyễn Phi Ân',
   ),

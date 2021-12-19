@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/ui/library/views/artists_view.dart';
+import 'package:mixture_music_app/ui/library/views/favourite_view.dart';
 import 'package:mixture_music_app/ui/library/views/mix_music_view.dart';
 import 'package:mixture_music_app/ui/library/views/recent_activity_view.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
@@ -10,10 +12,6 @@ import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
 import '../../constants/app_text_style.dart';
 import '../../constants/enums/enums.dart';
-import '../../models/library_model.dart';
-import 'widgets/library_grid_view_card.dart';
-import 'widgets/library_list_view_card.dart';
-import 'widgets/shuffle_and_swap_view.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({Key? key}) : super(key: key);
@@ -24,7 +22,9 @@ class LibraryScreen extends StatefulWidget {
 
 class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateMixin {
   late final TabController _tabController;
-  ViewType _viewType = ViewType.list;
+  ViewType _favouriteViewType = ViewType.list;
+  ViewType _artistViewType = ViewType.list;
+  ViewType _initSwapViewType = ViewType.list;
   int _selectedIndex = 0;
 
   @override
@@ -79,10 +79,15 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                       child: TabBar(
                         controller: _tabController,
                         onTap: (index) {
-                          print(index);
                           setState(() {
                             _selectedIndex = index;
                             _tabController.animateTo(index);
+
+                            if (_selectedIndex == 0) {
+                              _initSwapViewType = _favouriteViewType;
+                            } else if (_selectedIndex == 2) {
+                              _initSwapViewType = _artistViewType;
+                            }
                           });
                         },
                         isScrollable: true,
@@ -106,154 +111,24 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                       ),
                     ),
                     const SizedBox(height: 24.0),
-                    ShuffleAndSwapView(
-                      onShuffleTap: () {},
-                      onSwapViewTap: (viewType) {
-                        setState(() {
-                          _viewType = viewType;
-                        });
-                      },
-                      visibleSwapViewIcon: _selectedIndex == 0 || _selectedIndex == 2,
-                    ),
                   ],
                 ),
               ),
               FadeIndexedStack(
                 index: _selectedIndex,
-                children: List.generate(
-                  libraryTitle.length,
-                  (index) => index == 1
-                      ? const MixMusicView()
-                      : index == libraryTitle.length - 1
-                          ? const Padding(
-                              child: RecentActivityView(),
-                              padding: EdgeInsets.only(top: 8.0),
-                            )
-                          : Container(
-                              margin: const EdgeInsets.only(
-                                left: 16.0,
-                                right: 16.0,
-                              ),
-                              child: AnimatedSwitcher(
-                                transitionBuilder: (child, anim) {
-                                  return FadeTransition(
-                                    opacity: anim,
-                                    child: ScaleTransition(
-                                      scale: anim,
-                                      child: child,
-                                    ),
-                                  );
-                                },
-                                duration: const Duration(milliseconds: 300),
-                                child: _viewType == ViewType.list
-                                    ? _LibraryListView(libraries: libraryExampleModels)
-                                    : _LibraryGridView(libraries: libraryExampleModels),
-                              ),
-                            ),
-                ),
+                children: [
+                  FavouriteView(libraries: libraryExampleModels),
+                  const MixMusicView(),
+                  ArtistsView(onArtistTap: (artist) {}, artists: artistModels),
+                  const Padding(
+                    child: RecentActivityView(),
+                    padding: EdgeInsets.only(top: 8.0),
+                  ),
+                ],
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _LibraryListView extends StatefulWidget {
-  const _LibraryListView({required this.libraries});
-
-  final List<LibraryModel> libraries;
-
-  @override
-  State<_LibraryListView> createState() => _LibraryListViewState();
-}
-
-class _LibraryListViewState extends State<_LibraryListView> {
-  int _playingIndex = -1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ...List.generate(
-            widget.libraries.length,
-            (index) => LibraryListViewCard(
-              libraryModel: widget.libraries[index],
-              onTap: (isPlaying) {
-                if (isPlaying) {
-                  setState(() {
-                    _playingIndex = index;
-                  });
-                } else {
-                  _playingIndex = -1;
-                }
-              },
-              isPlaying: _playingIndex == index,
-              borderRadius: BorderRadius.zero,
-              cardColor: Colors.transparent,
-              cardBorder: index == 0
-                  ? const Border.symmetric(horizontal: BorderSide(width: 1.0, color: Colors.grey))
-                  : const Border(bottom: BorderSide(width: 1.0, color: Colors.grey)),
-            ),
-          ),
-          const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-        ],
-      ),
-    );
-  }
-}
-
-class _LibraryGridView extends StatefulWidget {
-  const _LibraryGridView({required this.libraries});
-
-  final List<LibraryModel> libraries;
-
-  @override
-  State<_LibraryGridView> createState() => _LibraryGridViewState();
-}
-
-class _LibraryGridViewState extends State<_LibraryGridView> {
-  int _playingIndex = -1;
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Wrap(
-            spacing: 24.0,
-            runSpacing: 8.0,
-            children: [
-              ...List.generate(
-                widget.libraries.length,
-                (index) => Container(
-                  margin: const EdgeInsets.only(top: 16.0),
-                  child: LibraryGridViewCard(
-                    libraryModel: widget.libraries[index],
-                    onTap: (isPlaying) {
-                      if (isPlaying) {
-                        setState(() {
-                          _playingIndex = index;
-                        });
-                      } else {
-                        _playingIndex = -1;
-                      }
-                    },
-                    imageRadius: BorderRadius.circular(16.0),
-                    isPlaying: _playingIndex == index,
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-        ],
       ),
     );
   }
