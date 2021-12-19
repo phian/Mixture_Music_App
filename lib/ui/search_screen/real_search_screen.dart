@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/controller/search_controller.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
 
-class RealSearchScreen extends StatelessWidget {
-  RealSearchScreen({
+class RealSearchScreen extends StatefulWidget {
+  const RealSearchScreen({
     Key? key,
     this.searchKeyWord,
   }) : super(key: key);
 
   final String? searchKeyWord;
+
+  @override
+  State<RealSearchScreen> createState() => _RealSearchScreenState();
+}
+
+class _RealSearchScreenState extends State<RealSearchScreen> {
   final TextEditingController searchController = TextEditingController();
   final musicPlayerController = Get.put(MusicPlayerController());
   final controller = Get.put(SearchController());
 
   @override
+  void initState() {
+    super.initState();
+    searchController.text = widget.searchKeyWord ?? '';
+    controller.getAllSongs();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    searchController.text = searchKeyWord ?? '';
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
@@ -35,8 +46,10 @@ class RealSearchScreen extends StatelessWidget {
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search),
                         suffixIcon: GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             searchController.text = '';
+                            await Future.delayed(const Duration(milliseconds: 500));
+                            controller.resetSearchSongs();
                           },
                           child: const Icon(Icons.clear),
                         ),
@@ -46,10 +59,16 @@ class RealSearchScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        fillColor: theme.colorScheme.brightness == Brightness.light
-                            ? Colors.grey[200]
-                            : Colors.white24,
+                        fillColor: theme.colorScheme.brightness == Brightness.light ? Colors.grey[200] : Colors.white24,
                       ),
+                      onChanged: (value) async {
+                        await Future.delayed(const Duration(milliseconds: 500));
+                        if (value.isEmpty) {
+                          controller.resetSearchSongs();
+                        } else {
+                          controller.getSongsByKeyword(keyword: value);
+                        }
+                      },
                       onSubmitted: (value) {
                         if (value.isNotEmpty) {
                           controller.addSearch(value);
@@ -61,7 +80,7 @@ class RealSearchScreen extends StatelessWidget {
                   const SizedBox(width: 8),
                   TextButton(
                     child: Text(
-                      'Cancle',
+                      'Cancel',
                       style: theme.textTheme.bodyText2!.copyWith(
                         color: theme.colorScheme.primary,
                       ),
@@ -73,23 +92,33 @@ class RealSearchScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 16),
-              // Expanded(
-              //   child: ListView.separated(
-              //     itemCount: listSong.length,
-              //     itemBuilder: (BuildContext context, int index) {
-              //       return SongTile(
-              //         songModel: listSong[index],
-              //         onTap: () {
-              //           musicPlayerController.setSong(listSong[index]);
-              //           Get.back();
-              //         },
-              //       );
-              //     },
-              //     separatorBuilder: (BuildContext context, int index) {
-              //       return const Divider();
-              //     },
-              //   ),
-              // ),
+              Expanded(
+                child: Obx(
+                  () => RefreshIndicator(
+                    onRefresh: () async {
+                      searchController.text = '';
+                      controller.resetSearchSongs();
+                    },
+                    child: ListView.separated(
+                      itemCount: controller.searchSongs.isEmpty ? controller.songs.length : controller.searchSongs.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return SongTile(
+                          songModel: controller.searchSongs.isEmpty ? controller.songs[index] : controller.searchSongs[index],
+                          onTap: () {
+                            musicPlayerController.setSong(
+                              controller.searchSongs.isEmpty ? controller.songs[index] : controller.searchSongs[index],
+                            );
+                            Get.back();
+                          },
+                        );
+                      },
+                      separatorBuilder: (BuildContext context, int index) {
+                        return const Divider();
+                      },
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

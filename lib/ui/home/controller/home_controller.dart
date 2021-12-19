@@ -1,11 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
-import 'package:mixture_music_app/models/song/song_data.dart';
 
 import '../../../constants/app_colors.dart';
 import '../../../controllers/weather_controller.dart';
@@ -24,9 +22,7 @@ class HomeController extends GetxController {
   final _themeController = Get.put(ThemeController());
   final _songController = SongController();
 
-  @override
-  void onInit() async {
-    super.onInit();
+  void init() async {
     await getLocationAndWeather();
     await getSuggestPlaylist();
   }
@@ -65,6 +61,7 @@ class HomeController extends GetxController {
     suggestedPlaylist.value = await _songController.getSuggestedPlaylist(
       getWeatherType(),
     );
+    print('suggested song length: ${suggestedPlaylist.length}');
   }
 
   Future<void> getLocationAndWeather() async {
@@ -93,8 +90,7 @@ class HomeController extends GetxController {
 
   Future<String> getLocationName() async {
     Placemark placemark = Placemark();
-    await placemarkFromCoordinates(_pos.latitude, _pos.longitude)
-        .then((list) => placemark = list.first);
+    await placemarkFromCoordinates(_pos.latitude, _pos.longitude).then((list) => placemark = list.first);
 
     var _location = '';
     if (placemark.subAdministrativeArea!.isNotEmpty) {
@@ -133,8 +129,7 @@ class HomeController extends GetxController {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // When we reach here, permissions are granted and we can

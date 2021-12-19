@@ -3,9 +3,13 @@ import 'package:hive/hive.dart';
 class SharePrefService {
   const SharePrefService();
 
-  final _authType = 'authType';
-  final _authUserName = 'authUserName';
-  final _authUserAvatar = 'authUserAvatar';
+  String get _authType => 'authType';
+
+  String get _authUserName => 'authUserName';
+
+  String get _authUserAvatar => 'authUserAvatar';
+
+  String get _recentSearch => 'recentSearch';
 
   Future<void> saveAuthType(String authType) async {
     var authTypeBox = await Hive.openBox(_authType);
@@ -75,5 +79,17 @@ class SharePrefService {
   Future<int> removeAuthUserAvatar() async {
     var authUserBox = await Hive.openBox(_authUserAvatar);
     return await authUserBox.clear();
+  }
+
+  Future<List<String>?> getRecentSearch() async {
+    Box<List<String>?> recentSearchBox = await Hive.openBox<List<String>?>(_recentSearch);
+
+    return recentSearchBox.get('listRecentSearch');
+  }
+
+  Future<void> saveRecentSearch(List<String> recentSearches) async {
+    Box<List<String>?> recentSearchBox = await Hive.openBox<List<String>?>(_recentSearch);
+
+    return await recentSearchBox.put('listRecentSearch', recentSearches);
   }
 }
