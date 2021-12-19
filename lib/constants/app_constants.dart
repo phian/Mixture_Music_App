@@ -11,7 +11,7 @@ class AppConstants {
   static const double playerMinHeight = 60;
 }
 
-const defaultImg =
+const defaultImgURL =
     'https://firebasestorage.googleapis.com/v0/b/mixturemusic-f0b97.appspot.com/o/coverImge%2Fdefault_img.jpg?alt=media&token=8bf1736d-96c1-4d7c-984a-ab4836753859';
 
 const libraryTitle = [

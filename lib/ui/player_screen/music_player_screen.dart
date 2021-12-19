@@ -40,7 +40,7 @@ class MusicPlayerScreen extends StatelessWidget {
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
                       builder: (context) {
-                        return AddToPlaylistSheet();
+                        return AddToPlaylistSheet(song: controller.playingSong.value!,);
                       },
                     );
                   },

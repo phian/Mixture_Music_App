@@ -1,14 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/constants/app_constants.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 import '../create_playlist_screen.dart';
 
 class AddToPlaylistSheet extends StatelessWidget {
-  AddToPlaylistSheet({Key? key}) : super(key: key);
+  AddToPlaylistSheet({Key? key, required this.song}) : super(key: key);
 
-  final userDataController = Get.find<UserDataController>();
+  final _dataController = Get.find<UserDataController>();
+  final SongModel song;
+  final _playlistController = PlaylistController();
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +66,7 @@ class AddToPlaylistSheet extends StatelessWidget {
                 Obx(() {
                   return Expanded(
                     child: ListView.builder(
-                      itemCount: userDataController.playlists.length,
+                      itemCount: _dataController.playlists.length,
                       itemBuilder: (context, index) {
                         return ListTile(
                           leading: SizedBox(
@@ -69,42 +74,79 @@ class AddToPlaylistSheet extends StatelessWidget {
                             width: 60,
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(5),
-                              child: GridView.builder(
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                ),
-                                itemCount: userDataController
-                                            .playlists[index].songs.length >
-                                        4
-                                    ? 4
-                                    : userDataController
-                                        .playlists[index].songs.length,
-                                itemBuilder: (context, idx) => Image.network(
-                                  userDataController
-                                      .playlists[index].songs[idx].data.imgURL,
-                                  loadingBuilder: (context, child, chunkEvent) {
-                                    if (chunkEvent == null) return child;
-                                    return const LoadingContainer(
-                                        width: 30.0, height: 30.0);
-                                  },
-                                ),
-                              ),
+                              child: _dataController
+                                      .playlists[index].songs.isNotEmpty
+                                  ? GridView.builder(
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                      ),
+                                      itemCount: _dataController
+                                                  .playlists[index]
+                                                  .songs
+                                                  .length >
+                                              4
+                                          ? 4
+                                          : _dataController
+                                              .playlists[index].songs.length,
+                                      itemBuilder: (context, idx) =>
+                                          Image.network(
+                                        _dataController.playlists[index]
+                                            .songs[idx].data.imgURL,
+                                        loadingBuilder:
+                                            (context, child, chunkEvent) {
+                                          if (chunkEvent == null) return child;
+                                          return const LoadingContainer(
+                                              width: 30.0, height: 30.0);
+                                        },
+                                      ),
+                                    )
+                                  : Image.network(defaultImgURL),
                             ),
                           ),
                           title: Text(
-                            userDataController.playlists[index].title,
+                            _dataController.playlists[index].title,
                           ),
                           subtitle: Text(
-                            userDataController.playlists[index].songs.length
+                            _dataController.playlists[index].songs.length
                                     .toString() +
                                 ' Tracks',
                           ),
                           trailing: Checkbox(
-                            value: true,
-                            onChanged: (value) {},
+                            value: _dataController.playlists[index].songs
+                                .contains(song),
+                            onChanged: (value) {
+                              if (value!) {
+                                _dataController.playlists[index].songs.remove(
+                                  song,
+                                );
+                              } else {
+                                _dataController.playlists[index].songs
+                                    .add(song);
+                              }
+                              _dataController.playlists.refresh();
+                            },
                           ),
-                          onTap: () {},
+                          onTap: () {
+                            bool hasAdded = _dataController
+                                .playlists[index].songs
+                                .contains(song);
+
+                            if (hasAdded) {
+                              _dataController.playlists[index].songs.remove(
+                                song,
+                              );
+                            } else {
+                              _dataController.playlists[index].songs.add(song);
+                            }
+                            // trigger getX to update UI
+                            _dataController.playlists.refresh();
+
+                            // update playlist in firestore
+                            _playlistController.updatePlaylist(
+                              _dataController.playlists[index],
+                            );
+                          },
                         );
                       },
                     ),
