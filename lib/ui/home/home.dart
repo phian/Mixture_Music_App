@@ -23,7 +23,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    controller.onInit();
+    controller.init();
   }
 
   @override
@@ -80,36 +80,38 @@ class _HomeState extends State<Home> {
                   thickness: 0.5,
                   height: 1,
                 ),
-                ListView.separated(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                  itemCount: controller.suggestedPlaylist.length,
-                  itemBuilder: (context, index) {
-                    return Obx(
-                      () => SongTile(
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 8,
-                          horizontal: 16,
+                Obx(
+                  () => ListView.separated(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    itemCount: controller.suggestedPlaylist.length,
+                    itemBuilder: (context, index) {
+                      return Obx(
+                        () => SongTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            vertical: 8,
+                            horizontal: 16,
+                          ),
+                          songModel: controller.suggestedPlaylist[index],
+                          isPlaying: musicController.playingSong.value != null
+                              ? musicController.playingSong.value!.id == controller.suggestedPlaylist[index].id
+                                  ? true
+                                  : false
+                              : false,
+                          onTap: () {
+                            controller.playingSongIndex.value = index;
+                            musicController.setSong(
+                              controller.suggestedPlaylist[index],
+                            );
+                          },
                         ),
-                        songModel: controller.suggestedPlaylist[index],
-                        isPlaying: musicController.playingSong.value != null
-                            ? musicController.playingSong.value!.id == controller.suggestedPlaylist[index].id
-                                ? true
-                                : false
-                            : false,
-                        onTap: () {
-                          controller.playingSongIndex.value = index;
-                          musicController.setSong(
-                            controller.suggestedPlaylist[index],
-                          );
-                        },
-                      ),
-                    );
-                  },
-                  separatorBuilder: (context, index) => const Divider(
-                    height: 1,
-                    thickness: 0.5,
+                      );
+                    },
+                    separatorBuilder: (context, index) => const Divider(
+                      height: 1,
+                      thickness: 0.5,
+                    ),
                   ),
                 ),
               ],
