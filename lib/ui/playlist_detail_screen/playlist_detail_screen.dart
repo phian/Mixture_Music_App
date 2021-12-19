@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_sheet.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/delete_dialog.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/edit_playlist_sheet.dart';
@@ -22,6 +23,15 @@ class PlayListDetailScreen extends StatefulWidget {
 class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
   final List<IconData> _actionIcons = [Icons.add, Icons.edit, Icons.share, Icons.delete];
   final List<String> _menuTexts = ['Add tracks', 'Edit playlist', 'Share playlist', 'Delete playlist'];
+  List<SongModel> _songs = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (Get.arguments != null) {
+      _songs = List.from(Get.arguments);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
