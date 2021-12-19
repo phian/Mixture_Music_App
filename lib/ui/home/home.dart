@@ -1,7 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/song_controller.dart';
 
 import '../../widgets/song_tile.dart';
 import '../player_screen/controller/music_player_controller.dart';
@@ -10,11 +9,22 @@ import 'widget/playlist_header.dart';
 import 'widget/refresh_indicator.dart';
 import 'widget/weather_infor.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   Home({Key? key}) : super(key: key);
 
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
   final controller = Get.put(HomeController());
   final musicController = Get.put(MusicPlayerController());
+
+  @override
+  void initState() {
+    super.initState();
+    controller.onInit();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +68,7 @@ class Home extends StatelessWidget {
                 ),
                 Obx(() {
                   return PlaylistHeader(
-                    coverImageUrl: controller.suggestedPlaylist
-                        .map((e) => e.data.imgURL)
-                        .toList(),
+                    coverImageUrl: controller.suggestedPlaylist.map((e) => e.data.imgURL).toList(),
                   );
                 }),
 
@@ -75,8 +83,7 @@ class Home extends StatelessWidget {
                 ListView.separated(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  padding:
-                      const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                  padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                   itemCount: controller.suggestedPlaylist.length,
                   itemBuilder: (context, index) {
                     return Obx(
@@ -87,8 +94,7 @@ class Home extends StatelessWidget {
                         ),
                         songModel: controller.suggestedPlaylist[index],
                         isPlaying: musicController.playingSong.value != null
-                            ? musicController.playingSong.value!.id ==
-                                    controller.suggestedPlaylist[index].id
+                            ? musicController.playingSong.value!.id == controller.suggestedPlaylist[index].id
                                 ? true
                                 : false
                             : false,
