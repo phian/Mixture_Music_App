@@ -62,7 +62,7 @@ final mixedSongUrls = [
   'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
 ];
 
-final artistModels = [
+final artistModels = <ArtistModel>[
   ArtistModel(
     artistId: '0',
     artistName: 'Erik',
