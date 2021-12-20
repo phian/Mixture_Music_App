@@ -8,10 +8,10 @@ class SongRepo {
   final _sharePrefService = const SharePrefService();
   final _songService = SongService();
 
-  Future<List<SongModel>> getSuggestedPlaylist(String weatherType) async {
+  Future<List<SongModel>> getSuggestedSongs(String weatherType) async {
     var playlist = <SongModel>[];
 
-    await _songService.getSuggestedPlaylist(weatherType).then((songs) {
+    await _songService.getSuggestedSongs(weatherType).then((songs) {
       for (var song in songs) {
         playlist.add(
           SongModel(

@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class SongService {
   
   Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>>
-      getSuggestedPlaylist(String weatherType) async {
+      getSuggestedSongs(String weatherType) async {
     var limitSuggestedSong = 10;
     List<QueryDocumentSnapshot<Map<String, dynamic>>> songs = [];
     await FirebaseFirestore.instance
