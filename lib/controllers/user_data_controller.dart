@@ -10,6 +10,8 @@ import 'package:mixture_music_app/models/song/song_model.dart';
 class UserDataController extends GetxController {
   var playlists = <Playlist>[].obs;
   var favorites = <SongModel>[].obs;
+  var recents = <SongModel>[].obs;
+
   final _playlistController = PlaylistController();
   final _songController = SongController();
   final _user = FirebaseAuth.instance.currentUser;
@@ -19,6 +21,7 @@ class UserDataController extends GetxController {
     super.onInit();
     await getAllUserPlaylists();
     await getAllUserFavSongs();
+    await getAllUserRecents();
   }
 
   Future<void> getAllUserPlaylists() async {
@@ -30,4 +33,11 @@ class UserDataController extends GetxController {
     favorites.value = await _songController.getAllUserFavSongs(_user!.uid);
     log('number of user\'s fav songs: ' + favorites.length.toString());
   }
+
+  Future<void> getAllUserRecents() async {
+    recents.value = await _songController.getAllUserRecents(_user!.uid);
+    log('number of user\'s recent songs: ' + recents.length.toString());
+  }
+
+
 }

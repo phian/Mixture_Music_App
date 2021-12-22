@@ -1,8 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/add_to_playlist/add_to_playlist_screen.dart';
 
@@ -15,7 +13,6 @@ class MusicPlayerScreen extends StatelessWidget {
 
   final controller = Get.put(MusicPlayerController());
   final _userDataController = Get.put(UserDataController());
-  final _songController = SongController();
 
   bool isFavorite() {
     return _userDataController.favorites.contains(controller.playingSong.value);
@@ -96,23 +93,18 @@ class MusicPlayerScreen extends StatelessWidget {
                         CupertinoButton(
                           onPressed: () async {
                             if (isFavorite()) {
-                              await _songController.removeSongFromFav(
-                                FirebaseAuth.instance.currentUser!.uid,
-                                controller.playingSong.value!,
-                              );
+                              controller.removeSongFromFav();
+
                               _userDataController.favorites.remove(
                                 controller.playingSong.value!,
                               );
                             } else {
-                              await _songController.addSongToFav(
-                                FirebaseAuth.instance.currentUser!.uid,
-                                controller.playingSong.value!,
-                              );
+                              controller.addSongToFav();
+
                               _userDataController.favorites.add(
                                 controller.playingSong.value!,
                               );
                             }
-
                             _userDataController.getAllUserFavSongs();
                           },
                           child: Icon(

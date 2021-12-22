@@ -1,5 +1,4 @@
 
-
 import 'package:mixture_music_app/models/song/song_data.dart';
 
 class SongModel {
@@ -17,13 +16,18 @@ class SongModel {
     };
   }
 
+  factory SongModel.fromMap(Map<String, dynamic> map) {
+    return SongModel(
+      id: map['id'] ?? '',
+      data: SongData.fromMap(map['data']),
+    );
+  }
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-  
-    return other is SongModel &&
-      other.id == id &&
-      other.data == data;
+
+    return other is SongModel && other.id == id && other.data == data;
   }
 
   @override
