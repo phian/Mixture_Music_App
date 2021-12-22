@@ -17,6 +17,10 @@ class MusicPlayerScreen extends StatelessWidget {
   final _userDataController = Get.put(UserDataController());
   final _songController = SongController();
 
+  bool isFavorite() {
+    return _userDataController.favorites.contains(controller.playingSong.value);
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -91,27 +95,30 @@ class MusicPlayerScreen extends StatelessWidget {
                         ),
                         CupertinoButton(
                           onPressed: () async {
-                            await _songController.addSongToFav(
-                              FirebaseAuth.instance.currentUser!.uid,
-                              controller.playingSong.value!,
-                            );
+                            if (isFavorite()) {
+                              await _songController.removeSongFromFav(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                controller.playingSong.value!,
+                              );
+                              _userDataController.favorites.remove(
+                                controller.playingSong.value!,
+                              );
+                            } else {
+                              await _songController.addSongToFav(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                controller.playingSong.value!,
+                              );
+                              _userDataController.favorites.add(
+                                controller.playingSong.value!,
+                              );
+                            }
 
-                            _userDataController.favorites.add(
-                              controller.playingSong.value!,
-                            );
-
-                            await _userDataController.getAllUserFavSongs();
+                            _userDataController.getAllUserFavSongs();
                           },
-                          child: Obx(
-                            () => Icon(
-                              _userDataController.favorites.contains(controller.playingSong.value)
-                                  ? Icons.favorite_rounded
-                                  : Icons.favorite_border_rounded,
-                              color: _userDataController.favorites
-                                      .contains(controller.playingSong.value)
-                                  ? theme.primaryColor
-                                  : theme.colorScheme.onBackground,
-                            ),
+                          child: Icon(
+                            isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            color:
+                                isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
                           ),
                         ),
                       ],

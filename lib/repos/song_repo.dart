@@ -50,8 +50,8 @@ class SongRepo {
     var rs = await _songService.getAllUserFavSongs(uid);
     for (var song in rs.docs) {
       favSongs.add(SongModel(
-        id: song.id,
-        data: SongData.fromMap(song.data()),
+        id: song['id'],
+        data: SongData.fromMap(song['data']),
       ));
     }
     return favSongs;
@@ -59,5 +59,9 @@ class SongRepo {
 
   Future<void> addSongToFav(String uid, SongModel song) async {
     await _songService.addSongToFav(uid, song);
+  }
+
+  Future<void> removeSongFromFav(String uid, SongModel song) async {
+    await _songService.removeSongFromFav(uid, song);
   }
 }

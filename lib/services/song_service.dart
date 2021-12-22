@@ -42,4 +42,22 @@ class SongService {
         .collection('favorite_songs')
         .add(song.toMap());
   }
+
+  Future<void> removeSongFromFav(String uid, SongModel song) async {
+    await FirebaseFirestore.instance
+        .collection('user_accounts')
+        .doc(uid)
+        .collection('favorite_songs')
+        .where('id', isEqualTo: song.id)
+        .get()
+        // ignore: avoid_function_literals_in_foreach_calls
+        .then((value) => value.docs.forEach((doc) {
+              FirebaseFirestore.instance
+                  .collection('user_accounts')
+                  .doc(uid)
+                  .collection('favorite_songs')
+                  .doc(doc.id)
+                  .delete();
+            }));
+  }
 }

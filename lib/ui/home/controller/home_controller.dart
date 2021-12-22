@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
-import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 

@@ -15,4 +15,8 @@ class SongController {
   Future<void> addSongToFav(String uid, SongModel song) async {
     return await _songRepo.addSongToFav(uid, song);
   }
+
+  Future<void> removeSongFromFav(String uid, SongModel song) async {
+    return await _songRepo.removeSongFromFav(uid, song);
+  }
 }
