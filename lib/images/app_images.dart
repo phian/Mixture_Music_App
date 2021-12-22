@@ -4,4 +4,5 @@ class AppImages {
   static const delete = '$baseImageFolder/delete.png';
   static const faq = '$baseImageFolder/FAQ.jpg';
   static const logout = '$baseImageFolder/logout.png';
+  static const playlist = '$baseImageFolder/playlist.png';
 }
