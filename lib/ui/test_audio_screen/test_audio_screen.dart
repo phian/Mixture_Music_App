@@ -3,18 +3,26 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/auth_controller.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/model/media_state.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/widgets/seek_bar.dart';
-import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/rxdart.dart' as rxdart;
 
 // You might want to provide this using dependency injection rather than a
 // global variable.
 late AudioHandler _audioHandler;
 
 Future<void> initAudioHandler() async {
+  final PlaylistController _playlistController = PlaylistController();
+  final AuthController _authController = Get.find<AuthController>();
+
+  var result = await _playlistController.getUserPlaylists(_authController.currentAuthUser?.uid ?? '');
+
   _audioHandler = await AudioService.init(
-    builder: () => AudioPlayerHandler(),
+    builder: () => AudioPlayerHandler(songs: result[0].songs),
     config: const AudioServiceConfig(
       androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
       androidNotificationChannelName: 'Audio playback',
@@ -90,7 +98,7 @@ class TestAudioScreen extends StatelessWidget {
 
   /// A stream reporting the combined state of the current media item and its
   /// current position.
-  Stream<MediaState> get _mediaStateStream => Rx.combineLatest2<MediaItem?, Duration, MediaState>(
+  Stream<MediaState> get _mediaStateStream => rxdart.Rx.combineLatest2<MediaItem?, Duration, MediaState>(
         _audioHandler.mediaItem,
         AudioService.position,
         (mediaItem, position) => MediaState(mediaItem, position),

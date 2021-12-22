@@ -1,38 +1,41 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mixture_music_app/models/song/song_model.dart';
 
 /// An [AudioHandler] for playing a single item.
 class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
-  final List<MediaItem> _items = [
-    MediaItem(
-      // This can be any unique id, but we use the audio URL for convenience.
-      id: 'https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3',
-      album: 'Science Friday 1',
-      title: 'A Salute To Head-Scratching Science',
-      artist: 'Science Friday and WNYC Studios',
-      duration: const Duration(milliseconds: 5739820),
-      artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
-    ),
-    MediaItem(
-      id: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-      album: 'Science Friday 2',
-      title: 'From Cat Rheology To Operatic Incompetence',
-      artist: "Science Friday and NYC Studios",
-      duration: const Duration(milliseconds: 2856950),
-      artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
-    ),
+  final List<SongModel> songs;
+
+  List<MediaItem> _items = [
+    // MediaItem(
+    //   // This can be any unique id, but we use the audio URL for convenience.
+    //   id: 'https://s3.amazonaws.com/scifri-episodes/scifri20181123-episode.mp3',
+    //   album: 'Science Friday 1',
+    //   title: 'A Salute To Head-Scratching Science',
+    //   artist: 'Science Friday and WNYC Studios',
+    //   duration: const Duration(milliseconds: 5739820),
+    //   artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
+    // ),
+    // MediaItem(
+    //   id: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+    //   album: 'Science Friday 2',
+    //   title: 'From Cat Rheology To Operatic Incompetence',
+    //   artist: 'Science Friday and NYC Studios',
+    //   duration: const Duration(milliseconds: 2856950),
+    //   artUri: Uri.parse('https://media.wnyc.org/i/1400/1400/l/80/1/ScienceFriday_WNYCStudios_1400.jpg'),
+    // ),
   ];
 
   final _player = AudioPlayer();
 
   /// Initialise our audio handler.
-  AudioPlayerHandler() {
+  AudioPlayerHandler({required this.songs}) {
     // So that our clients (the Flutter UI and the system notification) know
     // what state to display, here we set up our audio handler to broadcast all
     // playback state changes as they happen via playbackState...
     _player.playbackEventStream.map(_transformEvent).pipe(playbackState);
     // ... and also the current media item via mediaItem.
-    mediaItem.add(_items[0]);
+    _initAudioSource();
 
     // Load the player.
     _player.setAudioSource(
@@ -40,6 +43,24 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
         children: List.generate(_items.length, (index) => AudioSource.uri(Uri.parse(_items[index].id))),
       ),
     );
+  }
+
+  void _initAudioSource() {
+    _items = [];
+
+    for (int i = 0; i < songs.length; i++) {
+      _items.add(
+        MediaItem(
+          id: songs[i].data.audioURL,
+          title: songs[i].data.title,
+          artist: songs[i].data.artist,
+          artUri: Uri.tryParse(songs[i].data.imgURL),
+        ),
+      );
+    }
+    if (_items.isNotEmpty) {
+      mediaItem.add(_items[0]);
+    }
   }
 
   @override

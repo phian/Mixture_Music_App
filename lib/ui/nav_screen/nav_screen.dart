@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/search_screen.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
 
 import '../../routing/routes.dart';
 import '../home/home.dart';
@@ -29,6 +30,16 @@ class _NavScreenState extends State<NavScreen> {
 
   final musicController = Get.put(MusicPlayerController());
   final userDataController = Get.put(UserDataController());
+
+  @override
+  void initState() {
+    super.initState();
+    _initAudioHandler();
+  }
+
+  void _initAudioHandler() async {
+    await initAudioHandler();
+  }
 
   @override
   Widget build(BuildContext context) {
