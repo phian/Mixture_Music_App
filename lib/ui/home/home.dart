@@ -1,5 +1,6 @@
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 
 import '../../widgets/song_tile.dart';
@@ -28,6 +29,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
         child: CustomRefreshIndicator(
@@ -68,12 +70,22 @@ class _HomeState extends State<Home> {
                 ),
                 Obx(() {
                   return PlaylistHeader(
-                    coverImageUrl: controller.suggestedPlaylist.map((e) => e.data.imgURL).toList(),
+                    coverImageUrl: controller.suggestedSongs
+                        .map((e) => e.data.imgURL)
+                        .toList(),
+                    onSave: () {
+                      controller.saveSuggestedSongAsPlaylist().then(
+                            (value) => Fluttertoast.showToast(
+                              msg: 'Added playlist to your Library',
+                              backgroundColor: theme.primaryColor,
+                            ),
+                          );
+                    },
+                    onRefresh: () {
+                      controller.getSuggestSongs();
+                    },
                   );
                 }),
-
-                // return const SizedBox.shrink();
-
                 const Divider(
                   indent: 16,
                   endIndent: 16,
@@ -84,8 +96,9 @@ class _HomeState extends State<Home> {
                   () => ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                    itemCount: controller.suggestedPlaylist.length,
+                    padding:
+                        const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    itemCount: controller.suggestedSongs.length,
                     itemBuilder: (context, index) {
                       return Obx(
                         () => SongTile(
@@ -93,16 +106,17 @@ class _HomeState extends State<Home> {
                             vertical: 8,
                             horizontal: 16,
                           ),
-                          songModel: controller.suggestedPlaylist[index],
+                          songModel: controller.suggestedSongs[index],
                           isPlaying: musicController.playingSong.value != null
-                              ? musicController.playingSong.value!.id == controller.suggestedPlaylist[index].id
+                              ? musicController.playingSong.value!.id ==
+                                      controller.suggestedSongs[index].id
                                   ? true
                                   : false
                               : false,
                           onTap: () {
                             controller.playingSongIndex.value = index;
                             musicController.setSong(
-                              controller.suggestedPlaylist[index],
+                              controller.suggestedSongs[index],
                             );
                           },
                         ),

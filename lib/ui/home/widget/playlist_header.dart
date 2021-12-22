@@ -6,9 +6,13 @@ class PlaylistHeader extends StatelessWidget {
   const PlaylistHeader({
     Key? key,
     required this.coverImageUrl,
+    required this.onSave,
+    required this.onRefresh,
   }) : super(key: key);
 
   final List<String> coverImageUrl;
+  final VoidCallback onSave;
+  final VoidCallback onRefresh;
 
   @override
   Widget build(BuildContext context) {
@@ -90,20 +94,20 @@ class PlaylistHeader extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: onSave,
                     ),
                     const SizedBox(width: 30),
                     CupertinoButton(
                       padding: EdgeInsets.zero,
                       child: Text(
-                        'Share',
+                        'Refresh',
                         style: TextStyle(
                           fontSize: 16,
                           color: theme.primaryColor,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      onPressed: () {},
+                      onPressed: onRefresh,
                     ),
                   ],
                 )

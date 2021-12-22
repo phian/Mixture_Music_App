@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/controllers/song_controller.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
+import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 
 import '../../../constants/app_colors.dart';
@@ -13,7 +17,7 @@ class HomeController extends GetxController {
   var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
   var playingSongIndex = Rxn<int>();
-  var suggestedPlaylist = <SongModel>[].obs;
+  var suggestedSongs = <SongModel>[].obs;
 
   final limitedSong = 10;
 
@@ -21,10 +25,12 @@ class HomeController extends GetxController {
   final _weatherController = WeatherController();
   final _themeController = Get.put(ThemeController());
   final _songController = SongController();
+  final _playlistController = PlaylistController();
+  final _dataController = Get.find<UserDataController>();
 
   void init() async {
     await getLocationAndWeather();
-    await getSuggestPlaylist();
+    await getSuggestSongs();
   }
 
   String getWeatherType() {
@@ -53,15 +59,26 @@ class HomeController extends GetxController {
 
   Future<void> onPullToRefresh() async {
     await getLocationAndWeather();
-    await getSuggestPlaylist();
+    await getSuggestSongs();
     playingSongIndex.value = null;
   }
 
-  Future<void> getSuggestPlaylist() async {
-    suggestedPlaylist.value = await _songController.getSuggestedPlaylist(
+  Future<void> getSuggestSongs() async {
+    suggestedSongs.value = await _songController.getSuggestedSongs(
       getWeatherType(),
     );
-    print('suggested song length: ${suggestedPlaylist.length}');
+    print('suggested song length: ${suggestedSongs.length}');
+  }
+
+  Future<void> saveSuggestedSongAsPlaylist() async {
+    var newPlaylist = Playlist(
+      createdTime: Timestamp.now(),
+      title: "Today's Playlist",
+      songs: suggestedSongs,
+    );
+
+    await _playlistController.createPlaylist(newPlaylist);
+    _dataController.getAllUserPlaylists();
   }
 
   Future<void> getLocationAndWeather() async {
@@ -90,7 +107,8 @@ class HomeController extends GetxController {
 
   Future<String> getLocationName() async {
     Placemark placemark = Placemark();
-    await placemarkFromCoordinates(_pos.latitude, _pos.longitude).then((list) => placemark = list.first);
+    await placemarkFromCoordinates(_pos.latitude, _pos.longitude)
+        .then((list) => placemark = list.first);
 
     var _location = '';
     if (placemark.subAdministrativeArea!.isNotEmpty) {
@@ -129,7 +147,8 @@ class HomeController extends GetxController {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // When we reach here, permissions are granted and we can

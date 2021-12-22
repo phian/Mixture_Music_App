@@ -3,7 +3,6 @@ import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
-
 class SongTile extends StatefulWidget {
   const SongTile({
     Key? key,
@@ -48,7 +47,8 @@ class _SongTileState extends State<SongTile> {
       onTap: widget.onTap,
       borderRadius: widget.borderRadius ?? BorderRadius.zero,
       child: Container(
-        padding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16),
+        padding:
+            widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(border: widget.border),
         width: widget.width,
         height: widget.height,
@@ -99,7 +99,9 @@ class _SongTileState extends State<SongTile> {
                     maxLines: 1,
                     style: theme.textTheme.headline6?.copyWith(
                       fontSize: 16,
-                      color: widget.isPlaying ? theme.primaryColor : theme.textTheme.headline6?.color,
+                      color: widget.isPlaying
+                          ? theme.primaryColor
+                          : theme.textTheme.headline6?.color,
                     ),
                   ),
                   Text(
