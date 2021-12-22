@@ -33,6 +33,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
   final _authController = Get.find<AuthController>();
   String _authType = '';
   final _settingsController = Get.put(SettingsScreenController());
+  final _user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -156,7 +157,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           }
                         } else if (_authType == 'google') {
                           return Image.network(
-                            _googleUser?.photoURL ?? '',
+                            _user!.photoURL!,
                             width: MediaQuery.of(context).size.width * 0.25,
                             height: MediaQuery.of(context).size.width * 0.25,
                             fit: BoxFit.cover,
@@ -171,7 +172,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                           );
                         } else {
                           return Image.network(
-                            _facebookUser?.picture?.url ?? '',
+                            _user!.photoURL!,
                             width: MediaQuery.of(context).size.width * 0.25,
                             height: MediaQuery.of(context).size.width * 0.25,
                             fit: BoxFit.cover,
@@ -232,7 +233,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             const SizedBox(height: 24.0),
             ...List.generate(
               firstSectionIcons.length,
-                  (index) => SettingTile(
+              (index) => SettingTile(
                 leading: Icon(firstSectionIcons[index], size: 30.0),
                 title: Text(
                   firstSectionTexts[index],
@@ -247,7 +248,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       context: context,
                       backgroundColor: Colors.transparent,
                       builder: (context) {
-                        return NotificationSheet(controller: _settingsController, title: firstSectionTexts[index]);
+                        return NotificationSheet(
+                            controller: _settingsController, title: firstSectionTexts[index]);
                       },
                     );
                   } else if (index == 2) {
@@ -255,7 +257,8 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                       context: context,
                       backgroundColor: Colors.transparent,
                       builder: (context) {
-                        return InterfaceSheet(controller: _settingsController, title: firstSectionTexts[index]);
+                        return InterfaceSheet(
+                            controller: _settingsController, title: firstSectionTexts[index]);
                       },
                     );
                   }
@@ -270,7 +273,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
             ),
             ...List.generate(
               secondSectionIcons.length,
-                  (index) => SettingTile(
+              (index) => SettingTile(
                 leading: Icon(secondSectionIcons[index], size: 30.0),
                 title: Text(
                   secondSectionTexts[index],

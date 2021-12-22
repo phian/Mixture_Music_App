@@ -7,4 +7,12 @@ class SongController {
   Future<List<SongModel>> getSuggestedPlaylist(String weatherType) async {
     return await _songRepo.getSuggestedPlaylist(weatherType);
   }
+
+  Future<List<SongModel>> getAllUserFavSongs(String uid) async {
+    return _songRepo.getAllUserFavSongs(uid);
+  }
+
+  Future<void> addSongToFav(String uid, SongModel song) async {
+    return await _songRepo.addSongToFav(uid, song);
+  }
 }
