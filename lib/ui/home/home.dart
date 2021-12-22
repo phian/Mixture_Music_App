@@ -2,6 +2,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 
 import '../../widgets/song_tile.dart';
 import '../player_screen/controller/music_player_controller.dart';
@@ -20,6 +21,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final controller = Get.put(HomeController());
   final musicController = Get.put(MusicPlayerController());
+  final _userDataController = Get.put(UserDataController());
 
   @override
   void initState() {
@@ -70,9 +72,7 @@ class _HomeState extends State<Home> {
                 ),
                 Obx(() {
                   return PlaylistHeader(
-                    coverImageUrl: controller.suggestedSongs
-                        .map((e) => e.data.imgURL)
-                        .toList(),
+                    coverImageUrl: controller.suggestedSongs.map((e) => e.data.imgURL).toList(),
                     onSave: () {
                       controller.saveSuggestedSongAsPlaylist().then(
                             (value) => Fluttertoast.showToast(
@@ -80,6 +80,7 @@ class _HomeState extends State<Home> {
                               backgroundColor: theme.primaryColor,
                             ),
                           );
+                      _userDataController.getAllUserPlaylists();
                     },
                     onRefresh: () {
                       controller.getSuggestSongs();
@@ -96,8 +97,7 @@ class _HomeState extends State<Home> {
                   () => ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    padding:
-                        const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                     itemCount: controller.suggestedSongs.length,
                     itemBuilder: (context, index) {
                       return Obx(
