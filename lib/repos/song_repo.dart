@@ -49,10 +49,7 @@ class SongRepo {
     var favSongs = <SongModel>[];
     var rs = await _songService.getAllUserFavSongs(uid);
     for (var song in rs.docs) {
-      favSongs.add(SongModel(
-        id: song['id'],
-        data: SongData.fromMap(song['data']),
-      ));
+      favSongs.add(SongModel.fromMap(song.data()));
     }
     return favSongs;
   }
@@ -64,4 +61,19 @@ class SongRepo {
   Future<void> removeSongFromFav(String uid, SongModel song) async {
     await _songService.removeSongFromFav(uid, song);
   }
+
+  Future<void> addSongToRecents(String uid, SongModel song) async {
+    await _songService.addSongToRecents(uid, song);
+  }
+
+  Future<List<SongModel>> getAllUserRecents(String uid) async {
+    var recents = <SongModel>[];
+    var rs = await _songService.getAllUserRecents(uid);
+    for (var song in rs.docs) {
+      recents.add(SongModel.fromMap(song.data()));
+    }
+    return recents;
+    
+  }
+
 }

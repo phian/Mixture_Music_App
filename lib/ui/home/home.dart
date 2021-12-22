@@ -113,7 +113,7 @@ class _HomeState extends State<Home> {
                                   ? true
                                   : false
                               : false,
-                          onTap: () {
+                          onTap: () async {
                             controller.playingSongIndex.value = index;
                             musicController.setSong(
                               controller.suggestedSongs[index],

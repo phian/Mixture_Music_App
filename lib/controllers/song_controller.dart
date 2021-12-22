@@ -19,4 +19,12 @@ class SongController {
   Future<void> removeSongFromFav(String uid, SongModel song) async {
     return await _songRepo.removeSongFromFav(uid, song);
   }
+
+  Future<void> addSongToRecents(String uid, SongModel song) async {
+    return await _songRepo.addSongToRecents(uid, song);
+  }
+
+  Future<List<SongModel>> getAllUserRecents(String uid) async {
+    return await _songRepo.getAllUserRecents(uid);
+  }
 }
