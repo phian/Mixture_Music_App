@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 
 class SongService {
-  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getSuggestedPlaylist(
+  Future<List<QueryDocumentSnapshot<Map<String, dynamic>>>> getSuggestedSongs(
       String weatherType) async {
     var limitSuggestedSong = 10;
     List<QueryDocumentSnapshot<Map<String, dynamic>>> songs = [];

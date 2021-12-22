@@ -4,8 +4,8 @@ import 'package:mixture_music_app/repos/song_repo.dart';
 class SongController {
   final _songRepo = SongRepo();
 
-  Future<List<SongModel>> getSuggestedPlaylist(String weatherType) async {
-    return await _songRepo.getSuggestedPlaylist(weatherType);
+  Future<List<SongModel>> getSuggestedSongs(String weatherType) async {
+    return await _songRepo.getSuggestedSongs(weatherType);
   }
 
   Future<List<SongModel>> getAllUserFavSongs(String uid) async {
