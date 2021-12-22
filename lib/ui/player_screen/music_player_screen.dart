@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/song_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/add_to_playlist/add_to_playlist_screen.dart';
 
 import '../../widgets/marquee_text.dart';
@@ -11,6 +14,12 @@ class MusicPlayerScreen extends StatelessWidget {
   MusicPlayerScreen({Key? key}) : super(key: key);
 
   final controller = Get.put(MusicPlayerController());
+  final _userDataController = Get.put(UserDataController());
+  final _songController = SongController();
+
+  bool isFavorite() {
+    return _userDataController.favorites.contains(controller.playingSong.value);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +49,9 @@ class MusicPlayerScreen extends StatelessWidget {
                       isScrollControlled: true,
                       backgroundColor: Colors.transparent,
                       builder: (context) {
-                        return AddToPlaylistSheet(song: controller.playingSong.value!,);
+                        return AddToPlaylistSheet(
+                          song: controller.playingSong.value!,
+                        );
                       },
                     );
                   },
@@ -76,22 +87,38 @@ class MusicPlayerScreen extends StatelessWidget {
                         Expanded(
                           child: MarqueeText(
                             controller.playingSong.value!.data.title,
-                            style:
-                                Theme.of(context).textTheme.headline6!.copyWith(
-                                      fontSize: 26,
-                                    ),
+                            style: Theme.of(context).textTheme.headline6!.copyWith(
+                                  fontSize: 26,
+                                ),
                             horizontalPadding: 10,
                           ),
                         ),
                         CupertinoButton(
-                          onPressed: () {
-                            // controller.selectedSong.update((song) {
-                            //   song!.isFavorite = !song.isFavorite;
-                            // });
+                          onPressed: () async {
+                            if (isFavorite()) {
+                              await _songController.removeSongFromFav(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                controller.playingSong.value!,
+                              );
+                              _userDataController.favorites.remove(
+                                controller.playingSong.value!,
+                              );
+                            } else {
+                              await _songController.addSongToFav(
+                                FirebaseAuth.instance.currentUser!.uid,
+                                controller.playingSong.value!,
+                              );
+                              _userDataController.favorites.add(
+                                controller.playingSong.value!,
+                              );
+                            }
+
+                            _userDataController.getAllUserFavSongs();
                           },
                           child: Icon(
-                            Icons.favorite_border,
-                            color: theme.colorScheme.onBackground,
+                            isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            color:
+                                isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
                           ),
                         ),
                       ],
@@ -111,10 +138,8 @@ class MusicPlayerScreen extends StatelessWidget {
                         activeTrackColor: theme.primaryColor.withOpacity(0.8),
                         inactiveTrackColor: theme.primaryColor.withOpacity(0.2),
                         thumbColor: theme.primaryColor.withOpacity(0.8),
-                        thumbShape:
-                            const RoundSliderThumbShape(enabledThumbRadius: 5),
-                        overlayShape:
-                            const RoundSliderThumbShape(enabledThumbRadius: 10),
+                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
+                        overlayShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
                         overlayColor: theme.primaryColor.withOpacity(0.1),
                       ),
                       child: Slider(

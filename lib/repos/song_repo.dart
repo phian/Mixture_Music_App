@@ -4,7 +4,6 @@ import 'package:mixture_music_app/services/share_preference_service.dart';
 import 'package:mixture_music_app/services/song_service.dart';
 
 class SongRepo {
-
   final _sharePrefService = const SharePrefService();
   final _songService = SongService();
 
@@ -38,10 +37,31 @@ class SongRepo {
     var result = await _songService.getAllSongs();
     for (int i = 0; i < result.docs.length; i++) {
       songs.add(SongModel(
-          id: result.docs[i].id,
-          data: SongData.fromMap(result.docs[i].data())));
+        id: result.docs[i].id,
+        data: SongData.fromMap(result.docs[i].data()),
+      ));
     }
 
     return songs;
+  }
+
+  Future<List<SongModel>> getAllUserFavSongs(String uid) async {
+    var favSongs = <SongModel>[];
+    var rs = await _songService.getAllUserFavSongs(uid);
+    for (var song in rs.docs) {
+      favSongs.add(SongModel(
+        id: song['id'],
+        data: SongData.fromMap(song['data']),
+      ));
+    }
+    return favSongs;
+  }
+
+  Future<void> addSongToFav(String uid, SongModel song) async {
+    await _songService.addSongToFav(uid, song);
+  }
+
+  Future<void> removeSongFromFav(String uid, SongModel song) async {
+    await _songService.removeSongFromFav(uid, song);
   }
 }
