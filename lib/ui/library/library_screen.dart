@@ -37,7 +37,8 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
   }
 
   void _getUserPlaylists() async {
-    var result = await _playlistController.getUserPlaylists(_authController.currentAuthUser?.uid ?? '');
+    var result =
+        await _playlistController.getUserPlaylists(_authController.currentAuthUser?.uid ?? '');
     _libraryController.setPlaylist(result);
   }
 
@@ -98,7 +99,8 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                           indicatorColor: Theme.of(context).primaryColor,
                           indicatorSize: TabBarIndicatorSize.label,
                           indicatorWeight: 3.0,
-                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          physics:
+                              const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                           tabs: List.generate(
                             libraryTitle.length,
                             (index) => Tab(
@@ -128,10 +130,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                       ),
                     ),
                     ArtistsView(onArtistTap: (artist) {}, artists: artistModels),
-                    const Padding(
-                      child: RecentActivityView(),
-                      padding: EdgeInsets.only(top: 8.0),
-                    ),
+                    const RecentActivityView(),
                   ],
                 ),
               ],

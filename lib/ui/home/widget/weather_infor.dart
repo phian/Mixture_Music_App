@@ -28,8 +28,7 @@ class WeatherInfo extends StatelessWidget {
         SizedBox(
           height: 240,
           child: ListView(
-            physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics()),
+            physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
             padding: const EdgeInsets.symmetric(horizontal: 12),
             scrollDirection: Axis.horizontal,
             children: [
@@ -119,7 +118,7 @@ class CurrentWeather extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 250,
+      //width: 250,
       child: Card(
         elevation: 4,
         child: Padding(
@@ -143,7 +142,7 @@ class CurrentWeather extends StatelessWidget {
                     size: 70,
                     color: Theme.of(context).colorScheme.secondary,
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 16),
                   Text(
                     '${current.temp.round()}°',
                     style: TextStyle(
@@ -244,10 +243,7 @@ class DailyWeather extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .secondary
-                        .withOpacity(0.4),
+                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.4),
                   ),
                 ),
               ),

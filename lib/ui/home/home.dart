@@ -24,12 +24,6 @@ class _HomeState extends State<Home> {
   final _userDataController = Get.put(UserDataController());
 
   @override
-  void initState() {
-    super.initState();
-    controller.init();
-  }
-
-  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     return Scaffold(
@@ -114,10 +108,10 @@ class _HomeState extends State<Home> {
                                   : false
                               : false,
                           onTap: () async {
-                            controller.playingSongIndex.value = index;
                             musicController.setSong(
                               controller.suggestedSongs[index],
                             );
+                            _userDataController.getAllUserRecents();
                           },
                         ),
                       );

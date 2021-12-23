@@ -15,10 +15,7 @@ import '../../../models/weather/weather_model.dart';
 class HomeController extends GetxController {
   var location = ''.obs;
   var weatherModel = Rxn<WeatherModel>();
-  var playingSongIndex = Rxn<int>();
   var suggestedSongs = <SongModel>[].obs;
-
-  final limitedSong = 10;
 
   late Position _pos;
   final _weatherController = WeatherController();
@@ -26,7 +23,9 @@ class HomeController extends GetxController {
   final _songController = SongController();
   final _playlistController = PlaylistController();
 
-  void init() async {
+  @override
+  void onInit() async {
+    super.onInit();
     await getLocationAndWeather();
     await getSuggestSongs();
   }
@@ -58,7 +57,6 @@ class HomeController extends GetxController {
   Future<void> onPullToRefresh() async {
     await getLocationAndWeather();
     await getSuggestSongs();
-    playingSongIndex.value = null;
   }
 
   Future<void> getSuggestSongs() async {
