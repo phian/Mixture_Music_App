@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/ui/library/widgets/library_grid_view_card.dart';
 import 'package:mixture_music_app/ui/library/widgets/library_list_view_card.dart';
 import 'package:mixture_music_app/ui/library/widgets/shuffle_and_swap_view.dart';
+import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
+import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class FavouriteView extends StatefulWidget {
-  const FavouriteView({Key? key, required this.libraries}) : super(key: key);
-
-  final List<LibraryModel> libraries;
+  const FavouriteView({Key? key}) : super(key: key);
 
   @override
   _FavouriteViewState createState() => _FavouriteViewState();
@@ -35,9 +37,10 @@ class _FavouriteViewState extends State<FavouriteView> {
           ),
         ),
         AnimatedCrossFade(
-          firstChild: _LibraryListView(libraries: widget.libraries),
-          secondChild: _LibraryGridView(libraries: widget.libraries),
-          crossFadeState: _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          firstChild: const _LibraryListView(),
+          secondChild: _LibraryGridView(),
+          crossFadeState:
+              _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 300),
         ),
       ],
@@ -46,56 +49,62 @@ class _FavouriteViewState extends State<FavouriteView> {
 }
 
 class _LibraryListView extends StatefulWidget {
-  const _LibraryListView({required this.libraries});
-
-  final List<LibraryModel> libraries;
+  const _LibraryListView({Key? key}) : super(key: key);
 
   @override
   State<_LibraryListView> createState() => _LibraryListViewState();
 }
 
 class _LibraryListViewState extends State<_LibraryListView> {
-  int _playingIndex = -1;
+  final _userDataController = Get.put(UserDataController());
+  final _musicController = Get.put(MusicPlayerController());
 
   @override
   Widget build(BuildContext context) {
     return Align(
       alignment: Alignment.topCenter,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ...List.generate(
-            widget.libraries.length,
-            (index) => LibraryListViewCard(
-              libraryModel: widget.libraries[index],
-              onTap: (isPlaying) {
-                if (isPlaying) {
-                  setState(() {
-                    _playingIndex = index;
-                  });
-                } else {
-                  _playingIndex = -1;
-                }
-              },
-              isPlaying: _playingIndex == index,
-              borderRadius: BorderRadius.zero,
-              cardColor: Colors.transparent,
-              cardBorder: index == 0
-                  ? const Border.symmetric(horizontal: BorderSide(width: 1.0, color: Colors.grey))
-                  : const Border(bottom: BorderSide(width: 1.0, color: Colors.grey)),
-            ),
+      child: Obx(
+        () => ListView.separated(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: _userDataController.favorites.length,
+          itemBuilder: (context, index) {
+            return Obx(
+              () => SongTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 8,
+                  horizontal: 32,
+                ),
+                songModel: _userDataController.favorites[index],
+                isPlaying: _musicController.playingSong.value != null
+                    ? _musicController.playingSong.value!.id ==
+                            _userDataController.favorites[index].id
+                        ? true
+                        : false
+                    : false,
+                onTap: () async {
+                  _musicController.setSong(
+                    _userDataController.favorites[index],
+                  );
+                },
+                isFavorite: _userDataController.favorites.contains(
+                  _userDataController.favorites[index],
+                ),
+              ),
+            );
+          },
+          separatorBuilder: (context, index) => const Divider(
+            height: 1,
+            thickness: 0.5,
           ),
-          const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-        ],
+        ),
       ),
     );
   }
 }
 
 class _LibraryGridView extends StatefulWidget {
-  const _LibraryGridView({required this.libraries});
-
-  final List<LibraryModel> libraries;
+  const _LibraryGridView({Key? key}) : super(key: key);
 
   @override
   State<_LibraryGridView> createState() => _LibraryGridViewState();
@@ -103,6 +112,9 @@ class _LibraryGridView extends StatefulWidget {
 
 class _LibraryGridViewState extends State<_LibraryGridView> {
   int _playingIndex = -1;
+
+  final _userDataController = Get.put(UserDataController());
+  final _musicController = Get.put(MusicPlayerController());
 
   @override
   Widget build(BuildContext context) {
@@ -116,11 +128,11 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
             runSpacing: 8.0,
             children: [
               ...List.generate(
-                widget.libraries.length,
+                _userDataController.favorites.length,
                 (index) => Container(
                   margin: const EdgeInsets.only(top: 16.0),
                   child: LibraryGridViewCard(
-                    libraryModel: widget.libraries[index],
+                    songModel: _userDataController.favorites[index],
                     onTap: (isPlaying) {
                       if (isPlaying) {
                         setState(() {

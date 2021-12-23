@@ -22,7 +22,7 @@ class _NavScreenState extends State<NavScreen> {
   int selectedScreenIndex = 0;
 
   final _screen = [
-    Home(),
+    const Home(),
     SearchScreen(),
     const LibraryScreen(),
     const SettingsScreen(),

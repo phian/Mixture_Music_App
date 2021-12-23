@@ -1,10 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
 class SongTile extends StatefulWidget {
-  const SongTile({
+  SongTile({
     Key? key,
     required this.songModel,
     required this.onTap,
@@ -18,6 +19,7 @@ class SongTile extends StatefulWidget {
     this.canMove = false,
     this.initialCheck = false,
     this.onCheckChanged,
+    this.isFavorite = false,
   }) : super(key: key);
 
   final bool isPlaying;
@@ -32,6 +34,7 @@ class SongTile extends StatefulWidget {
   final bool canMove;
   final void Function(bool? value)? onCheckChanged;
   final bool initialCheck;
+  final bool isFavorite;
 
   @override
   State<SongTile> createState() => _SongTileState();
@@ -47,8 +50,7 @@ class _SongTileState extends State<SongTile> {
       onTap: widget.onTap,
       borderRadius: widget.borderRadius ?? BorderRadius.zero,
       child: Container(
-        padding:
-            widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16),
+        padding: widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(border: widget.border),
         width: widget.width,
         height: widget.height,
@@ -72,37 +74,54 @@ class _SongTileState extends State<SongTile> {
               ),
             ),
             const SizedBox(width: 4.0),
-            SizedBox(
-              height: 50,
-              width: 50,
+            Expanded(
+              flex: 2,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
                 child: Image.network(
                   widget.songModel.data.imgURL,
                   loadingBuilder: (context, child, chunkEvent) {
                     if (chunkEvent == null) return child;
-
-                    return const LoadingContainer(width: 30.0, height: 30.0);
+                    return LayoutBuilder(
+                      builder: (context, constraints) {
+                        final size = constraints.maxWidth;
+                        return LoadingContainer(
+                          height: size,
+                          width: size,
+                        );
+                      },
+                    );
                   },
                 ),
               ),
             ),
             const SizedBox(width: 16),
             Expanded(
-              flex: 4,
+              flex: widget.isFavorite ? 9 : 10,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.songModel.data.title,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
-                    style: theme.textTheme.headline6?.copyWith(
-                      fontSize: 16,
-                      color: widget.isPlaying
-                          ? theme.primaryColor
-                          : theme.textTheme.headline6?.color,
-                    ),
+                  Row(
+                    children: [
+                      if (widget.isPlaying)
+                        Icon(
+                          Icons.leaderboard_rounded,
+                          color: theme.primaryColor,
+                          size: 16,
+                        ),
+                      if (widget.isPlaying) const SizedBox(width: 4),
+                      Text(
+                        widget.songModel.data.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        style: theme.textTheme.headline6?.copyWith(
+                          fontSize: 16,
+                          color: widget.isPlaying
+                              ? theme.primaryColor
+                              : theme.textTheme.headline6?.color,
+                        ),
+                      ),
+                    ],
                   ),
                   Text(
                     widget.songModel.data.artist,
@@ -116,11 +135,17 @@ class _SongTileState extends State<SongTile> {
               ),
             ),
             const SizedBox(width: 16),
-            if (widget.isPlaying)
-              Icon(
-                Icons.play_arrow,
-                color: theme.primaryColor,
-              ),
+            if (widget.isFavorite)
+              Expanded(
+                  flex: 1,
+                  child: CupertinoButton(
+                    child: Icon(
+                      Icons.favorite_rounded,
+                      color: theme.primaryColor,
+                    ),
+                    onPressed: () {},
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                  )),
             Visibility(
               visible: widget.canMove,
               child: const Icon(Icons.drag_handle),
