@@ -25,19 +25,23 @@ class UserDataController extends GetxController {
   }
 
   Future<void> getAllUserPlaylists() async {
-    playlists.value = await _playlistController.getAllUserPlayList();
-    log('number of user\'s playlist: ' + playlists.length.toString());
+    if (_user != null) {
+      playlists.value = await _playlistController.getAllUserPlayList(_user!.uid);
+      log('number of user\'s playlist: ' + playlists.length.toString());
+    }
   }
 
   Future<void> getAllUserFavSongs() async {
-    favorites.value = await _songController.getAllUserFavSongs(_user!.uid);
-    log('number of user\'s fav songs: ' + favorites.length.toString());
+    if (_user != null) {
+      favorites.value = await _songController.getAllUserFavSongs(_user!.uid);
+      log('number of user\'s favorites: ' + favorites.length.toString());
+    }
   }
 
   Future<void> getAllUserRecents() async {
-    recents.value = await _songController.getAllUserRecents(_user!.uid);
-    log('number of user\'s recent songs: ' + recents.length.toString());
+    if (_user != null) {
+      recents.value = await _songController.getAllUserRecents(_user!.uid);
+      log('number of user\'s recents: ' + recents.length.toString());
+    }
   }
-
-
 }

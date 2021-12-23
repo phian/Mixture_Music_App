@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
-import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/ui/library/widgets/library_grid_view_card.dart';
-import 'package:mixture_music_app/ui/library/widgets/library_list_view_card.dart';
 import 'package:mixture_music_app/ui/library/widgets/shuffle_and_swap_view.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
@@ -38,7 +36,7 @@ class _FavouriteViewState extends State<FavouriteView> {
         ),
         AnimatedCrossFade(
           firstChild: const _LibraryListView(),
-          secondChild: _LibraryGridView(),
+          secondChild: const _LibraryGridView(),
           crossFadeState:
               _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 300),
@@ -111,8 +109,6 @@ class _LibraryGridView extends StatefulWidget {
 }
 
 class _LibraryGridViewState extends State<_LibraryGridView> {
-  int _playingIndex = -1;
-
   final _userDataController = Get.put(UserDataController());
   final _musicController = Get.put(MusicPlayerController());
 
@@ -123,33 +119,35 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Wrap(
-            spacing: 24.0,
-            runSpacing: 8.0,
-            children: [
-              ...List.generate(
-                _userDataController.favorites.length,
-                (index) => Container(
-                  margin: const EdgeInsets.only(top: 16.0),
-                  child: LibraryGridViewCard(
-                    songModel: _userDataController.favorites[index],
-                    onTap: (isPlaying) {
-                      if (isPlaying) {
-                        setState(() {
-                          _playingIndex = index;
-                        });
-                      } else {
-                        _playingIndex = -1;
-                      }
-                    },
-                    imageRadius: BorderRadius.circular(16.0),
-                    isPlaying: _playingIndex == index,
+          Obx(
+            () => Wrap(
+              spacing: 24.0,
+              runSpacing: 8.0,
+              children: [
+                ...List.generate(
+                  _userDataController.favorites.length,
+                  (index) => Container(
+                    margin: const EdgeInsets.only(top: 16.0),
+                    child: LibraryGridViewCard(
+                      songModel: _userDataController.favorites[index],
+                      onTap: () {
+                        _musicController.setSong(
+                          _userDataController.favorites[index],
+                        );
+                      },
+                      imageRadius: BorderRadius.circular(16.0),
+                      isPlaying: _musicController.playingSong.value != null
+                          ? _musicController.playingSong.value!.id ==
+                                  _userDataController.favorites[index].id
+                              ? true
+                              : false
+                          : false,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: kBottomNavigationBarHeight + 32.0),
         ],
       ),
     );

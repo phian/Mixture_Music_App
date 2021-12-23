@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/models/library_model.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
-import 'package:mixture_music_app/widgets/loading_container.dart';
 import 'package:mixture_music_app/widgets/rounded_inkwell_wrapper.dart';
 
 class LibraryGridViewCard extends StatefulWidget {
@@ -10,14 +8,14 @@ class LibraryGridViewCard extends StatefulWidget {
     Key? key,
     required this.songModel,
     this.titleStyle,
-    this.onTap,
+    required this.onTap,
     this.imageRadius,
     this.isPlaying = false,
   }) : super(key: key);
 
   final SongModel songModel;
   final TextStyle? titleStyle;
-  final void Function(bool isPlaying)? onTap;
+  final void Function() onTap;
   final BorderRadius? imageRadius;
   final bool isPlaying;
 
@@ -28,12 +26,9 @@ class LibraryGridViewCard extends StatefulWidget {
 class _LibraryGridViewCardState extends State<LibraryGridViewCard>
     with SingleTickerProviderStateMixin {
   late bool _isPlaying = widget.isPlaying;
-  late final AnimationController _aniController =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
 
   @override
   void dispose() {
-    _aniController.dispose();
     super.dispose();
   }
 
@@ -43,10 +38,6 @@ class _LibraryGridViewCardState extends State<LibraryGridViewCard>
     setState(() {
       _isPlaying = widget.isPlaying;
     });
-
-    if (_isPlaying == false) {
-      _aniController.reverse();
-    }
   }
 
   @override
@@ -61,20 +52,7 @@ class _LibraryGridViewCardState extends State<LibraryGridViewCard>
               InkWellWrapper(
                 color: Colors.transparent,
                 borderRadius: widget.imageRadius,
-                onTap: widget.onTap != null
-                    ? () {
-                        setState(() {
-                          if (_isPlaying) {
-                            _aniController.reverse();
-                          } else {
-                            _aniController.forward();
-                          }
-
-                          _isPlaying = !_isPlaying;
-                          widget.onTap?.call(_isPlaying);
-                        });
-                      }
-                    : null,
+                onTap: widget.onTap,
                 child: ClipRRect(
                   borderRadius: widget.imageRadius,
                   child: Ink.image(
@@ -84,28 +62,18 @@ class _LibraryGridViewCardState extends State<LibraryGridViewCard>
                   ),
                 ),
               ),
-              RoundedInkWellWrapper(
-                onTap: () {
-                  setState(() {
-                    if (_isPlaying) {
-                      _aniController.reverse();
-                    } else {
-                      _aniController.forward();
-                    }
-
-                    _isPlaying = !_isPlaying;
-                    widget.onTap?.call(_isPlaying);
-                  });
-                },
-                child: Container(
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  padding: const EdgeInsets.all(4.0),
-                  child: AnimatedIcon(
-                      icon: AnimatedIcons.play_pause,
-                      progress: _aniController,
-                      color: Theme.of(context).primaryColor),
+              if (_isPlaying)
+                RoundedInkWellWrapper(
+                  onTap: widget.onTap,
+                  child: Container(
+                    decoration: const BoxDecoration(shape: BoxShape.circle),
+                    padding: const EdgeInsets.all(4.0),
+                    child: Icon(
+                      Icons.leaderboard,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                  ),
                 ),
-              )
             ],
           ),
         ),
