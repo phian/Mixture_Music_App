@@ -38,13 +38,13 @@ class PlaylistCard extends StatelessWidget {
               child: songs.length < 4
                   ? Image.network(
                       defaultImgURL,
-                      width: 50.0,
-                      height: 50.0,
+                      width: 80.0,
+                      height: 80.0,
                       fit: BoxFit.cover,
                       loadingBuilder: (_, child, chunkEvent) {
                         if (chunkEvent == null) return child;
 
-                        return const LoadingContainer(width: 50.0, height: 50.0);
+                        return const LoadingContainer(width: 80.0, height: 80.0);
                       },
                     )
                   : ConstrainedBox(
@@ -58,6 +58,11 @@ class PlaylistCard extends StatelessWidget {
                               width: 40.0,
                               height: 40.0,
                               fit: BoxFit.cover,
+                              loadingBuilder: (_, child, chunkEvent) {
+                                if (chunkEvent == null) return child;
+
+                                return const LoadingContainer(width: 40.0, height: 40.0);
+                              },
                             ),
                           )
                         ],
