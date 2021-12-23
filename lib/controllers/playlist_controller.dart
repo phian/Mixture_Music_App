@@ -16,8 +16,4 @@ class PlaylistController {
   Future<void> updatePlaylist(Playlist playlist) async {
     await _playlistRepo.updatePlaylist(playlist);
   }
-
-  Future<List<Playlist>> getUserPlaylists(String userId) async {
-    return await _playlistRepo.getUserPlaylists(userId);
-  }
 }
