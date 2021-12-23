@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
-import 'package:mixture_music_app/ui/settings_screen/widgets/playlist_card.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class RecentActivityView extends StatefulWidget {

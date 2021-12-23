@@ -5,7 +5,7 @@ import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
 class SongTile extends StatefulWidget {
-  SongTile({
+  const SongTile({
     Key? key,
     required this.songModel,
     required this.onTap,

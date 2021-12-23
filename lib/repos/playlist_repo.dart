@@ -6,9 +6,9 @@ import 'package:mixture_music_app/services/playlist_service.dart';
 class PlaylistRepo {
   final _playlistService = PlaylistService();
 
-  Future<List<Playlist>> getAllUserPlayList() async {
+  Future<List<Playlist>> getAllUserPlayList(String uid) async {
     var playlists = <Playlist>[];
-    await _playlistService.getAllUserPlayList().then((value) {
+    await _playlistService.getAllUserPlayList(uid).then((value) {
       for (var playlist in value) {
         playlists.add(Playlist.fromSnapshot(playlist));
       }
