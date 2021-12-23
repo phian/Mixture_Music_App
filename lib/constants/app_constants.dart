@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/models/artist_model.dart';
-import 'package:mixture_music_app/models/library_model.dart';
-import 'package:mixture_music_app/models/playlist_model.dart';
 import 'package:mixture_music_app/models/song/song_data.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 
@@ -22,14 +20,6 @@ const libraryTitle = [
   'Recent activity',
 ];
 
-const accountScreenGridData = [
-  'Songs',
-  'Upload',
-  'MV',
-  'On Device',
-  'Album',
-  'Artists',
-];
 
 const accountScreenGridIcon = [
   Icons.library_music,
@@ -47,19 +37,6 @@ const accountScreenIconColors = [
   AppColors.c434CE5,
   AppColors.cFF4C4E,
   AppColors.c0791FD,
-];
-
-const personalTitle = [
-  'Playlist',
-  'Mixed songs',
-  'Recent activity',
-];
-
-final mixedSongUrls = [
-  'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-  'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
-  'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
-  'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
 ];
 
 final artistModels = <ArtistModel>[
@@ -90,61 +67,6 @@ final artistModels = <ArtistModel>[
   ),
 ];
 
-final personalSuggestPlaylists = [
-  PlaylistModel(
-    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-    playlistName: 'Đen Vâu',
-    owner: 'Nguyễn Phi Ân',
-  ),
-  PlaylistModel(
-    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
-    playlistName: 'Trung Quân idol',
-    owner: 'Nguyễn Phi Ân',
-  ),
-  PlaylistModel(
-    imageUrl: 'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
-    playlistName: 'Vũ Cát Tường',
-    owner: 'Nguyễn Phi Ân',
-  ),
-  PlaylistModel(
-    imageUrl: 'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
-    playlistName: 'Sơn Tùng MTP',
-    owner: 'Nguyễn Phi Ân',
-  ),
-];
-
-final libraryExampleModels = [
-  LibraryModel(
-    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w360_r1x1_jpeg/avatars/9/0/2/2/90223f08b220e52a78ac5c0dd739256f.jpg',
-    libraryTitle: 'Trời hôm nay nhiều mây cực',
-    librarySubTitle: 'Đen vâu',
-    isFavourite: true,
-  ),
-  LibraryModel(
-    libraryTitle: 'Gọi mưa',
-    librarySubTitle: 'Trung Quân Idol',
-    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/0/0/003a856bfc8a2109ca5b5603e2ef5f75_1406285052.jpg',
-    isFavourite: true,
-  ),
-  LibraryModel(
-    libraryTitle: 'Vết mưa',
-    librarySubTitle: 'Vũ Cát Tường',
-    imageUrl: 'https://avatar-ex-swe.nixcdn.com/playlist/2013/10/29/e/d/1/2/1383055637469_500.jpg',
-    isFavourite: true,
-  ),
-  LibraryModel(
-    librarySubTitle: 'Cơn mưa ngang qua',
-    libraryTitle: 'Sơn Tùng MTP',
-    imageUrl: 'https://avatar-ex-swe.nixcdn.com/song/2018/03/30/b/1/8/8/1522404477634_640.jpg',
-    isFavourite: true,
-  ),
-  LibraryModel(
-    librarySubTitle: 'Dấu mưa',
-    libraryTitle: 'Trung Quân Idol',
-    imageUrl: 'https://photo-resize-zmp3.zadn.vn/w240_r1x1_jpeg/covers/5/f/5f732a84bfba6ba0230e11ef4e49ba38_1392691168.jpg',
-    isFavourite: true,
-  ),
-];
 
 final listSong = [
   SongModel(
