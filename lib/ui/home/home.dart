@@ -113,6 +113,9 @@ class _HomeState extends State<Home> {
                             );
                             _userDataController.getAllUserRecents();
                           },
+                          isFavorite: _userDataController.favorites.contains(
+                            controller.suggestedSongs[index],
+                          ),
                         ),
                       );
                     },

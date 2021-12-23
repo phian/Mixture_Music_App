@@ -123,7 +123,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                 FadeIndexedStack(
                   index: _selectedIndex,
                   children: [
-                    FavouriteView(libraries: libraryExampleModels),
+                    const FavouriteView(),
                     Obx(
                       () => PlaylistView(
                         playlists: _libraryController.playlists.value,

@@ -42,6 +42,9 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                   _userDataController.recents[index],
                 );
               },
+              isFavorite: _userDataController.favorites.contains(
+                _userDataController.recents[index],
+              ),
             ),
           );
         },
