@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 
 import '../../widgets/song_tile.dart';
 import '../player_screen/controller/music_player_controller.dart';
@@ -22,6 +23,12 @@ class _HomeState extends State<Home> {
   final controller = Get.put(HomeController());
   final musicController = Get.put(MusicPlayerController());
   final _userDataController = Get.put(UserDataController());
+
+  @override
+  void initState() {
+    super.initState();
+    audioHandler.initAudioSource(controller.suggestedSongs);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,8 +109,7 @@ class _HomeState extends State<Home> {
                           ),
                           songModel: controller.suggestedSongs[index],
                           isPlaying: musicController.playingSong.value != null
-                              ? musicController.playingSong.value!.id ==
-                                      controller.suggestedSongs[index].id
+                              ? musicController.playingSong.value!.id == controller.suggestedSongs[index].id
                                   ? true
                                   : false
                               : false,
@@ -112,6 +118,17 @@ class _HomeState extends State<Home> {
                               controller.suggestedSongs[index],
                             );
                             _userDataController.getAllUserRecents();
+
+                            if (audioHandler.player.currentIndex == index) {
+                              if (audioHandler.player.playing == false) {
+                                audioHandler.play();
+                              } else {
+                                audioHandler.pause();
+                              }
+                            } else {
+                              audioHandler.skipToQueueItem(index);
+                              audioHandler.play();
+                            }
                           },
                           isFavorite: _userDataController.favorites.contains(
                             controller.suggestedSongs[index],

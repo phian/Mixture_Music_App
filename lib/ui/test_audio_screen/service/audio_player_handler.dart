@@ -20,6 +20,7 @@ Future<void> initAudioHandler() async {
 class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   List<MediaItem> _items = [];
   final _player = AudioPlayer();
+  AudioPlayer get player => _player;
 
   /// Initialise our audio handler.
   AudioPlayerHandler() {
@@ -36,6 +37,14 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     //     children: List.generate(_items.length, (index) => AudioSource.uri(Uri.parse(_items[index].id))),
     //   ),
     // );
+  }
+
+  @override
+  Future<void> skipToQueueItem(int index) async {
+    if (index < 0 || index >= _items.length) return;
+    // This jumps to the beginning of the queue item at [index].
+    mediaItem.add(_items[index]);
+    _player.seek(Duration.zero, index: _player.shuffleModeEnabled ? _player.shuffleIndices![index] : index);
   }
 
   void initAudioSource(List<SongModel> songs) {
