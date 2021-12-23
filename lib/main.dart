@@ -6,6 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mixture_music_app/controllers/theme_controller.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/home/controller/home_controller.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 
 import 'routing/route_generator.dart';
 
@@ -14,6 +15,7 @@ void main() async {
   await Firebase.initializeApp();
   await Hive.initFlutter();
   await Hive.openBox<List<String>?>('recentSearch');
+  await initAudioHandler();
 
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(

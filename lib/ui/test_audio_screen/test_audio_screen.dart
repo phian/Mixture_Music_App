@@ -3,36 +3,33 @@ import 'dart:async';
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/model/media_state.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/widgets/seek_bar.dart';
 import 'package:rxdart/rxdart.dart' as rxdart;
 
-// You might want to provide this using dependency injection rather than a
-// global variable.
-late AudioHandler _audioHandler;
+class TestAudioScreen extends StatefulWidget {
+  const TestAudioScreen({Key? key}) : super(key: key);
 
-Future<void> initAudioHandler() async {
-  final PlaylistController _playlistController = PlaylistController();
-  final AuthController _authController = Get.find<AuthController>();
-
-  var result = await _playlistController.getUserPlaylists(_authController.currentAuthUser?.uid ?? '');
-
-  _audioHandler = await AudioService.init(
-    builder: () => AudioPlayerHandler(songs: result[0].songs),
-    config: const AudioServiceConfig(
-      androidNotificationChannelId: 'com.ryanheise.myapp.channel.audio',
-      androidNotificationChannelName: 'Audio playback',
-      androidNotificationOngoing: true,
-    ),
-  );
+  @override
+  State<TestAudioScreen> createState() => _TestAudioScreenState();
 }
 
-class TestAudioScreen extends StatelessWidget {
-  const TestAudioScreen({Key? key}) : super(key: key);
+class _TestAudioScreenState extends State<TestAudioScreen> {
+  final PlaylistController _playlistController = PlaylistController();
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserSongs();
+  }
+
+  void _getUserSongs() async {
+    var playlists = await _playlistController.getAllUserPlayList();
+    audioHandler.initAudioSource(playlists[0].songs);
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +43,7 @@ class TestAudioScreen extends StatelessWidget {
           children: [
             // Show media item title
             StreamBuilder<MediaItem?>(
-              stream: _audioHandler.mediaItem,
+              stream: audioHandler.mediaItem,
               builder: (context, snapshot) {
                 final mediaItem = snapshot.data;
                 return Text(mediaItem?.title ?? '');
@@ -54,16 +51,16 @@ class TestAudioScreen extends StatelessWidget {
             ),
             // Play/pause/stop buttons.
             StreamBuilder<bool>(
-              stream: _audioHandler.playbackState.map((state) => state.playing).distinct(),
+              stream: audioHandler.playbackState.map((state) => state.playing).distinct(),
               builder: (context, snapshot) {
                 final playing = snapshot.data ?? false;
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _button(Icons.skip_previous, _audioHandler.skipToPrevious),
-                    if (playing) _button(Icons.pause, _audioHandler.pause) else _button(Icons.play_arrow, _audioHandler.play),
-                    _button(Icons.stop, _audioHandler.stop),
-                    _button(Icons.skip_next, _audioHandler.skipToNext),
+                    _button(Icons.skip_previous, audioHandler.skipToPrevious),
+                    if (playing) _button(Icons.pause, audioHandler.pause) else _button(Icons.play_arrow, audioHandler.play),
+                    _button(Icons.stop, audioHandler.stop),
+                    _button(Icons.skip_next, audioHandler.skipToNext),
                   ],
                 );
               },
@@ -77,14 +74,14 @@ class TestAudioScreen extends StatelessWidget {
                   duration: mediaState?.mediaItem?.duration ?? Duration.zero,
                   position: mediaState?.position ?? Duration.zero,
                   onChangeEnd: (newPosition) {
-                    _audioHandler.seek(newPosition);
+                    audioHandler.seek(newPosition);
                   },
                 );
               },
             ),
             // Display the processing state.
             StreamBuilder<AudioProcessingState>(
-              stream: _audioHandler.playbackState.map((state) => state.processingState).distinct(),
+              stream: audioHandler.playbackState.map((state) => state.processingState).distinct(),
               builder: (context, snapshot) {
                 final processingState = snapshot.data ?? AudioProcessingState.idle;
                 return Text('Processing state: ${describeEnum(processingState)}');
@@ -99,7 +96,7 @@ class TestAudioScreen extends StatelessWidget {
   /// A stream reporting the combined state of the current media item and its
   /// current position.
   Stream<MediaState> get _mediaStateStream => rxdart.Rx.combineLatest2<MediaItem?, Duration, MediaState>(
-        _audioHandler.mediaItem,
+        audioHandler.mediaItem,
         AudioService.position,
         (mediaItem, position) => MediaState(mediaItem, position),
       );

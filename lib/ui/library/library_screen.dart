@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/auth_controller.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/library/controller/library_screen_controller.dart';
@@ -25,7 +24,6 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateMixin {
   late final TabController _tabController;
   int _selectedIndex = 0;
-  final AuthController _authController = Get.find<AuthController>();
   final LibraryScreenController _libraryController = Get.put(LibraryScreenController());
   final PlaylistController _playlistController = PlaylistController();
 
@@ -37,8 +35,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
   }
 
   void _getUserPlaylists() async {
-    var result =
-        await _playlistController.getUserPlaylists(_authController.currentAuthUser?.uid ?? '');
+    var result = await _playlistController.getAllUserPlayList();
     _libraryController.setPlaylist(result);
   }
 
@@ -99,8 +96,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                           indicatorColor: Theme.of(context).primaryColor,
                           indicatorSize: TabBarIndicatorSize.label,
                           indicatorWeight: 3.0,
-                          physics:
-                              const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
                           tabs: List.generate(
                             libraryTitle.length,
                             (index) => Tab(
