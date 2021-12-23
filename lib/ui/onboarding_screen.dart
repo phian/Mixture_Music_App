@@ -34,16 +34,19 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
               ),
               items: [
                 ...List.generate(
-                  listSong.length,
-                      (index) => ClipRRect(
+                  onboardImg.length,
+                  (index) => ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: Image.network(
-                      listSong[index].data.imgURL,
+                      onboardImg[index],
                       fit: BoxFit.cover,
                       loadingBuilder: (context, child, chunkEvent) {
                         if (chunkEvent == null) return child;
 
-                        return const LoadingContainer(width: 30.0, height: 30.0);
+                        return const LoadingContainer(
+                          width: double.infinity,
+                          height: double.infinity,
+                        );
                       },
                     ),
                   ),
@@ -71,12 +74,13 @@ class _OnBoardingScreenState extends State<OnBoardingScreen> {
                       Text(
                         'WELCOME TO MIXTURE MUSIC APP',
                         style: Theme.of(context).textTheme.headline5?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 30.0,
-                        ),
+                              fontWeight: FontWeight.w600,
+                              fontSize: 30.0,
+                            ),
                       ),
                       const SizedBox(height: 24.0),
-                      Text('Newest songs around the world', style: Theme.of(context).textTheme.subtitle1),
+                      Text('Newest songs around the world',
+                          style: Theme.of(context).textTheme.subtitle1),
                       const SizedBox(height: 64.0),
                       BaseButton(
                         content: 'GET STARTED',
