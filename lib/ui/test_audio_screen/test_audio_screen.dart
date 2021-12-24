@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:audio_service/audio_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
@@ -26,7 +27,9 @@ class _TestAudioScreenState extends State<TestAudioScreen> {
   }
 
   void _getUserSongs() async {
-    var playlists = await _playlistController.getAllUserPlayList();
+    var playlists = await _playlistController.getAllUserPlayList(
+      FirebaseAuth.instance.currentUser!.uid,
+    );
     audioHandler.initAudioSource(playlists[0].songs);
     setState(() {});
   }
@@ -58,7 +61,10 @@ class _TestAudioScreenState extends State<TestAudioScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _button(Icons.skip_previous, audioHandler.skipToPrevious),
-                    if (playing) _button(Icons.pause, audioHandler.pause) else _button(Icons.play_arrow, audioHandler.play),
+                    if (playing)
+                      _button(Icons.pause, audioHandler.pause)
+                    else
+                      _button(Icons.play_arrow, audioHandler.play),
                     _button(Icons.stop, audioHandler.stop),
                     _button(Icons.skip_next, audioHandler.skipToNext),
                   ],
@@ -95,7 +101,8 @@ class _TestAudioScreenState extends State<TestAudioScreen> {
 
   /// A stream reporting the combined state of the current media item and its
   /// current position.
-  Stream<MediaState> get _mediaStateStream => rxdart.Rx.combineLatest2<MediaItem?, Duration, MediaState>(
+  Stream<MediaState> get _mediaStateStream =>
+      rxdart.Rx.combineLatest2<MediaItem?, Duration, MediaState>(
         audioHandler.mediaItem,
         AudioService.position,
         (mediaItem, position) => MediaState(mediaItem, position),

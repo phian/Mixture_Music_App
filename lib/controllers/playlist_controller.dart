@@ -15,4 +15,5 @@ class PlaylistController {
   Future<void> updatePlaylist(Playlist playlist) async {
     await _playlistRepo.updatePlaylist(playlist);
   }
+  
 }
