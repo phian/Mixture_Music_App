@@ -41,11 +41,5 @@ class PlaylistService {
     }
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> getUserPlaylists(String userId) async {
-    return await FirebaseFirestore.instance
-        .collection('user_accounts')
-        .doc(userId)
-        .collection('created_playlists')
-        .get();
-  }
+ 
 }
