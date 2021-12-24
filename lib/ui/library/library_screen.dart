@@ -1,10 +1,9 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mixture_music_app/controllers/playlist_controller.dart';
+
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/routing/routes.dart';
-import 'package:mixture_music_app/ui/library/controller/library_screen_controller.dart';
+
 import 'package:mixture_music_app/ui/library/views/artists_view.dart';
 import 'package:mixture_music_app/ui/library/views/favourite_view.dart';
 import 'package:mixture_music_app/ui/library/views/mix_music_view.dart';
@@ -26,22 +25,12 @@ class LibraryScreen extends StatefulWidget {
 class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateMixin {
   late final TabController _tabController;
   int _selectedIndex = 0;
-  final LibraryScreenController _libraryController = Get.put(LibraryScreenController());
-  final PlaylistController _playlistController = PlaylistController();
   final _userDataController = Get.put(UserDataController());
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: libraryTitle.length, vsync: this);
-    _getUserPlaylists();
-  }
-
-  void _getUserPlaylists() async {
-    // var result = await _playlistController.getAllUserPlayList(
-    //   FirebaseAuth.instance.currentUser!.uid,
-    // );
-    // _libraryController.setPlaylist(result);
   }
 
   @override
