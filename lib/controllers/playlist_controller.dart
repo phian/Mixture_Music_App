@@ -16,4 +16,7 @@ class PlaylistController {
     await _playlistRepo.updatePlaylist(playlist);
   }
   
+  Future<void> deletePlaylist(Playlist playlist) async {
+    await _playlistRepo.deletePlaylist(playlist);
+  }
 }

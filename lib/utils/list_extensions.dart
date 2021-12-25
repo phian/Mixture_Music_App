@@ -12,7 +12,6 @@ extension ConvertSongModel on List<SongModel> {
     List<MediaItem> items = [];
 
     for (int i = 0; i < length; i++) {
-      print('image url: ${this[i].data.imgURL}');
       items.add(
         MediaItem(
           id: this[i].data.audioURL,
@@ -22,7 +21,7 @@ extension ConvertSongModel on List<SongModel> {
         ),
       );
     }
-
+    
     return items;
   }
 }

@@ -42,7 +42,9 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
         },
       ),
       body: RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          setState(() {});
+        },
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(
@@ -73,7 +75,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                             },
                             icon: const Icon(Icons.add, size: 30.0),
                             tooltip: 'Add',
-                          )
+                          ),
                         ],
                       ),
                       Align(
