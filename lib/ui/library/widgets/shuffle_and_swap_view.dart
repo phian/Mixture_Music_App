@@ -21,7 +21,8 @@ class ShuffleAndSwapView extends StatefulWidget {
   State<ShuffleAndSwapView> createState() => _ShuffleAndSwapViewState();
 }
 
-class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTickerProviderStateMixin {
+class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView>
+    with SingleTickerProviderStateMixin {
   bool _isList = true;
   late AnimationController _aniController;
 
@@ -42,6 +43,7 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -58,9 +60,7 @@ class _ShuffleAndSwapViewState extends State<ShuffleAndSwapView> with SingleTick
                 const SizedBox(width: 4.0),
                 Text(
                   'Shuffle',
-                  style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
-                    color: AppColors.black,
-                    fontWeight: FontWeight.bold,
+                  style: theme.textTheme.bodyText1!.copyWith(
                     fontSize: 16.0,
                   ),
                 ),
