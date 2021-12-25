@@ -74,6 +74,7 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -85,10 +86,9 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
               child: Text(
                 'Settings',
                 textAlign: TextAlign.left,
-                style: Theme.of(context).textTheme.headline4?.copyWith(
-                      fontSize: 30.0,
-                      color: AppColors.black,
-                    ),
+                style: theme.textTheme.headline4!.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             const SizedBox(height: 24.0),
@@ -201,7 +201,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                                     ? _googleUser?.displayName ?? ''
                                     : _facebookUser?.name ?? '',
                             style: Theme.of(context).textTheme.headline5?.copyWith(
-                                  color: AppColors.black,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20.0,
                                 ),
@@ -214,7 +213,6 @@ class _SettingsScreenState extends State<SettingsScreen> with SingleTickerProvid
                                     ? _googleUser?.email ?? ''
                                     : _facebookUser?.email ?? '',
                             style: Theme.of(context).textTheme.caption?.copyWith(
-                                  color: AppColors.black,
                                   fontWeight: FontWeight.w100,
                                   fontSize: 15.0,
                                 ),

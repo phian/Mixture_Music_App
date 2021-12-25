@@ -21,4 +21,8 @@ class PlaylistRepo {
   Future<void> updatePlaylist(Playlist playlist) async {
     await _playlistService.updatePlaylist(playlist);
   }
+
+  Future<void> deletePlaylist(Playlist playlist) async {
+    await _playlistService.deletePlaylist(playlist);
+  }
 }

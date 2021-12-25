@@ -11,9 +11,7 @@ import 'package:mixture_music_app/ui/library/views/recent_activity_view.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
 import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
 
-import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
-import '../../constants/app_text_style.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({Key? key}) : super(key: key);
@@ -35,6 +33,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -42,7 +41,11 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
         },
       ),
       body: RefreshIndicator(
-        onRefresh: () async {},
+        onRefresh: () async {
+          await _userDataController.getAllUserFavSongs();
+          await _userDataController.getAllUserRecents();
+          await _userDataController.getAllUserPlaylists();
+        },
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsets.only(
@@ -62,10 +65,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                         children: [
                           Text(
                             'Your Library',
-                            style: AppTextStyles.lightTextTheme.headline4?.copyWith(
-                              fontSize: 30.0,
-                              color: AppColors.black,
-                            ),
+                            style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
                           ),
                           IconButton(
                             onPressed: () {
@@ -73,7 +73,7 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                             },
                             icon: const Icon(Icons.add, size: 30.0),
                             tooltip: 'Add',
-                          )
+                          ),
                         ],
                       ),
                       Align(
@@ -97,10 +97,8 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                             (index) => Tab(
                               icon: Text(
                                 libraryTitle[index],
-                                style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
-                                  color: AppColors.black,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16.0,
+                                style: theme.textTheme.headline6!.copyWith(
+                                  fontSize: 16,
                                 ),
                               ),
                             ),
