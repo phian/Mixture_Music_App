@@ -23,24 +23,26 @@ class _RecentActivityViewState extends State<RecentActivityView> {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: _userDataController.recents.length,
         itemBuilder: (context, index) {
-          return SongTile(
-            contentPadding: const EdgeInsets.symmetric(
-              vertical: 8,
-              horizontal: 32,
-            ),
-            songModel: _userDataController.recents[index],
-            isPlaying: _musicController.playingSong.value != null
-                ? _musicController.playingSong.value!.id == _userDataController.recents[index].id
-                    ? true
-                    : false
-                : false,
-            onTap: () async {
-              _musicController.setSong(
+          return Obx(
+            () => SongTile(
+              contentPadding: const EdgeInsets.symmetric(
+                vertical: 8,
+                horizontal: 32,
+              ),
+              songModel: _userDataController.recents[index],
+              isPlaying: _musicController.playingSong.value != null
+                  ? _musicController.playingSong.value!.id == _userDataController.recents[index].id
+                      ? true
+                      : false
+                  : false,
+              onTap: () async {
+                _musicController.setSong(
+                  _userDataController.recents[index],
+                );
+              },
+              isFavorite: _userDataController.favorites.contains(
                 _userDataController.recents[index],
-              );
-            },
-            isFavorite: _userDataController.favorites.contains(
-              _userDataController.recents[index],
+              ),
             ),
           );
         },
