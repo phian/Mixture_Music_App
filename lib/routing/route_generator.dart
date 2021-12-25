@@ -39,7 +39,7 @@ class RouteGenerator {
       case AppRoutes.signUp:
         return MaterialPageRoute(builder: (_) => const SignUpScreen());
       case AppRoutes.main:
-        return MaterialPageRoute(builder: (_) => Home());
+        return MaterialPageRoute(builder: (_) => const Home());
       case AppRoutes.navigationScreen:
         return MaterialPageRoute(builder: (_) => const NavScreen());
       case AppRoutes.musicPlayerScreen:
@@ -86,7 +86,7 @@ class RouteGenerator {
       ),
       GetPage(name: AppRoutes.forgotPassword, page: () => const ForgotPasswordScreen()),
       GetPage(name: AppRoutes.signUp, page: () => const SignUpScreen()),
-      GetPage(name: AppRoutes.main, page: () => Home()),
+      GetPage(name: AppRoutes.main, page: () => const Home()),
       GetPage(name: AppRoutes.navigationScreen, page: () => const NavScreen()),
       GetPage(name: AppRoutes.musicPlayerScreen, page: () => MusicPlayerScreen()),
       GetPage(name: AppRoutes.feedbackAndBugReport, page: () => const FeedbackAndReportScreen()),

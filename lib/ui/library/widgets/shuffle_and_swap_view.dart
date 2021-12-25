@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../../constants/app_colors.dart';
-import '../../../constants/app_text_style.dart';
 import '../../../constants/enums/enums.dart';
 import '../../../widgets/inkwell_wrapper.dart';
 
