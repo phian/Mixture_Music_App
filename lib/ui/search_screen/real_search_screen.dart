@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/controller/search_controller.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
@@ -20,6 +21,7 @@ class _RealSearchScreenState extends State<RealSearchScreen> {
   final TextEditingController searchController = TextEditingController();
   final musicPlayerController = Get.put(MusicPlayerController());
   final controller = Get.put(SearchController());
+  final _userData = Get.find<UserDataController>();
 
   @override
   void initState() {
@@ -59,7 +61,9 @@ class _RealSearchScreenState extends State<RealSearchScreen> {
                           borderRadius: BorderRadius.circular(10),
                           borderSide: BorderSide.none,
                         ),
-                        fillColor: theme.colorScheme.brightness == Brightness.light ? Colors.grey[200] : Colors.white24,
+                        fillColor: theme.colorScheme.brightness == Brightness.light
+                            ? Colors.grey[200]
+                            : Colors.white24,
                       ),
                       onChanged: (value) async {
                         await Future.delayed(const Duration(milliseconds: 500));
@@ -100,16 +104,25 @@ class _RealSearchScreenState extends State<RealSearchScreen> {
                       controller.resetSearchSongs();
                     },
                     child: ListView.separated(
-                      itemCount: controller.searchSongs.isEmpty ? controller.songs.length : controller.searchSongs.length,
+                      itemCount: controller.searchSongs.isEmpty
+                          ? controller.songs.length
+                          : controller.searchSongs.length,
                       itemBuilder: (BuildContext context, int index) {
                         return SongTile(
-                          songModel: controller.searchSongs.isEmpty ? controller.songs[index] : controller.searchSongs[index],
+                          songModel: controller.searchSongs.isEmpty
+                              ? controller.songs[index]
+                              : controller.searchSongs[index],
                           onTap: () {
                             musicPlayerController.setSong(
-                              controller.searchSongs.isEmpty ? controller.songs[index] : controller.searchSongs[index],
+                              controller.searchSongs.isEmpty
+                                  ? controller.songs[index]
+                                  : controller.searchSongs[index],
                             );
                             Get.back();
                           },
+                          isFavorite: _userData.favorites.contains(
+                            controller.songs[index],
+                          ),
                         );
                       },
                       separatorBuilder: (BuildContext context, int index) {
