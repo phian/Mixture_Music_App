@@ -7,9 +7,9 @@ class MusicPlayerController extends GetxController {
   var playingSong = Rxn<SongModel>();
   final _songController = SongController();
 
-  void setSong(SongModel songModel) {
+  Future<void> setSong(SongModel songModel) async {
     playingSong.value = songModel;
-    _songController.addSongToRecents(FirebaseAuth.instance.currentUser!.uid, songModel);
+    await _songController.addSongToRecents(FirebaseAuth.instance.currentUser!.uid, songModel);
   }
 
   Future<void> addSongToFav() async {
