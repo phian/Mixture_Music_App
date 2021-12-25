@@ -43,7 +43,9 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          setState(() {});
+          await _userDataController.getAllUserFavSongs();
+          await _userDataController.getAllUserRecents();
+          await _userDataController.getAllUserPlaylists();
         },
         child: SingleChildScrollView(
           child: Container(
