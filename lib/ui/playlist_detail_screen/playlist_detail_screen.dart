@@ -220,7 +220,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                   ),
                   const SizedBox(height: kBottomNavigationBarHeight + 32.0),
                 ],
-              )
+              ),
             ],
           ),
         ),
@@ -255,6 +255,11 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             return EditPlaylistSheet(
               playlist: _playlist,
               sheetHeight: MediaQuery.of(context).size.height * 0.9,
+              onDeleteSongButtonTap: (listSong) {
+                setState(() {
+                  _playlist.songs = listSong;
+                });
+              },
             );
           },
         );

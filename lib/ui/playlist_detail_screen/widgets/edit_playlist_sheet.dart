@@ -6,6 +6,7 @@ import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/widgets/pick_image_dialog.dart';
@@ -57,6 +58,8 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
 
     return result;
   }
+
+  final _userDataController = Get.find<UserDataController>();
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +152,6 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
-                        
                         ImageGridWidget(
                           imageUrls: _playlist.songs.map((e) => e.data.imgURL).toList(),
                           gridRadius: BorderRadius.circular(4.0),
@@ -346,6 +348,8 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                             _selectedSong.clear();
                           });
                           _playlistController.updatePlaylist(_playlist);
+                          _userDataController.getAllUserPlaylists();
+                          widget.onDeleteSongButtonTap?.call(_playlist.songs);
                         },
                         borderRadius: BorderRadius.circular(4.0),
                         child: Container(
