@@ -6,6 +6,9 @@ import 'package:mixture_music_app/models/song/song_model.dart';
 class MusicPlayerController extends GetxController {
   var playingSong = Rxn<SongModel>();
   final _songController = SongController();
+  RxList<int> shuffleList = <int>[].obs;
+  RxInt currentShuffleIndex = 0.obs;
+  RxBool isShuffle = false.obs;
 
   Future<void> setSong(SongModel songModel) async {
     playingSong.value = songModel;

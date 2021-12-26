@@ -1,16 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/add_to_playlist/add_to_playlist_screen.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/model/position_data.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/widgets/seek_bar.dart';
+import 'package:mixture_music_app/widgets/loading_container.dart';
+import 'package:rxdart/rxdart.dart' as rxdart;
 
 import '../../widgets/marquee_text.dart';
 import 'controller/music_player_controller.dart';
 import 'widget/music_control_button.dart';
 
-class MusicPlayerScreen extends StatelessWidget {
+class MusicPlayerScreen extends StatefulWidget {
   MusicPlayerScreen({Key? key}) : super(key: key);
 
+  @override
+  State<MusicPlayerScreen> createState() => _MusicPlayerScreenState();
+}
+
+class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   final controller = Get.put(MusicPlayerController());
   final _userDataController = Get.put(UserDataController());
 
@@ -22,7 +33,7 @@ class MusicPlayerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Obx(
-      () => Stack(
+          () => Stack(
         children: [
           Scaffold(
             appBar: AppBar(
@@ -71,23 +82,41 @@ class MusicPlayerScreen extends StatelessWidget {
                       padding: const EdgeInsets.all(10),
                       child: Hero(
                         tag: 'Artwork',
-                        child: Image.network(
-                          controller.playingSong.value!.data.imgURL,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ),
+                        child: controller.playingSong.value != null
+                            ? Obx(
+                                () => Image.network(
+                                  controller.playingSong.value!.data.imgURL,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (_, child, chunkEvent) {
+                                    if (chunkEvent == null) return child;
+
+                                    return const LoadingContainer(width: 45.0, height: 45.0);
+                                  },
+                                ),
+                              )
+                            : Image.network(
+                                defaultImgURL,
+                                fit: BoxFit.cover,
+                                loadingBuilder: (_, child, chunkEvent) {
+                                  if (chunkEvent == null) return child;
+
+                                  return const LoadingContainer(width: 45.0, height: 45.0);
+                                },
+                              ),
                       ),
                     ),
                     const SizedBox(height: 16),
                     Row(
                       children: [
                         Expanded(
-                          child: MarqueeText(
-                            controller.playingSong.value!.data.title,
-                            style: Theme.of(context).textTheme.headline6!.copyWith(
-                                  fontSize: 26,
-                                ),
-                            horizontalPadding: 10,
+                          child: Obx(
+                            () => MarqueeText(
+                              controller.playingSong.value?.data.title ?? "Song's name",
+                              style: Theme.of(context).textTheme.headline6!.copyWith(
+                                    fontSize: 26,
+                                  ),
+                              horizontalPadding: 10,
+                            ),
                           ),
                         ),
                         CupertinoButton(
@@ -107,60 +136,66 @@ class MusicPlayerScreen extends StatelessWidget {
                           },
                           child: Icon(
                             isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            color:
-                                isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
+                            color: isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
                           ),
                         ),
                       ],
                     ),
-                    MarqueeText(
-                      controller.playingSong.value!.data.artist,
-                      style: theme.textTheme.caption!.copyWith(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w500,
+                    Obx(
+                      () => MarqueeText(
+                        controller.playingSong.value?.data.artist ?? "Artist's name",
+                        style: theme.textTheme.caption!.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        horizontalPadding: 10,
                       ),
-                      horizontalPadding: 10,
                     ),
                     const SizedBox(height: 16),
-                    SliderTheme(
-                      data: SliderThemeData(
-                        trackHeight: 4,
-                        activeTrackColor: theme.primaryColor.withOpacity(0.8),
-                        inactiveTrackColor: theme.primaryColor.withOpacity(0.2),
-                        thumbColor: theme.primaryColor.withOpacity(0.8),
-                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 5),
-                        overlayShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
-                        overlayColor: theme.primaryColor.withOpacity(0.1),
-                      ),
-                      child: Slider(
-                        value: 0.3,
-                        onChanged: (value) {},
-                      ),
+                    StreamBuilder<PositionData>(
+                      stream: _positionDataStream,
+                      builder: (context, snapshot) {
+                        final positionData = snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
+                        return SeekBar(
+                          duration: positionData.duration,
+                          position: positionData.position,
+                          onChangeEnd: (newPosition) {
+                            audioHandler.seek(newPosition);
+                          },
+                        );
+                      },
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: const [
-                          Text(
-                            '00:31',
-                            //style: theme.textTheme.caption,
-                          ),
-                          Spacer(),
-                          Text(
-                            '03:45',
-                            //style: theme.textTheme.caption,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
+                    const Expanded(child: SizedBox()),
                     MusicControlButton(
-                      onPlay: () {},
-                      onPause: () {},
-                      onNext: () {},
-                      onPrevious: () {},
-                      onLoop: (value) {},
-                      onShuffe: (value) {},
+                      onSkipPrevious: () {
+                        if (controller.isShuffle.value) {
+                          controller.playingSong.value =
+                              _userDataController.currentPlaylist[controller.shuffleList[controller.currentShuffleIndex.value]];
+                        } else {
+                          if (audioHandler.player.currentIndex != null) {
+                            if (audioHandler.player.currentIndex! - 1 >= 0) {
+                              controller.playingSong.value = _userDataController.currentPlaylist[audioHandler.player.currentIndex! - 1];
+                            } else {
+                              controller.playingSong.value = _userDataController.currentPlaylist[_userDataController.currentPlaylist.length - 1];
+                            }
+                          }
+                        }
+                      },
+                      onSkipNext: () {
+                        if (controller.isShuffle.value) {
+                          controller.playingSong.value =
+                              _userDataController.currentPlaylist[controller.shuffleList[controller.currentShuffleIndex.value]];
+                        } else {
+                          if (audioHandler.player.currentIndex != null) {
+                            if (audioHandler.player.currentIndex! + 1 < _userDataController.currentPlaylist.length) {
+                              controller.playingSong.value = _userDataController.currentPlaylist[audioHandler.player.currentIndex! + 1];
+                            } else {
+                              controller.playingSong.value = _userDataController.currentPlaylist[0];
+                            }
+                          }
+                        }
+                      },
+                      controller: controller,
                     ),
                     const Spacer(),
                   ],
@@ -172,4 +207,11 @@ class MusicPlayerScreen extends StatelessWidget {
       ),
     );
   }
+
+  Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+        audioHandler.player.positionStream,
+        audioHandler.player.bufferedPositionStream,
+        audioHandler.player.durationStream,
+        (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero),
+      );
 }

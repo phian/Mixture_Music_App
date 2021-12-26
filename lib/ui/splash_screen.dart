@@ -13,7 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  final controller = Get.put(HomeController());
+  final controller = Get.find<HomeController>();
+
   @override
   void initState() {
     super.initState();
@@ -22,6 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> fetchData() async {
     await controller.getLocationAndWeather();
+    await controller.getSuggestSongs();
   }
 
   @override

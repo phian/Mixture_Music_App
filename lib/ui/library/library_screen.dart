@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
-
+import 'package:mixture_music_app/routing/routes.dart';
 import 'package:mixture_music_app/ui/library/views/artists_view.dart';
 import 'package:mixture_music_app/ui/library/views/favourite_view.dart';
 import 'package:mixture_music_app/ui/library/views/mix_music_view.dart';
@@ -10,7 +9,9 @@ import 'package:mixture_music_app/ui/library/views/recent_activity_view.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/test_audio_screen.dart';
 import 'package:mixture_music_app/widgets/fade_indexed_stack.dart';
 
+import '../../constants/app_colors.dart';
 import '../../constants/app_constants.dart';
+import '../../constants/app_text_style.dart';
 
 class LibraryScreen extends StatefulWidget {
   const LibraryScreen({Key? key}) : super(key: key);

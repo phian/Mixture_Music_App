@@ -6,6 +6,7 @@ import 'package:mixture_music_app/images/app_images.dart';
 import 'package:mixture_music_app/ui/library/widgets/library_grid_view_card.dart';
 import 'package:mixture_music_app/ui/library/widgets/shuffle_and_swap_view.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class FavouriteView extends StatefulWidget {
@@ -17,6 +18,8 @@ class FavouriteView extends StatefulWidget {
 
 class _FavouriteViewState extends State<FavouriteView> {
   ViewType _viewType = ViewType.list;
+  final _userDataController = Get.put(UserDataController());
+  final _musicController = Get.put(MusicPlayerController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +30,20 @@ class _FavouriteViewState extends State<FavouriteView> {
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: ShuffleAndSwapView(
             onShuffleTap: () {},
-            onSwapViewTap: (viewType) {
-              setState(() {
-                _viewType = viewType;
-              });
-            },
+            onSwapViewTap: _userDataController.favorites.isEmpty
+                ? null
+                : (viewType) {
+                    setState(() {
+                      _viewType = viewType;
+                    });
+                  },
             visibleSwapViewIcon: true,
           ),
         ),
         AnimatedCrossFade(
-          firstChild: const _LibraryListView(),
-          secondChild: const _LibraryGridView(),
-          crossFadeState:
-              _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          firstChild: _LibraryListView(musicController: _musicController, userDataController: _userDataController),
+          secondChild: _LibraryGridView(musicController: _musicController, userDataController: _userDataController),
+          crossFadeState: _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 300),
         ),
       ],
@@ -48,22 +52,26 @@ class _FavouriteViewState extends State<FavouriteView> {
 }
 
 class _LibraryListView extends StatefulWidget {
-  const _LibraryListView({Key? key}) : super(key: key);
+  const _LibraryListView({
+    Key? key,
+    required this.musicController,
+    required this.userDataController,
+  }) : super(key: key);
+
+  final MusicPlayerController musicController;
+  final UserDataController userDataController;
 
   @override
   State<_LibraryListView> createState() => _LibraryListViewState();
 }
 
 class _LibraryListViewState extends State<_LibraryListView> {
-  final _userDataController = Get.put(UserDataController());
-  final _musicController = Get.put(MusicPlayerController());
-
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Align(
         alignment: Alignment.topCenter,
-        child: _userDataController.favorites.isEmpty
+        child: widget.userDataController.favorites.isEmpty
             ? Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -77,39 +85,35 @@ class _LibraryListViewState extends State<_LibraryListView> {
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      'You have no favorites',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                      'You have no favorite songs',
+                      style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
               )
             : ListView.separated(
-                shrinkWrap: true,
+          shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: _userDataController.favorites.length,
+                itemCount: widget.userDataController.favorites.length,
                 itemBuilder: (context, index) {
                   return SongTile(
                     contentPadding: const EdgeInsets.symmetric(
                       vertical: 8,
                       horizontal: 32,
                     ),
-                    songModel: _userDataController.favorites[index],
-                    isPlaying: _musicController.playingSong.value != null
-                        ? _musicController.playingSong.value!.id ==
-                                _userDataController.favorites[index].id
+                    songModel: widget.userDataController.favorites[index],
+                    isPlaying: widget.musicController.playingSong.value != null
+                        ? widget.musicController.playingSong.value!.id == widget.userDataController.favorites[index].id
                             ? true
                             : false
                         : false,
                     onTap: () async {
-                      _musicController.setSong(
-                        _userDataController.favorites[index],
+                      widget.musicController.setSong(
+                        widget.userDataController.favorites[index],
                       );
                     },
-                    isFavorite: _userDataController.favorites.contains(
-                      _userDataController.favorites[index],
+                    isFavorite: widget.userDataController.favorites.contains(
+                      widget.userDataController.favorites[index],
                     ),
                   );
                 },
@@ -124,22 +128,26 @@ class _LibraryListViewState extends State<_LibraryListView> {
 }
 
 class _LibraryGridView extends StatefulWidget {
-  const _LibraryGridView({Key? key}) : super(key: key);
+  const _LibraryGridView({
+    Key? key,
+    required this.musicController,
+    required this.userDataController,
+  }) : super(key: key);
+
+  final MusicPlayerController musicController;
+  final UserDataController userDataController;
 
   @override
   State<_LibraryGridView> createState() => _LibraryGridViewState();
 }
 
 class _LibraryGridViewState extends State<_LibraryGridView> {
-  final _userDataController = Get.put(UserDataController());
-  final _musicController = Get.put(MusicPlayerController());
-
   @override
   Widget build(BuildContext context) {
     return Obx(
       () => Align(
         alignment: Alignment.topCenter,
-        child: _userDataController.favorites.isEmpty
+        child: widget.userDataController.favorites.isEmpty
             ? Center(
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
@@ -153,11 +161,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                     ),
                     const SizedBox(height: 16.0),
                     Text(
-                      'You have no favorites',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                      'You have no favorite songs',
+                      style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -170,31 +175,62 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                     runSpacing: 8.0,
                     children: [
                       ...List.generate(
-                        _userDataController.favorites.length,
+                        widget.userDataController.favorites.length,
                         (index) => Container(
                           margin: const EdgeInsets.only(top: 16.0),
                           child: LibraryGridViewCard(
-                            songModel: _userDataController.favorites[index],
+                            songModel: widget.userDataController.favorites[index],
                             onTap: () {
-                              _musicController.setSong(
-                                _userDataController.favorites[index],
+                              widget.musicController.setSong(
+                                widget.userDataController.favorites[index],
                               );
+
+                              _updateCurrentPlaylist();
+                              widget.userDataController.setCurrentPlaylistType('favourite');
+                              if (audioHandler.items.isEmpty) {
+                                audioHandler.initAudioSource(widget.userDataController.favorites.value, index: index);
+                              } else {
+                                if (widget.userDataController.currentPlaylistType.value != 'favourite') {
+                                  audioHandler.initAudioSource(widget.userDataController.favorites.value, index: index);
+                                }
+                              }
+
+                              if (audioHandler.player.currentIndex == index) {
+                                if (audioHandler.player.playing == false) {
+                                  audioHandler.play();
+                                } else {
+                                  audioHandler.pause();
+                                }
+                              } else {
+                                audioHandler.skipToQueueItem(index);
+                                audioHandler.play();
+                              }
                             },
                             imageRadius: BorderRadius.circular(16.0),
-                            isPlaying: _musicController.playingSong.value != null
-                                ? _musicController.playingSong.value!.id ==
-                                        _userDataController.favorites[index].id
+                            isPlaying: widget.musicController.playingSong.value != null
+                                ? widget.musicController.playingSong.value!.id == widget.userDataController.favorites[index].id
                                     ? true
                                     : false
                                 : false,
                           ),
-                        ),
+                            ),
                       ),
                     ],
                   ),
                 ],
-              ),
+        ),
       ),
     );
+  }
+
+  void _updateCurrentPlaylist() {
+    if (widget.userDataController.currentPlaylist.isEmpty) {
+      widget.userDataController.setCurrentPlaylist(widget.userDataController.favorites);
+    } else {
+      if (widget.userDataController.currentPlaylistType.value != 'favourite') {
+        widget.userDataController.currentPlaylist.clear();
+        widget.userDataController.setCurrentPlaylist(widget.userDataController.favorites);
+      }
+    }
   }
 }
