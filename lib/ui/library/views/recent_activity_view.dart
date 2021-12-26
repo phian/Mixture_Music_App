@@ -43,33 +43,33 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                       _musicController.setSong(
                         _userDataController.recents[index],
                       );
+
+                      _userDataController.setCurrentPlaylistType('recent');
+                      if (audioHandler.items.isEmpty) {
+                        audioHandler.initAudioSource(_userDataController.recents.value, index: index);
+                      } else {
+                        if (_userDataController.currentPlaylistType.value != 'recent') {
+                          audioHandler.initAudioSource(_userDataController.recents.value, index: index);
+                        }
+                      }
+
+                      _updateCurrentPlaylist();
+                      if (audioHandler.player.currentIndex == index) {
+                        if (audioHandler.player.playing == false) {
+                          audioHandler.play();
+                        } else {
+                          audioHandler.pause();
+                        }
+                      } else {
+                        audioHandler.skipToQueueItem(index);
+                        audioHandler.play();
+                      }
                     },
                     isFavorite: _userDataController.favorites.contains(
                       _userDataController.recents[index],
                     ),
                   ),
                 );
-
-                _userDataController.setCurrentPlaylistType('recent');
-                if (audioHandler.items.isEmpty) {
-                  audioHandler.initAudioSource(_userDataController.recents.value, index: index);
-                } else {
-                  if (_userDataController.currentPlaylistType.value != 'recent') {
-                    audioHandler.initAudioSource(_userDataController.recents.value, index: index);
-                  }
-                }
-
-                _updateCurrentPlaylist();
-                if (audioHandler.player.currentIndex == index) {
-                  if (audioHandler.player.playing == false) {
-                    audioHandler.play();
-                  } else {
-                    audioHandler.pause();
-                  }
-                } else {
-                  audioHandler.skipToQueueItem(index);
-                  audioHandler.play();
-                }
               },
               separatorBuilder: (context, index) => const Divider(
                 height: 1,
