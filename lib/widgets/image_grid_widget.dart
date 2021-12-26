@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/widgets/loading_container.dart';
 
 class ImageGridWidget extends StatelessWidget {
@@ -26,22 +27,25 @@ class ImageGridWidget extends StatelessWidget {
       child: SizedBox(
         height: gridSize ?? MediaQuery.of(context).size.width / 2,
         width: gridSize ?? MediaQuery.of(context).size.width / 2,
-        child: Wrap(
-          direction: Axis.vertical,
-          children: List.generate(
-            gridImageAmount,
-            (index) => Image.network(
-              imageUrls[index] ?? '',
-              width: (gridSize ?? MediaQuery.of(context).size.width) / 4,
-              height: (gridSize ?? MediaQuery.of(context).size.width) / 4,
-              loadingBuilder: (context, child, chunkEvent) {
-                if (chunkEvent == null) return child;
+        child: imageUrls.length >= 4
+            ? Wrap(
+                direction: Axis.vertical,
+                children: List.generate(
+                  gridImageAmount,
+                  (index) => Image.network(
+                    imageUrls[index] ?? '',
+                    width: (gridSize ?? MediaQuery.of(context).size.width) / 4,
+                    height: (gridSize ?? MediaQuery.of(context).size.width) / 4,
+                    loadingBuilder: (context, child, chunkEvent) {
+                      if (chunkEvent == null) return child;
 
-                return LoadingContainer(width: loadingWidth ?? 30.0, height: loadingHeight ?? 30.0);
-              },
-            ),
-          ),
-        ),
+                      return LoadingContainer(
+                          width: loadingWidth ?? 30.0, height: loadingHeight ?? 30.0);
+                    },
+                  ),
+                ),
+              )
+            : Image.network(defaultImgURL),
       ),
     );
   }

@@ -1,9 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
+import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_card.dart';
 import 'package:mixture_music_app/widgets/custom_textfield/config/decoration_config.dart';
@@ -13,17 +15,17 @@ import 'package:mixture_music_app/widgets/custom_textfield/custom_textfield.dart
 class AddSongSheet extends StatefulWidget {
   const AddSongSheet({
     Key? key,
-    required this.songs,
+    required this.playlist,
     required this.onAddingSongs,
-    required this.onPlayingSong,
     this.sheetHeight,
     this.sheetRadius,
   }) : super(key: key);
 
-  final List<SongModel> songs;
+  /// playlist to add songs to
+  final Playlist playlist;
+
   final double? sheetHeight;
-  final void Function(List<SongModel> songs) onAddingSongs;
-  final void Function(SongModel playingSong) onPlayingSong;
+  final void Function(SongModel songs) onAddingSongs;
   final BorderRadius? sheetRadius;
 
   @override
@@ -31,13 +33,94 @@ class AddSongSheet extends StatefulWidget {
 }
 
 class _AddSongSheetState extends State<AddSongSheet> {
-  final List<String> _addSongTypes = [
-    'Recently played',
-    'Favourite',
-  ];
-  final List<SongModel> _addedSongs = [];
-  late final List<SongModel> _songs = widget.songs;
+  
+  //late final List<SongModel> _songs = widget.songs;
   int _playingIndex = -1;
+  final _userDataController = Get.find<UserDataController>();
+  late List<SongModel> _favorites;
+  late List<SongModel> _recentlyPlayed;
+
+  @override
+  void initState() {
+    super.initState();
+    _favorites = List.from(_userDataController.favorites);
+    _favorites.removeWhere((element) => widget.playlist.songs.contains(element));
+    _recentlyPlayed = List.from(_userDataController.recents);
+    _recentlyPlayed.removeWhere((element) => widget.playlist.songs.contains(element));
+  }
+
+  Widget _listSong(List<SongModel> songs, String title) {
+    return Container(
+      width: MediaQuery.of(context).size.width * 0.95,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16.0),
+        color: AppColors.black12.withOpacity(0.05),
+      ),
+      child: Stack(
+        alignment: Alignment.topCenter,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 78.0),
+              child: Column(
+                children: [
+                  ...List.generate(
+                    songs.length,
+                    (index) => Container(
+                      margin: const EdgeInsets.only(bottom: 16.0),
+                      child: AddSongCard(
+                        song: songs[index],
+                        isPlaying: _playingIndex == index,
+                        onAddButtonTap: (song) {
+                          setState(() {
+                            widget.onAddingSongs.call(song);
+                            songs.removeWhere((element) => element.id == song.id);
+                            Fluttertoast.showToast(
+                              msg: 'Added',
+                              fontSize: 18.0,
+                              textColor: AppColors.white,
+                              backgroundColor: Theme.of(context).primaryColor,
+                            );
+                          });
+                        },
+                        onPlayTap: (isPlaying) {
+                          if (isPlaying) {
+                            setState(() {
+                              _playingIndex = index;
+                            });
+                          }
+                        },
+                        imageRadius: BorderRadius.circular(4.0),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topRight: Radius.circular(16.0),
+                topLeft: Radius.circular(16.0),
+              ),
+              color: Colors.grey,
+            ),
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.headline5?.copyWith(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +136,6 @@ class _AddSongSheetState extends State<AddSongSheet> {
           Text(
             'Add songs',
             style: Theme.of(context).textTheme.headline5?.copyWith(
-                  fontSize: 30.0,
                   fontWeight: FontWeight.bold,
                 ),
           ),
@@ -64,7 +146,10 @@ class _AddSongSheetState extends State<AddSongSheet> {
               onChanged: (value) {},
               textFieldConfig: TextFieldConfig(
                 textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColors.black),
+                style: Theme.of(context)
+                    .textTheme
+                    .headline5
+                    ?.copyWith(fontSize: 20.0, fontWeight: FontWeight.w500, color: AppColors.black),
               ),
               decorationConfig: TextFieldDecorationConfig(
                 border: const OutlineInputBorder(borderSide: BorderSide.none),
@@ -92,75 +177,8 @@ class _AddSongSheetState extends State<AddSongSheet> {
               viewportFraction: 1.0,
             ),
             items: [
-              ...List.generate(
-                _addSongTypes.length,
-                (index) => Container(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  decoration: BoxDecoration(borderRadius: BorderRadius.circular(16.0), color: AppColors.black12.withOpacity(0.05)),
-                  child: Stack(
-                    alignment: Alignment.topCenter,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: SingleChildScrollView(
-                          padding: const EdgeInsets.only(top: 78.0),
-                          child: Column(
-                            children: [
-                              ...List.generate(
-                                _songs.length,
-                                (index) => Container(
-                                  margin: const EdgeInsets.only(bottom: 16.0),
-                                  child: AddSongCard(
-                                    song: listSong[index],
-                                    isPlaying: _playingIndex == index,
-                                    onAddButtonTap: (song) {
-                                      setState(() {
-                                        _addedSongs.add(song);
-                                        widget.onAddingSongs.call(_addedSongs);
-                                        _songs.removeWhere((element) => element.id == song.id);
-                                        Fluttertoast.showToast(
-                                          msg: 'Song added',
-                                          fontSize: 18.0,
-                                          backgroundColor: AppColors.c7A7C81,
-                                          textColor: AppColors.white,
-                                        );
-                                      });
-                                    },
-                                    onPlayTap: (isPlaying) {
-                                      if (isPlaying) {
-                                        setState(() {
-                                          _playingIndex = index;
-                                          widget.onPlayingSong.call(_songs[index]);
-                                        });
-                                      }
-                                    },
-                                    imageRadius: BorderRadius.circular(4.0),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.all(16.0),
-                        width: MediaQuery.of(context).size.width,
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.only(topRight: Radius.circular(16.0), topLeft: Radius.circular(16.0)),
-                          color: Colors.grey,
-                        ),
-                        child: Text(
-                          _addSongTypes[index],
-                          style: Theme.of(context).textTheme.headline5?.copyWith(
-                                fontSize: 22.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
+              _listSong(_favorites, 'Favorites'),
+              _listSong(_recentlyPlayed, 'Recently played'),
             ],
           ),
         ],

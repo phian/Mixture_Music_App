@@ -11,7 +11,7 @@ extension ConvertSongModel on List<SongModel> {
   List<MediaItem> convertToMediaItemList() {
     List<MediaItem> items = [];
 
-    for (int i = 0; i < this.length; i++) {
+    for (int i = 0; i < length; i++) {
       items.add(
         MediaItem(
           id: this[i].data.audioURL,

@@ -17,14 +17,13 @@ class ThemeController extends GetxController {
       primary: value,
     );
 
-    if (Get.theme.brightness == Brightness.dark) {
-      dark.value = FlexColorScheme.dark(
-        colors: schemeColor,
-      ).toTheme;
-    } else {
-      light.value = FlexColorScheme.light(
-        colors: schemeColor,
-      ).toTheme;
-    }
+    // set two theme in the same time so if change light to dark mode, primary color will be synchronized
+    dark.value = FlexColorScheme.dark(
+      colors: schemeColor,
+    ).toTheme;
+
+    light.value = FlexColorScheme.light(
+      colors: schemeColor,
+    ).toTheme;
   }
 }

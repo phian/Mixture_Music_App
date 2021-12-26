@@ -33,93 +33,90 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.to(const TestAudioScreen());
         },
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          padding: EdgeInsets.only(
-            top: MediaQuery.of(context).padding.top + 16.0,
-          ),
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Your Library',
-                          style: AppTextStyles.lightTextTheme.headline4?.copyWith(
-                            fontSize: 30.0,
-                            color: AppColors.black,
+      body: RefreshIndicator(
+        onRefresh: () async {
+          await _userDataController.getAllUserFavSongs();
+          await _userDataController.getAllUserRecents();
+          await _userDataController.getAllUserPlaylists();
+        },
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + 16.0,
+            ),
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Your Library',
+                            style: theme.textTheme.headline4!.copyWith(fontWeight: FontWeight.bold),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Get.toNamed(AppRoutes.playlistDetailScreen);
+                        ],
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: TabBar(
+                          controller: _tabController,
+                          onTap: (index) {
+                            setState(() {
+                              _selectedIndex = index;
+                              _tabController.animateTo(index);
+                            });
                           },
-                          icon: const Icon(Icons.add, size: 30.0),
-                          tooltip: 'Add',
-                        )
-                      ],
-                    ),
-                    Align(
-                      alignment: Alignment.topCenter,
-                      child: TabBar(
-                        controller: _tabController,
-                        onTap: (index) {
-                          setState(() {
-                            _selectedIndex = index;
-                            _tabController.animateTo(index);
-                          });
-                        },
-                        isScrollable: true,
-                        indicatorColor: Theme.of(context).primaryColor,
-                        indicatorSize: TabBarIndicatorSize.label,
-                        indicatorWeight: 3.0,
-                        physics: const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
-                        tabs: List.generate(
-                          libraryTitle.length,
-                          (index) => Tab(
-                            icon: Text(
-                              libraryTitle[index],
-                              style: AppTextStyles.lightTextTheme.subtitle1?.copyWith(
-                                color: AppColors.black,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.0,
+                          isScrollable: true,
+                          indicatorColor: Theme.of(context).primaryColor,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          indicatorWeight: 3.0,
+                          physics:
+                              const AlwaysScrollableScrollPhysics(parent: BouncingScrollPhysics()),
+                          tabs: List.generate(
+                            libraryTitle.length,
+                            (index) => Tab(
+                              icon: Text(
+                                libraryTitle[index],
+                                style: theme.textTheme.headline6!.copyWith(
+                                  fontSize: 16,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
+                      const SizedBox(height: 24.0),
+                    ],
+                  ),
+                ),
+                FadeIndexedStack(
+                  index: _selectedIndex,
+                  children: [
+                    const FavouriteView(),
+                    Obx(
+                      () => PlaylistView(
+                        playlists: _userDataController.playlists.value,
+                      ),
                     ),
-                    const SizedBox(height: 24.0),
+                    ArtistsView(onArtistTap: (artist) {}, artists: artistModels),
+                    const RecentActivityView(),
                   ],
                 ),
-              ),
-              FadeIndexedStack(
-                index: _selectedIndex,
-                children: [
-                  const FavouriteView(),
-                  Obx(
-                    () => PlaylistView(
-                      playlists: _userDataController.playlists.value,
-                    ),
-                  ),
-                  ArtistsView(onArtistTap: (artist) {}, artists: artistModels),
-                  const RecentActivityView(),
-                ],
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

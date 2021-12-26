@@ -10,9 +10,9 @@ class MusicPlayerController extends GetxController {
   RxInt currentShuffleIndex = 0.obs;
   RxBool isShuffle = false.obs;
 
-  void setSong(SongModel songModel) {
+  Future<void> setSong(SongModel songModel) async {
     playingSong.value = songModel;
-    _songController.addSongToRecents(FirebaseAuth.instance.currentUser!.uid, songModel);
+    await _songController.addSongToRecents(FirebaseAuth.instance.currentUser!.uid, songModel);
   }
 
   Future<void> addSongToFav() async {

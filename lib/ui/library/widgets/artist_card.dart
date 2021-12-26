@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/models/artist_model.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
@@ -54,7 +53,6 @@ class ArtistCard extends StatelessWidget {
                       style: Theme.of(context).textTheme.caption?.copyWith(
                             fontWeight: FontWeight.w500,
                             fontSize: 20.0,
-                            color: AppColors.black,
                           ),
                     ),
                   ),
@@ -91,7 +89,6 @@ class ArtistCard extends StatelessWidget {
                     style: Theme.of(context).textTheme.caption?.copyWith(
                           fontWeight: FontWeight.w500,
                           fontSize: 20.0,
-                          color: AppColors.black,
                         ),
                   ),
                 ],

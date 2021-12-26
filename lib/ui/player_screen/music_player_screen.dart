@@ -122,19 +122,17 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                         CupertinoButton(
                           onPressed: () async {
                             if (isFavorite()) {
-                              controller.removeSongFromFav();
-
                               _userDataController.favorites.remove(
                                 controller.playingSong.value!,
                               );
+                              await controller.removeSongFromFav();
                             } else {
-                              controller.addSongToFav();
-
                               _userDataController.favorites.add(
                                 controller.playingSong.value!,
                               );
+                              await controller.addSongToFav();
                             }
-                            _userDataController.getAllUserFavSongs();
+                            await _userDataController.getAllUserFavSongs();
                           },
                           child: Icon(
                             isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
