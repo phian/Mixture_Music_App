@@ -5,7 +5,8 @@ import 'package:image_picker/image_picker.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
-import 'package:mixture_music_app/models/playlist_model.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
+import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/edit_profile_screen/widgets/pick_image_dialog.dart';
 import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
@@ -20,15 +21,13 @@ import 'package:mixture_music_app/widgets/unfocus_widget.dart';
 class EditPlaylistSheet extends StatefulWidget {
   const EditPlaylistSheet({
     Key? key,
-    required this.playlistModel,
-    required this.songs,
+    required this.playlist,
     this.onDeleteSongButtonTap,
     this.onChanged,
     this.sheetHeight,
   }) : super(key: key);
 
-  final PlaylistModel playlistModel;
-  final List<SongModel> songs;
+  final Playlist playlist;
   final void Function(List<SongModel> deleteSongs)? onDeleteSongButtonTap;
   final void Function(List<SongModel> songs)? onChanged;
   final double? sheetHeight;
@@ -39,9 +38,10 @@ class EditPlaylistSheet extends StatefulWidget {
 
 class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
   final List<SongModel> _selectedSong = [];
-  late final List<SongModel> _songs = widget.songs;
+
+  late final _playlist = widget.playlist;
   late final TextEditingController _playlistNameController =
-      TextEditingController(text: widget.playlistModel.playlistName);
+      TextEditingController(text: widget.playlist.title);
   final List<String> _sortTypes = [
     'Alphabetical',
     'Custom',
@@ -49,6 +49,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
     'Date Added Oldest'
   ];
   String _selectedSortType = 'Sorting';
+  final _playlistController = PlaylistController();
 
   Future<XFile?> _pickImage(ImageSource source) async {
     final ImagePicker picker = ImagePicker();
@@ -123,8 +124,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                   width: MediaQuery.of(context).size.width,
                   decoration: BoxDecoration(
                     border: Border.symmetric(
-                        horizontal:
-                            BorderSide(color: Theme.of(context).dividerColor)),
+                        horizontal: BorderSide(color: Theme.of(context).dividerColor)),
                   ),
                   child: GestureDetector(
                     onTap: () {
@@ -149,14 +149,14 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                     child: Stack(
                       alignment: Alignment.center,
                       children: [
+                        
                         ImageGridWidget(
-                          imageUrls: listSong.map((e) => e.data.imgURL).toList(),
+                          imageUrls: _playlist.songs.map((e) => e.data.imgURL).toList(),
                           gridRadius: BorderRadius.circular(4.0),
                         ),
                         Container(
                           padding: const EdgeInsets.all(8.0),
-                          child: const Icon(Icons.edit_outlined,
-                              color: Colors.white, size: 40.0),
+                          child: const Icon(Icons.edit_outlined, color: Colors.white, size: 40.0),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.white, width: 1.5),
                             borderRadius: BorderRadius.circular(90.0),
@@ -190,14 +190,12 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).dividerColor,
                     border: Border.symmetric(
-                        horizontal:
-                            BorderSide(color: Theme.of(context).dividerColor)),
+                        horizontal: BorderSide(color: Theme.of(context).dividerColor)),
                   ),
                   child: const SizedBox(),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 16.0, horizontal: 8.0),
+                  padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
                   child: IntrinsicWidth(
                     child: InkWellWrapper(
                       onTap: () {
@@ -217,30 +215,24 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                                     },
                                     borderRadius: BorderRadius.zero,
                                     child: Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 24.0),
+                                      padding: const EdgeInsets.symmetric(vertical: 24.0),
                                       width: MediaQuery.of(context).size.width,
                                       decoration: BoxDecoration(
                                         border: index == 0
                                             ? Border.symmetric(
                                                 horizontal: BorderSide(
-                                                    color: Theme.of(context)
-                                                        .dividerColor,
+                                                    color: Theme.of(context).dividerColor,
                                                     width: 1.5),
                                               )
                                             : Border(
                                                 bottom: BorderSide(
-                                                    color: Theme.of(context)
-                                                        .dividerColor,
+                                                    color: Theme.of(context).dividerColor,
                                                     width: 1.5)),
                                       ),
                                       child: Text(
                                         _sortTypes[index],
                                         textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .caption
-                                            ?.copyWith(
+                                        style: Theme.of(context).textTheme.caption?.copyWith(
                                               fontSize: 18.0,
                                             ),
                                       ),
@@ -250,8 +242,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                               ],
                               dividerThickness: 0.0,
                               bottomSheetRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(10.0),
-                                  topRight: Radius.circular(10.0)),
+                                  topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
                             );
                           },
                         );
@@ -265,10 +256,9 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                             const SizedBox(width: 16.0),
                             Text(
                               _selectedSortType,
-                              style:
-                                  Theme.of(context).textTheme.caption?.copyWith(
-                                        fontSize: 16.0,
-                                      ),
+                              style: Theme.of(context).textTheme.caption?.copyWith(
+                                    fontSize: 16.0,
+                                  ),
                             ),
                           ],
                         ),
@@ -282,8 +272,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                   decoration: BoxDecoration(
                     color: Theme.of(context).dividerColor,
                     border: Border.symmetric(
-                        horizontal:
-                            BorderSide(color: Theme.of(context).dividerColor)),
+                        horizontal: BorderSide(color: Theme.of(context).dividerColor)),
                   ),
                   child: const SizedBox(),
                 ),
@@ -294,35 +283,33 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                   physics: const ClampingScrollPhysics(),
                   children: <Widget>[
                     ...List.generate(
-                      _songs.length,
+                      _playlist.songs.length,
                       (index) => SongTile(
                         key: UniqueKey(),
                         onCheckChanged: (value) {
                           print(value);
                           if (value != null &&
                               value == true &&
-                              _selectedSong.contains(_songs[index]) == false) {
+                              _selectedSong.contains(_playlist.songs[index]) == false) {
                             setState(() {
-                              _selectedSong.add(_songs[index]);
+                              _selectedSong.add(_playlist.songs[index]);
                             });
                           } else {
                             setState(() {
                               _selectedSong.removeWhere(
-                                  (element) => element.id == _songs[index].id);
+                                  (element) => element.id == _playlist.songs[index].id);
                             });
                           }
                         },
                         canChoose: true,
                         canMove: true,
-                        initialCheck: _selectedSong.contains(_songs[index]),
-                        songModel: _songs[index],
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 12.0, vertical: 8.0),
+                        initialCheck: _selectedSong.contains(_playlist.songs[index]),
+                        songModel: _playlist.songs[index],
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
                         onTap: () {},
                         border: index == 0
                             ? const Border.symmetric(
-                                horizontal:
-                                    BorderSide(color: AppColors.c7A7C81),
+                                horizontal: BorderSide(color: AppColors.c7A7C81),
                               )
                             : const Border(
                                 bottom: BorderSide(color: AppColors.c7A7C81),
@@ -332,7 +319,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                   ],
                   onReorder: (int oldIndex, int newIndex) {
                     setState(() {
-                      _songs.insert(newIndex, listSong.removeAt(oldIndex));
+                      _playlist.songs.insert(newIndex, _playlist.songs.removeAt(oldIndex));
                     });
                   },
                 ),
@@ -351,7 +338,15 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: InkWellWrapper(
                         color: Theme.of(context).primaryColor,
-                        onTap: () {},
+                        onTap: () {
+                          setState(() {
+                            _playlist.songs.removeWhere(
+                              ((element) => _selectedSong.contains(element)),
+                            );
+                            _selectedSong.clear();
+                          });
+                          _playlistController.updatePlaylist(_playlist);
+                        },
                         borderRadius: BorderRadius.circular(4.0),
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -362,9 +357,7 @@ class _EditPlaylistSheetState extends State<EditPlaylistSheet> {
                             style: Theme.of(context)
                                 .textTheme
                                 .headline5
-                                ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                                ?.copyWith(fontWeight: FontWeight.bold, color: Colors.white),
                           ),
                         ),
                       ),

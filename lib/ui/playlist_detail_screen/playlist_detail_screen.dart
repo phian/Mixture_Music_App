@@ -6,7 +6,7 @@ import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/playlist/playlist.dart';
-import 'package:mixture_music_app/models/playlist_model.dart';
+import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_sheet.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/delete_dialog.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/edit_playlist_sheet.dart';
@@ -37,6 +37,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
   final DateFormat formatter = DateFormat('MMM dd, yyyy');
   final _userDataController = Get.find<UserDataController>();
   final _playlistController = PlaylistController();
+  final _musicPlayerController = Get.find<MusicPlayerController>();
 
   @override
   void initState() {
@@ -130,7 +131,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               ImageGridWidget(
-                imageUrls: listSong.map((e) => e.data.imgURL).toList(),
+                imageUrls: _playlist.songs.map((e) => e.data.imgURL).toList(),
                 gridRadius: BorderRadius.circular(4.0),
               ),
               const SizedBox(height: 32.0),
@@ -197,11 +198,24 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                 children: [
                   ...List.generate(
                     _playlist.songs.length,
-                    (index) => SongTile(
-                      songModel: _playlist.songs[index],
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-                      onTap: () {},
-                      isFavorite: _userDataController.favorites.contains(_playlist.songs[index]),
+                    (index) => Obx(
+                      () => SongTile(
+                        songModel: _playlist.songs[index],
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                        isPlaying: _musicPlayerController.playingSong.value != null
+                            ? _musicPlayerController.playingSong.value!.id ==
+                                    _playlist.songs[index].id
+                                ? true
+                                : false
+                            : false,
+                        onTap: () async {
+                          await _musicPlayerController.setSong(
+                            _playlist.songs[index],
+                          );
+                          _userDataController.getAllUserRecents();
+                        },
+                        isFavorite: _userDataController.favorites.contains(_playlist.songs[index]),
+                      ),
                     ),
                   ),
                   const SizedBox(height: kBottomNavigationBarHeight + 32.0),
@@ -239,11 +253,8 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
           isScrollControlled: true,
           builder: (_) {
             return EditPlaylistSheet(
-              playlistModel: PlaylistModel(
-                playlistName: 'Playlist name',
-              ),
+              playlist: _playlist,
               sheetHeight: MediaQuery.of(context).size.height * 0.9,
-              songs: listSong,
             );
           },
         );
