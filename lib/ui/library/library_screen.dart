@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/routing/routes.dart';
+import 'package:mixture_music_app/ui/create_playlist_screen.dart';
 
 import 'package:mixture_music_app/ui/library/views/artists_view.dart';
 import 'package:mixture_music_app/ui/library/views/favourite_view.dart';
@@ -69,7 +70,14 @@ class _LibraryScreenState extends State<LibraryScreen> with TickerProviderStateM
                           ),
                           IconButton(
                             onPressed: () {
-                              Get.toNamed(AppRoutes.playlistDetailScreen);
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor: Colors.transparent,
+                                builder: (context) {
+                                  return CreatePlaylistScreen();
+                                },
+                              );
                             },
                             icon: const Icon(Icons.add, size: 30.0),
                             tooltip: 'Add',
