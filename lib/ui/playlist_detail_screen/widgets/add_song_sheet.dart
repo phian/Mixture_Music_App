@@ -17,7 +17,6 @@ class AddSongSheet extends StatefulWidget {
     Key? key,
     required this.playlist,
     required this.onAddingSongs,
-    required this.onPlayingSong,
     this.sheetHeight,
     this.sheetRadius,
   }) : super(key: key);
@@ -26,8 +25,7 @@ class AddSongSheet extends StatefulWidget {
   final Playlist playlist;
 
   final double? sheetHeight;
-  final void Function(List<SongModel> songs) onAddingSongs;
-  final void Function(SongModel playingSong) onPlayingSong;
+  final void Function(SongModel songs) onAddingSongs;
   final BorderRadius? sheetRadius;
 
   @override
@@ -35,11 +33,7 @@ class AddSongSheet extends StatefulWidget {
 }
 
 class _AddSongSheetState extends State<AddSongSheet> {
-  final List<String> _addSongTypes = [
-    'Recently played',
-    'Favourite',
-  ];
-  final List<SongModel> _addedSongs = [];
+  
   //late final List<SongModel> _songs = widget.songs;
   int _playingIndex = -1;
   final _userDataController = Get.find<UserDataController>();
@@ -80,8 +74,7 @@ class _AddSongSheetState extends State<AddSongSheet> {
                         isPlaying: _playingIndex == index,
                         onAddButtonTap: (song) {
                           setState(() {
-                            _addedSongs.add(song);
-                            widget.onAddingSongs.call(_addedSongs);
+                            widget.onAddingSongs.call(song);
                             songs.removeWhere((element) => element.id == song.id);
                             Fluttertoast.showToast(
                               msg: 'Added',
@@ -95,7 +88,6 @@ class _AddSongSheetState extends State<AddSongSheet> {
                           if (isPlaying) {
                             setState(() {
                               _playingIndex = index;
-                              widget.onPlayingSong.call(_favorites[index]);
                             });
                           }
                         },

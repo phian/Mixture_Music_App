@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/constants/enums/enums.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
