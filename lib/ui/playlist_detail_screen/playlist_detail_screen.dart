@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
-import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/controllers/playlist_controller.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/playlist/playlist.dart';
@@ -237,7 +236,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             isScrollControlled: true,
             builder: (_) {
               return AddSongSheet(
-                songs: listSong,
+                playlist: _playlist,
                 sheetHeight: MediaQuery.of(context).size.height * 0.9,
                 sheetRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
