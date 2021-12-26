@@ -1,3 +1,4 @@
+import 'package:audio_service/audio_service.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -20,15 +21,10 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  final controller = Get.put(HomeController());
+  final controller = Get.find<HomeController>();
   final musicController = Get.put(MusicPlayerController());
   final _userDataController = Get.put(UserDataController());
-
-  @override
-  void initState() {
-    super.initState();
-    audioHandler.initAudioSource(controller.suggestedSongs);
-  }
+  bool _isRefreshed = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +35,7 @@ class _HomeState extends State<Home> {
           builder: (
             BuildContext context,
             Widget child,
-            IndicatorController indiController,
-          ) {
+            IndicatorController indiController,) {
             return MRefreshIndicator(
               context: context,
               child: child,
@@ -49,6 +44,9 @@ class _HomeState extends State<Home> {
           },
           onRefresh: () async {
             await controller.onPullToRefresh();
+            setState(() {
+              _isRefreshed = true;
+            });
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
@@ -83,8 +81,11 @@ class _HomeState extends State<Home> {
                           );
                       _userDataController.getAllUserPlaylists();
                     },
-                    onRefresh: () {
-                      controller.getSuggestSongs();
+                    onRefresh: () async {
+                      await controller.getSuggestSongs();
+                      setState(() {
+                        _isRefreshed = true;
+                      });
                     },
                   );
                 }),
@@ -95,14 +96,14 @@ class _HomeState extends State<Home> {
                   height: 1,
                 ),
                 Obx(
-                  () => ListView.separated(
+                      () => ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
                     itemCount: controller.suggestedSongs.length,
                     itemBuilder: (context, index) {
                       return Obx(
-                        () => SongTile(
+                            () => SongTile(
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 16,
@@ -114,21 +115,10 @@ class _HomeState extends State<Home> {
                                   : false
                               : false,
                           onTap: () async {
-                            musicController.setSong(
-                              controller.suggestedSongs[index],
-                            );
-                            _userDataController.getAllUserRecents();
-
-                            if (audioHandler.player.currentIndex == index) {
-                              if (audioHandler.player.playing == false) {
-                                audioHandler.play();
-                              } else {
-                                audioHandler.pause();
-                              }
-                            } else {
-                              audioHandler.skipToQueueItem(index);
-                              audioHandler.play();
-                            }
+                            _userDataController.setCurrentPlaylistType('suggest');
+                            _updateCurrentPlaylist();
+                            _initAudioSource(index);
+                            _updatePlayingItem(index);
                           },
                           isFavorite: _userDataController.favorites.contains(
                             controller.suggestedSongs[index],
@@ -148,5 +138,67 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
+  }
+
+  void _updatePlayingItem(int index) async {
+    if (_isRefreshed) {
+      audioHandler.skipToQueueItem(index);
+      audioHandler.play();
+
+      musicController.setSong(
+        controller.suggestedSongs[index],
+      );
+      _userDataController.getAllUserRecents();
+
+      setState(() {
+        _isRefreshed = false;
+      });
+    } else {
+      if (musicController.playingSong.value?.id != controller.suggestedSongs[index].id) {
+        if (musicController.isShuffle.value) {
+          await audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
+          musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
+        }
+
+        audioHandler.skipToQueueItem(index);
+        audioHandler.play();
+
+        musicController.setSong(
+          controller.suggestedSongs[index],
+        );
+        _userDataController.getAllUserRecents();
+      } else {
+        _checkPlayerState();
+      }
+    }
+  }
+
+  void _initAudioSource(int index) {
+    if (audioHandler.items.isEmpty) {
+      audioHandler.initAudioSource(controller.suggestedSongs, index: index);
+    } else {
+      if (_userDataController.currentPlaylistType.value != 'suggest' || _isRefreshed) {
+        audioHandler.initAudioSource(controller.suggestedSongs, index: index);
+      }
+    }
+  }
+
+  void _updateCurrentPlaylist() {
+    if (_userDataController.currentPlaylist.isEmpty) {
+      _userDataController.setCurrentPlaylist(controller.suggestedSongs);
+    } else {
+      if (_userDataController.currentPlaylistType.value != 'suggest' || _isRefreshed) {
+        // _userDataController.currentPlaylist.clear();
+        _userDataController.setCurrentPlaylist(controller.suggestedSongs);
+      }
+    }
+  }
+
+  void _checkPlayerState() {
+    if (audioHandler.player.playing == false) {
+      audioHandler.play();
+    } else {
+      audioHandler.pause();
+    }
   }
 }

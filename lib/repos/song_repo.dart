@@ -10,16 +10,17 @@ class SongRepo {
   Future<List<SongModel>> getSuggestedSongs(String weatherType) async {
     var playlist = <SongModel>[];
 
-    await _songService.getSuggestedSongs(weatherType).then((songs) {
-      for (var song in songs) {
-        playlist.add(
-          SongModel(
-            data: SongData.fromMap(song.data()),
-            id: song.id,
-          ),
-        );
-      }
-    });
+    var songs = await _songService.getSuggestedSongs(weatherType);
+
+    for (var song in songs) {
+      playlist.add(
+        SongModel(
+          data: SongData.fromMap(song.data()),
+          id: song.id,
+        ),
+      );
+    }
+
     return playlist;
   }
 
@@ -73,7 +74,5 @@ class SongRepo {
       recents.add(SongModel.fromMap(song.data()));
     }
     return recents;
-    
   }
-
 }

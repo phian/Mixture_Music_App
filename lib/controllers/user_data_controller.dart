@@ -11,6 +11,8 @@ class UserDataController extends GetxController {
   var playlists = <Playlist>[].obs;
   var favorites = <SongModel>[].obs;
   var recents = <SongModel>[].obs;
+  var currentPlaylistType = ''.obs;
+  var currentPlaylist = <SongModel>[].obs;
 
   final _playlistController = PlaylistController();
   final _songController = SongController();
@@ -43,5 +45,15 @@ class UserDataController extends GetxController {
       recents.value = await _songController.getAllUserRecents(_user!.uid);
       log('number of user\'s recents: ' + recents.length.toString());
     }
+  }
+
+  void setCurrentPlaylistType(String playlist) {
+    if (currentPlaylistType.value != playlist) {
+      currentPlaylistType.value = playlist;
+    }
+  }
+
+  void setCurrentPlaylist(List<SongModel> songs) {
+    currentPlaylist.value = List<SongModel>.from(songs);
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class RecentActivityView extends StatefulWidget {
@@ -12,7 +13,7 @@ class RecentActivityView extends StatefulWidget {
 }
 
 class _RecentActivityViewState extends State<RecentActivityView> {
-  final _userDataController = Get.put(UserDataController());
+  final _userDataController = Get.find<UserDataController>();
   final _musicController = Get.put(MusicPlayerController());
 
   @override
@@ -39,6 +40,27 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                 _musicController.setSong(
                   _userDataController.recents[index],
                 );
+
+                _userDataController.setCurrentPlaylistType('recent');
+                if (audioHandler.items.isEmpty) {
+                  audioHandler.initAudioSource(_userDataController.recents.value, index: index);
+                } else {
+                  if (_userDataController.currentPlaylistType.value != 'recent') {
+                    audioHandler.initAudioSource(_userDataController.recents.value, index: index);
+                  }
+                }
+
+                _updateCurrentPlaylist();
+                if (audioHandler.player.currentIndex == index) {
+                  if (audioHandler.player.playing == false) {
+                    audioHandler.play();
+                  } else {
+                    audioHandler.pause();
+                  }
+                } else {
+                  audioHandler.skipToQueueItem(index);
+                  audioHandler.play();
+                }
               },
               isFavorite: _userDataController.favorites.contains(
                 _userDataController.recents[index],
@@ -52,5 +74,16 @@ class _RecentActivityViewState extends State<RecentActivityView> {
         ),
       ),
     );
+  }
+
+  void _updateCurrentPlaylist() {
+    if (_userDataController.currentPlaylist.isEmpty) {
+      _userDataController.setCurrentPlaylist(_userDataController.recents);
+    } else {
+      if (_userDataController.currentPlaylistType.value != 'recent') {
+        _userDataController.currentPlaylist.clear();
+        _userDataController.setCurrentPlaylist(_userDataController.recents);
+      }
+    }
   }
 }

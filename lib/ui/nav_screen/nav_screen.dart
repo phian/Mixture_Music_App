@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/search_screen.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 
 import '../../routing/routes.dart';
 import '../home/home.dart';
@@ -33,35 +34,60 @@ class _NavScreenState extends State<NavScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(
-        () => Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: _screen
-                    .asMap()
-                    .map((i, screen) => MapEntry(
-                          i,
-                          Offstage(
-                            offstage: selectedScreenIndex != i,
-                            child: screen,
-                          ),
-                        ))
-                    .values
-                    .toList(),
-              ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: _screen
+                  .asMap()
+                  .map((i, screen) => MapEntry(
+                        i,
+                        Offstage(
+                          offstage: selectedScreenIndex != i,
+                          child: screen,
+                        ),
+                      ))
+                  .values
+                  .toList(),
             ),
-            MiniMusicPlayer(
+          ),
+          Obx(
+            () => MiniMusicPlayer(
               song: musicController.playingSong.value,
               onTap: () {
                 Get.toNamed(AppRoutes.musicPlayerScreen);
               },
-              onNext: () {},
-              onPlayPause: () {},
-              onPrevious: () {},
+              onSkipPrevious: () {
+                if (musicController.isShuffle.value) {
+                  musicController.playingSong.value =
+                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentShuffleIndex.value]];
+                } else {
+                  if (audioHandler.player.currentIndex != null) {
+                    if (audioHandler.player.currentIndex! - 1 >= 0) {
+                      musicController.playingSong.value = userDataController.currentPlaylist[audioHandler.player.currentIndex! - 1];
+                    } else {
+                      musicController.playingSong.value = userDataController.currentPlaylist[userDataController.currentPlaylist.length - 1];
+                    }
+                  }
+                }
+              },
+              onSkipNext: () {
+                if (musicController.isShuffle.value) {
+                  musicController.playingSong.value =
+                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentShuffleIndex.value]];
+                } else {
+                  if (audioHandler.player.currentIndex != null) {
+                    if (audioHandler.player.currentIndex! + 1 < userDataController.currentPlaylist.length) {
+                      musicController.playingSong.value = userDataController.currentPlaylist[audioHandler.player.currentIndex! + 1];
+                    } else {
+                      musicController.playingSong.value = userDataController.currentPlaylist[0];
+                    }
+                  }
+                }
+              },
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
