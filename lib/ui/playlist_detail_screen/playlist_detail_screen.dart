@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/models/playlist_model.dart';
 import 'package:mixture_music_app/ui/playlist_detail_screen/widgets/add_song_sheet.dart';
@@ -12,6 +15,7 @@ import 'package:mixture_music_app/widgets/base_app_bar.dart';
 import 'package:mixture_music_app/widgets/bottom_sheet_wrapper.dart';
 import 'package:mixture_music_app/widgets/image_grid_widget.dart';
 import 'package:mixture_music_app/widgets/inkwell_wrapper.dart';
+import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class PlayListDetailScreen extends StatefulWidget {
   const PlayListDetailScreen({Key? key}) : super(key: key);
@@ -22,8 +26,17 @@ class PlayListDetailScreen extends StatefulWidget {
 
 class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
   final List<IconData> _actionIcons = [Icons.add, Icons.edit, Icons.share, Icons.delete];
-  final List<String> _menuTexts = ['Add tracks', 'Edit playlist', 'Share playlist', 'Delete playlist'];
+  final List<String> _menuTexts = [
+    'Add tracks',
+    'Edit playlist',
+    'Share playlist',
+    'Delete playlist'
+  ];
   late Playlist _playlist;
+
+  final DateFormat formatter = DateFormat('MMM dd, yyyy');
+  final _userDataController = Get.find<UserDataController>();
+  final _playlistController = PlaylistController();
 
   @override
   void initState() {
@@ -72,9 +85,12 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                               decoration: BoxDecoration(
                                 border: index == 0
                                     ? Border.symmetric(
-                                        horizontal: BorderSide(color: Theme.of(context).dividerColor, width: 1.5),
+                                        horizontal: BorderSide(
+                                            color: Theme.of(context).dividerColor, width: 1.5),
                                       )
-                                    : Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1.5)),
+                                    : Border(
+                                        bottom: BorderSide(
+                                            color: Theme.of(context).dividerColor, width: 1.5)),
                               ),
                               child: Text(
                                 _menuTexts[index],
@@ -88,7 +104,8 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                         )
                       ],
                       dividerThickness: 0.0,
-                      bottomSheetRadius: const BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                      bottomSheetRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
                     );
                   });
             },
@@ -118,17 +135,21 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
               ),
               const SizedBox(height: 32.0),
               Text(
-                'Playlist name',
+                _playlist.title,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headline4?.copyWith(
-                      color: AppColors.black,
                       fontWeight: FontWeight.bold,
                     ),
               ),
               const SizedBox(height: 16.0),
               Text(
-                'Created ${DateTime.now().month} ${DateTime.now().day}, ${DateTime.now().year} - ${listSong.length} tracks',
-                style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: 20.0, color: AppColors.c7A7C81),
+                'Created ' +
+                    formatter.format(_playlist.createdTime.toDate()) +
+                    ' - ${_playlist.songs.length} tracks',
+                style: Theme.of(context)
+                    .textTheme
+                    .subtitle1
+                    ?.copyWith(fontSize: 20.0, color: AppColors.c7A7C81),
               ),
               const SizedBox(height: 16.0),
               Row(
@@ -145,7 +166,8 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                       color: Theme.of(context).primaryColor.withOpacity(0.15),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: Icon(_actionIcons[index], size: 25.0, color: Theme.of(context).primaryColor),
+                        child: Icon(_actionIcons[index],
+                            size: 25.0, color: Theme.of(context).primaryColor),
                       ),
                     ),
                   ),
@@ -170,27 +192,21 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                 ),
               ),
               const SizedBox(height: 8.0),
-              // Column(
-              //   mainAxisSize: MainAxisSize.min,
-              //   children: [
-              //     ...List.generate(
-              //       listSong.length,
-              //       (index) => SongTile(
-              //         songModel: listSong[index],
-              //         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-              //         onTap: () {},
-              //         border: index == 0
-              //             ? const Border.symmetric(
-              //                 horizontal: BorderSide(color: AppColors.c7A7C81),
-              //               )
-              //             : const Border(
-              //                 bottom: BorderSide(color: AppColors.c7A7C81),
-              //               ),
-              //       ),
-              //     ),
-              //     const SizedBox(height: kBottomNavigationBarHeight + 32.0),
-              //   ],
-              // )
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ...List.generate(
+                    _playlist.songs.length,
+                    (index) => SongTile(
+                      songModel: _playlist.songs[index],
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                      onTap: () {},
+                      isFavorite: _userDataController.favorites.contains(_playlist.songs[index]),
+                    ),
+                  ),
+                  const SizedBox(height: kBottomNavigationBarHeight + 32.0),
+                ],
+              )
             ],
           ),
         ),
@@ -209,7 +225,8 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
               return AddSongSheet(
                 songs: listSong,
                 sheetHeight: MediaQuery.of(context).size.height * 0.9,
-                sheetRadius: const BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                sheetRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                 onAddingSongs: (songs) {},
                 onPlayingSong: (playingSong) {},
               );
@@ -261,7 +278,10 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
             onCancelButtonTap: () {
               Get.back();
             },
-            onDeleteButtonTap: () {
+            onDeleteButtonTap: () async {
+              await _playlistController.deletePlaylist(_playlist);
+              _userDataController.getAllUserPlaylists();
+              Get.back();
               Get.back();
             },
           ),
