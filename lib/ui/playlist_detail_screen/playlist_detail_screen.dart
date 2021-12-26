@@ -174,23 +174,22 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                 ),
               ),
               const SizedBox(height: 48.0),
-              IntrinsicWidth(
-                child: InkWellWrapper(
-                  onTap: () {},
-                  borderRadius: BorderRadius.circular(4.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Icon(Icons.shuffle),
-                        SizedBox(width: 16.0),
-                        Text('Shuffle Play'),
-                      ],
-                    ),
+              const Divider(height: 1),
+              InkWellWrapper(
+                onTap: () {},
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(Icons.shuffle),
+                      SizedBox(width: 16.0),
+                      Text('Shuffle Play'),
+                    ],
                   ),
                 ),
               ),
+              const Divider(height: 1),
               const SizedBox(height: 8.0),
               Column(
                 mainAxisSize: MainAxisSize.min,
