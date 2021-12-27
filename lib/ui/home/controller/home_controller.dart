@@ -23,13 +23,6 @@ class HomeController extends GetxController {
   final _songController = SongController();
   final _playlistController = PlaylistController();
 
-  @override
-  void onInit() async {
-    super.onInit();
-    await getLocationAndWeather();
-    await getSuggestSongs();
-  }
-
   String getWeatherType() {
     switch (weatherModel.value!.current.weather[0].main) {
       case 'Drizzle':
@@ -99,7 +92,8 @@ class HomeController extends GetxController {
 
   Future<String> getLocationName() async {
     Placemark placemark = Placemark();
-    await placemarkFromCoordinates(_pos.latitude, _pos.longitude).then((list) => placemark = list.first);
+    await placemarkFromCoordinates(_pos.latitude, _pos.longitude)
+        .then((list) => placemark = list.first);
 
     var _location = '';
     if (placemark.subAdministrativeArea!.isNotEmpty) {
@@ -138,7 +132,8 @@ class HomeController extends GetxController {
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions are denied forever, handle appropriately.
-      return Future.error('Location permissions are permanently denied, we cannot request permissions.');
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // When we reach here, permissions are granted and we can
