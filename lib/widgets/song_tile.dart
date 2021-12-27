@@ -128,15 +128,17 @@ class _SongTileState extends State<SongTile> {
                           size: 16,
                         ),
                       if (widget.isPlaying) const SizedBox(width: 4),
-                      Text(
-                        widget.songModel.data.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: theme.textTheme.headline6?.copyWith(
-                          fontSize: 16,
-                          color: widget.isPlaying
-                              ? theme.primaryColor
-                              : theme.textTheme.headline6?.color,
+                      Expanded(
+                        child: Text(
+                          widget.songModel.data.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: theme.textTheme.headline6?.copyWith(
+                            fontSize: 16,
+                            color: widget.isPlaying
+                                ? theme.primaryColor
+                                : theme.textTheme.headline6?.color,
+                          ),
                         ),
                       ),
                     ],
@@ -166,9 +168,8 @@ class _SongTileState extends State<SongTile> {
                 ),
               ),
             const SizedBox(width: 8),
-            Visibility(
-              visible: !widget.canMove,
-              child: IconButton(
+            if (!widget.canMove)
+              IconButton(
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
@@ -194,11 +195,7 @@ class _SongTileState extends State<SongTile> {
                   color: widget.isPlaying ? theme.primaryColor : theme.iconTheme.color,
                 ),
               ),
-            ),
-            Visibility(
-              visible: widget.canMove,
-              child: const Icon(Icons.drag_handle),
-            ),
+            if (widget.canChoose) const Icon(Icons.drag_handle),
           ],
         ),
       ),
