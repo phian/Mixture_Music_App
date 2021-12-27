@@ -128,15 +128,17 @@ class _SongTileState extends State<SongTile> {
                           size: 16,
                         ),
                       if (widget.isPlaying) const SizedBox(width: 4),
-                      Text(
-                        widget.songModel.data.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: theme.textTheme.headline6?.copyWith(
-                          fontSize: 16,
-                          color: widget.isPlaying
-                              ? theme.primaryColor
-                              : theme.textTheme.headline6?.color,
+                      Expanded(
+                        child: Text(
+                          widget.songModel.data.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: theme.textTheme.headline6?.copyWith(
+                            fontSize: 16,
+                            color: widget.isPlaying
+                                ? theme.primaryColor
+                                : theme.textTheme.headline6?.color,
+                          ),
                         ),
                       ),
                     ],
@@ -166,13 +168,13 @@ class _SongTileState extends State<SongTile> {
                 ),
               ),
             const SizedBox(width: 8),
-            Visibility(
-              visible: !widget.canMove,
-              child: IconButton(
+            if (!widget.canMove)
+              IconButton(
                 onPressed: () {
                   showModalBottomSheet(
                     context: context,
                     backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
                     builder: (context) {
                       return _OptionSheet(
                         song: widget.songModel,
@@ -194,11 +196,7 @@ class _SongTileState extends State<SongTile> {
                   color: widget.isPlaying ? theme.primaryColor : theme.iconTheme.color,
                 ),
               ),
-            ),
-            Visibility(
-              visible: widget.canMove,
-              child: const Icon(Icons.drag_handle),
-            ),
+            if (widget.canChoose) const Icon(Icons.drag_handle),
           ],
         ),
       ),
@@ -232,52 +230,56 @@ class _OptionSheet extends StatelessWidget {
         topLeft: Radius.circular(10),
         topRight: Radius.circular(10),
       ),
-      child: Container(
-        color: theme.cardColor,
-        child: Column(
-          children: [
-            const SizedBox(height: 16),
-            Text(
-              song.data.title,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7,
+        child: Card(
+          child: Column(
+            children: [
+              const SizedBox(height: 16),
+              Image.network(song.data.imgURL, height: 100),
+              const SizedBox(height: 16),
+              Text(
+                song.data.title,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              song.data.artist,
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-              style: theme.textTheme.caption!.copyWith(
-                fontSize: 16,
+              const SizedBox(height: 8),
+              Text(
+                song.data.artist,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+                style: theme.textTheme.caption!.copyWith(
+                  fontSize: 16,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: isFavorite()
-                  ? Icon(
-                      Icons.favorite_rounded,
-                      color: theme.primaryColor,
-                    )
-                  : const Icon(Icons.favorite_border),
-              title: isFavorite()
-                  ? const Text('Remove from Favorites')
-                  : const Text('Add to Favorites'),
-              onTap: () {
-                onFavoriteTap?.call();
-                Get.back();
-              },
-            ),
-            const Divider(height: 1),
-            ListTile(
-              leading: const Icon(Icons.playlist_add),
-              title: const Text('Add to Playlists'),
-              onTap: onAddToPlaylist,
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 16),
+              ListTile(
+                leading: isFavorite()
+                    ? Icon(
+                        Icons.favorite_rounded,
+                        color: theme.primaryColor,
+                      )
+                    : const Icon(Icons.favorite_border),
+                title: isFavorite()
+                    ? const Text('Remove from Favorites')
+                    : const Text('Add to Favorites'),
+                onTap: () {
+                  onFavoriteTap?.call();
+                  Get.back();
+                },
+              ),
+              const Divider(height: 1),
+              ListTile(
+                leading: const Icon(Icons.playlist_add),
+                title: const Text('Add to Playlists'),
+                onTap: onAddToPlaylist,
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );
