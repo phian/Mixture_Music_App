@@ -52,8 +52,4 @@ class UserDataController extends GetxController {
       currentPlaylistType.value = playlist;
     }
   }
-
-  void setCurrentPlaylist(List<SongModel> songs) {
-    currentPlaylist.value = List<SongModel>.from(songs);
-  }
 }

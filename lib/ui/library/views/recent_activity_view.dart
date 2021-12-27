@@ -34,36 +34,13 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                     ),
                     songModel: _userDataController.recents[index],
                     isPlaying: _musicController.playingSong.value != null
-                        ? _musicController.playingSong.value!.id ==
-                                _userDataController.recents[index].id
+                        ? _musicController.playingSong.value!.id == _userDataController.recents[index].id
                             ? true
                             : false
                         : false,
                     onTap: () async {
-                      _musicController.setSong(
-                        _userDataController.recents[index],
-                      );
-
-                      _userDataController.setCurrentPlaylistType('recent');
-                      if (audioHandler.items.isEmpty) {
-                        audioHandler.initAudioSource(_userDataController.recents.value, index: index);
-                      } else {
-                        if (_userDataController.currentPlaylistType.value != 'recent') {
-                          audioHandler.initAudioSource(_userDataController.recents.value, index: index);
-                        }
-                      }
-
-                      _updateCurrentPlaylist();
-                      if (audioHandler.player.currentIndex == index) {
-                        if (audioHandler.player.playing == false) {
-                          audioHandler.play();
-                        } else {
-                          audioHandler.pause();
-                        }
-                      } else {
-                        audioHandler.skipToQueueItem(index);
-                        audioHandler.play();
-                      }
+                      _initAudioSource(index: index);
+                      _updatePlayingItem(index);
                     },
                     isFavorite: _userDataController.favorites.contains(
                       _userDataController.recents[index],
@@ -90,10 +67,7 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                   const SizedBox(height: 16.0),
                   Text(
                     'Your recent activity is empty',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
@@ -101,14 +75,36 @@ class _RecentActivityViewState extends State<RecentActivityView> {
     );
   }
 
-  void _updateCurrentPlaylist() {
-    if (_userDataController.currentPlaylist.isEmpty) {
-      _userDataController.setCurrentPlaylist(_userDataController.recents);
-    } else {
-      if (_userDataController.currentPlaylistType.value != 'recent') {
-        _userDataController.currentPlaylist.clear();
-        _userDataController.setCurrentPlaylist(_userDataController.recents);
+  void _updatePlayingItem(int index) async {
+    if (_musicController.playingSong.value?.id != _userDataController.recents[index].id) {
+      audioHandler.skipToQueueItem(index);
+      audioHandler.play();
+
+      _musicController.setSong(
+        _userDataController.recents[index],
+      );
+      _userDataController.getAllUserRecents();
+
+      if (audioHandler.player.shuffleModeEnabled) {
+        _musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
+        _musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
       }
+    } else {
+      _checkPlayerState();
+    }
+  }
+
+  void _initAudioSource({int? index}) {
+    audioHandler.initAudioSource(_userDataController.recents, index: index);
+    _userDataController.currentPlaylistType.value = 'recent';
+    _userDataController.currentPlaylist.value = List.from(_userDataController.recents);
+  }
+
+  void _checkPlayerState() {
+    if (audioHandler.player.playing == false) {
+      audioHandler.play();
+    } else {
+      audioHandler.pause();
     }
   }
 }

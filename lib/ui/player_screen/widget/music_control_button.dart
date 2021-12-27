@@ -55,6 +55,7 @@ class _MusicControlButtonState extends State<MusicControlButton> {
                   }
                 } else {
                   widget.controller.isShuffle.value = false;
+                  widget.controller.shuffleList.value = [];
                 }
               },
             );
@@ -74,6 +75,10 @@ class _MusicControlButtonState extends State<MusicControlButton> {
               ),
               onPressed: () {
                 if (widget.controller.isShuffle.value) {
+                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
+                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
+                  }
+
                   if (widget.controller.currentShuffleIndex.value - 1 >= 0) {
                     audioHandler.skipToQueueItem(widget.controller.currentShuffleIndex.value - 1);
                     widget.controller.currentShuffleIndex.value = widget.controller.currentShuffleIndex.value - 1;
@@ -144,6 +149,10 @@ class _MusicControlButtonState extends State<MusicControlButton> {
               ),
               onPressed: () {
                 if (widget.controller.isShuffle.value) {
+                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
+                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
+                  }
+
                   if (widget.controller.currentShuffleIndex.value + 1 < widget.controller.shuffleList.length) {
                     audioHandler.skipToQueueItem(widget.controller.currentShuffleIndex.value + 1);
                     widget.controller.currentShuffleIndex.value = widget.controller.currentShuffleIndex.value + 1;

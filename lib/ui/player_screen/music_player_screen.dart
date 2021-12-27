@@ -33,7 +33,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Obx(
-          () => Stack(
+      () => Stack(
         children: [
           Scaffold(
             appBar: AppBar(

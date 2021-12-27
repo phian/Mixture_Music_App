@@ -128,15 +128,15 @@ class _SongTileState extends State<SongTile> {
                           size: 16,
                         ),
                       if (widget.isPlaying) const SizedBox(width: 4),
-                      Text(
-                        widget.songModel.data.title,
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        style: theme.textTheme.headline6?.copyWith(
-                          fontSize: 16,
-                          color: widget.isPlaying
-                              ? theme.primaryColor
-                              : theme.textTheme.headline6?.color,
+                      Expanded(
+                        child: Text(
+                          widget.songModel.data.title,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                          style: theme.textTheme.headline6?.copyWith(
+                            fontSize: 16,
+                            color: widget.isPlaying ? theme.primaryColor : theme.textTheme.headline6?.color,
+                          ),
                         ),
                       ),
                     ],

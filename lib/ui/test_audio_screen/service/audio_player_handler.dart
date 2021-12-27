@@ -67,7 +67,7 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     });
   }
 
-  void initAudioSource(List<SongModel> songs, {int? index}) {
+  void initAudioSource(List<SongModel> songs, {int? index}) async {
     if (songs.isNotEmpty) {
       _items = List.from(songs.convertToMediaItemList());
       mediaItem.add(index != null ? _items[_player.shuffleModeEnabled ? _player.shuffleIndices![index] : index] : _items[0]);
@@ -83,7 +83,6 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
 
   @override
   Future<void> skipToQueueItem(int index) async {
-    print('items length: ${_items.length}');
     if (index < 0 || index >= _items.length) return;
     // This jumps to the beginning of the queue item at [index].
     mediaItem.add(_items[_player.shuffleModeEnabled ? _player.shuffleIndices![index] : index]);
