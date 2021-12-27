@@ -92,7 +92,7 @@ class _LibraryListViewState extends State<_LibraryListView> {
                 ),
               )
             : ListView.separated(
-          shrinkWrap: true,
+                shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.userDataController.favorites.length,
                 itemBuilder: (context, index) {
@@ -108,9 +108,9 @@ class _LibraryListViewState extends State<_LibraryListView> {
                             : false
                         : false,
                     onTap: () async {
-                      widget.musicController.setSong(
-                        widget.userDataController.favorites[index],
-                      );
+                      widget.userDataController.setCurrentPlaylistType('favourite');
+                      _initAudioSource(index: index);
+                      _updatePlayingItem(index);
                     },
                     isFavorite: widget.userDataController.favorites.contains(
                       widget.userDataController.favorites[index],
@@ -124,6 +124,39 @@ class _LibraryListViewState extends State<_LibraryListView> {
               ),
       ),
     );
+  }
+
+  void _updatePlayingItem(int index) async {
+    if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
+      audioHandler.skipToQueueItem(index);
+      audioHandler.play();
+
+      widget.musicController.setSong(
+        widget.userDataController.favorites[index],
+      );
+      widget.userDataController.getAllUserRecents();
+
+      if (audioHandler.player.shuffleModeEnabled) {
+        widget.musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
+        widget.musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
+      }
+    } else {
+      _checkPlayerState();
+    }
+  }
+
+  void _initAudioSource({int? index}) {
+    audioHandler.initAudioSource(widget.userDataController.favorites, index: index);
+    widget.userDataController.currentPlaylistType.value = 'favourite';
+    widget.userDataController.currentPlaylist.value = List.from(widget.userDataController.favorites);
+  }
+
+  void _checkPlayerState() {
+    if (audioHandler.player.playing == false) {
+      audioHandler.play();
+    } else {
+      audioHandler.pause();
+    }
   }
 }
 
@@ -181,30 +214,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                           child: LibraryGridViewCard(
                             songModel: widget.userDataController.favorites[index],
                             onTap: () {
-                              widget.musicController.setSong(
-                                widget.userDataController.favorites[index],
-                              );
-
-                              _updateCurrentPlaylist();
-                              widget.userDataController.setCurrentPlaylistType('favourite');
-                              if (audioHandler.items.isEmpty) {
-                                audioHandler.initAudioSource(widget.userDataController.favorites.value, index: index);
-                              } else {
-                                if (widget.userDataController.currentPlaylistType.value != 'favourite') {
-                                  audioHandler.initAudioSource(widget.userDataController.favorites.value, index: index);
-                                }
-                              }
-
-                              if (audioHandler.player.currentIndex == index) {
-                                if (audioHandler.player.playing == false) {
-                                  audioHandler.play();
-                                } else {
-                                  audioHandler.pause();
-                                }
-                              } else {
-                                audioHandler.skipToQueueItem(index);
-                                audioHandler.play();
-                              }
+                              _initAudioSource(index: index);
+                              _updatePlayingItem(index);
                             },
                             imageRadius: BorderRadius.circular(16.0),
                             isPlaying: widget.musicController.playingSong.value != null
@@ -213,24 +224,46 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                                     : false
                                 : false,
                           ),
-                            ),
+                        ),
                       ),
                     ],
                   ),
                 ],
-        ),
+              ),
       ),
     );
   }
 
-  void _updateCurrentPlaylist() {
-    if (widget.userDataController.currentPlaylist.isEmpty) {
-      widget.userDataController.setCurrentPlaylist(widget.userDataController.favorites);
-    } else {
-      if (widget.userDataController.currentPlaylistType.value != 'favourite') {
-        widget.userDataController.currentPlaylist.clear();
-        widget.userDataController.setCurrentPlaylist(widget.userDataController.favorites);
+  void _updatePlayingItem(int index) async {
+    if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
+      audioHandler.skipToQueueItem(index);
+      audioHandler.play();
+
+      widget.musicController.setSong(
+        widget.userDataController.favorites[index],
+      );
+      widget.userDataController.getAllUserRecents();
+
+      if (audioHandler.player.shuffleModeEnabled) {
+        widget.musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
+        widget.musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
       }
+    } else {
+      _checkPlayerState();
+    }
+  }
+
+  void _initAudioSource({int? index}) {
+    audioHandler.initAudioSource(widget.userDataController.favorites, index: index);
+    widget.userDataController.currentPlaylistType.value = 'favourite';
+    widget.userDataController.currentPlaylist.value = List.from(widget.userDataController.favorites);
+  }
+
+  void _checkPlayerState() {
+    if (audioHandler.player.playing == false) {
+      audioHandler.play();
+    } else {
+      audioHandler.pause();
     }
   }
 }

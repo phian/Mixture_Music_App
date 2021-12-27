@@ -1,5 +1,6 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
@@ -134,6 +135,10 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           return IconButton(
                             onPressed: () {
                               if (musicController.isShuffle.value) {
+                                if (listEquals(musicController.shuffleList, audioHandler.player.shuffleIndices) == false) {
+                                  musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
+                                }
+
                                 if (musicController.currentShuffleIndex.value - 1 >= 0) {
                                   audioHandler.skipToQueueItem(musicController.currentShuffleIndex.value - 1);
                                   musicController.currentShuffleIndex.value = musicController.currentShuffleIndex.value - 1;
@@ -194,6 +199,10 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           return IconButton(
                             onPressed: () {
                               if (musicController.isShuffle.value) {
+                                if (listEquals(musicController.shuffleList, audioHandler.player.shuffleIndices) == false) {
+                                  musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
+                                }
+
                                 if (musicController.currentShuffleIndex.value + 1 < musicController.shuffleList.length) {
                                   audioHandler.skipToQueueItem(musicController.currentShuffleIndex.value + 1);
                                   musicController.currentShuffleIndex.value = musicController.currentShuffleIndex.value + 1;

@@ -1,4 +1,3 @@
-import 'package:audio_service/audio_service.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -35,7 +34,8 @@ class _HomeState extends State<Home> {
           builder: (
             BuildContext context,
             Widget child,
-            IndicatorController indiController,) {
+            IndicatorController indiController,
+          ) {
             return MRefreshIndicator(
               context: context,
               child: child,
@@ -47,6 +47,7 @@ class _HomeState extends State<Home> {
             setState(() {
               _isRefreshed = true;
             });
+            _initAudioSource();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
@@ -86,6 +87,7 @@ class _HomeState extends State<Home> {
                       setState(() {
                         _isRefreshed = true;
                       });
+                      _initAudioSource();
                     },
                   );
                 }),
@@ -103,7 +105,7 @@ class _HomeState extends State<Home> {
                     itemCount: controller.suggestedSongs.length,
                     itemBuilder: (context, index) {
                       return Obx(
-                            () => SongTile(
+                        () => SongTile(
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 8,
                             horizontal: 16,
@@ -115,9 +117,7 @@ class _HomeState extends State<Home> {
                                   : false
                               : false,
                           onTap: () async {
-                            _userDataController.setCurrentPlaylistType('suggest');
-                            _updateCurrentPlaylist();
-                            _initAudioSource(index);
+                            _initAudioSource(index: index);
                             _updatePlayingItem(index);
                           },
                           isFavorite: _userDataController.favorites.contains(
@@ -141,7 +141,7 @@ class _HomeState extends State<Home> {
   }
 
   void _updatePlayingItem(int index) async {
-    if (_isRefreshed) {
+    if (musicController.playingSong.value?.id != controller.suggestedSongs[index].id) {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
@@ -150,48 +150,19 @@ class _HomeState extends State<Home> {
       );
       _userDataController.getAllUserRecents();
 
-      setState(() {
-        _isRefreshed = false;
-      });
-    } else {
-      if (musicController.playingSong.value?.id != controller.suggestedSongs[index].id) {
-        if (musicController.isShuffle.value) {
-          await audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
-          musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-        }
-
-        audioHandler.skipToQueueItem(index);
-        audioHandler.play();
-
-        musicController.setSong(
-          controller.suggestedSongs[index],
-        );
-        _userDataController.getAllUserRecents();
-      } else {
-        _checkPlayerState();
+      if (audioHandler.player.shuffleModeEnabled) {
+        musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
+        musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
       }
+    } else {
+      _checkPlayerState();
     }
   }
 
-  void _initAudioSource(int index) {
-    if (audioHandler.items.isEmpty) {
-      audioHandler.initAudioSource(controller.suggestedSongs, index: index);
-    } else {
-      if (_userDataController.currentPlaylistType.value != 'suggest' || _isRefreshed) {
-        audioHandler.initAudioSource(controller.suggestedSongs, index: index);
-      }
-    }
-  }
-
-  void _updateCurrentPlaylist() {
-    if (_userDataController.currentPlaylist.isEmpty) {
-      _userDataController.setCurrentPlaylist(controller.suggestedSongs);
-    } else {
-      if (_userDataController.currentPlaylistType.value != 'suggest' || _isRefreshed) {
-        // _userDataController.currentPlaylist.clear();
-        _userDataController.setCurrentPlaylist(controller.suggestedSongs);
-      }
-    }
+  void _initAudioSource({int? index}) {
+    audioHandler.initAudioSource(controller.suggestedSongs, index: index);
+    _userDataController.currentPlaylistType.value = 'suggest';
+    _userDataController.currentPlaylist.value = List.from(controller.suggestedSongs);
   }
 
   void _checkPlayerState() {

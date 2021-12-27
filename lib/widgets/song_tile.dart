@@ -135,9 +135,7 @@ class _SongTileState extends State<SongTile> {
                           maxLines: 1,
                           style: theme.textTheme.headline6?.copyWith(
                             fontSize: 16,
-                            color: widget.isPlaying
-                                ? theme.primaryColor
-                                : theme.textTheme.headline6?.color,
+                            color: widget.isPlaying ? theme.primaryColor : theme.textTheme.headline6?.color,
                           ),
                         ),
                       ),
