@@ -47,7 +47,6 @@ class _HomeState extends State<Home> {
             setState(() {
               _isRefreshed = true;
             });
-            _initAudioSource();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
@@ -87,7 +86,6 @@ class _HomeState extends State<Home> {
                       setState(() {
                         _isRefreshed = true;
                       });
-                      _initAudioSource();
                     },
                   );
                 }),
@@ -112,13 +110,20 @@ class _HomeState extends State<Home> {
                           ),
                           songModel: controller.suggestedSongs[index],
                           isPlaying: musicController.playingSong.value != null
-                              ? musicController.playingSong.value!.id == controller.suggestedSongs[index].id
+                              ? musicController.playingSong.value!.id ==
+                                      controller.suggestedSongs[index].id
                                   ? true
                                   : false
                               : false,
                           onTap: () async {
                             print('current index: ${audioHandler.player.currentIndex}');
                             _initAudioSource(index: index);
+
+                            if (musicController.indexList.isEmpty) {
+                              for (int i = 0; i < _userDataController.currentPlaylist.length; i++) {
+                                musicController.indexList.add(i);
+                              }
+                            }
                             _updatePlayingItem(index);
                           },
                           isFavorite: _userDataController.favorites.contains(
@@ -146,13 +151,14 @@ class _HomeState extends State<Home> {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
+      musicController.indexIndexList.value = index;
+
       musicController.setSong(
         controller.suggestedSongs[index],
       );
       _userDataController.getAllUserRecents();
 
       musicController.playingSong.value = _userDataController.currentPlaylist[index];
-
     } else {
       _checkPlayerState();
     }

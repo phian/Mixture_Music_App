@@ -57,36 +57,6 @@ class _NavScreenState extends State<NavScreen> {
               onTap: () {
                 Get.toNamed(AppRoutes.musicPlayerScreen);
               },
-              onSkipPrevious: () {
-                if (musicController.isShuffle.value) {
-                  musicController.playingSong.value =
-                      userDataController.currentPlaylist[musicController.indexList[musicController.indexIndexList.value]];
-                } else {
-                  if (audioHandler.player.currentIndex != null) {
-                    if (audioHandler.player.currentIndex! - 1 >= 0) {
-                      musicController.playingSong.value = userDataController.currentPlaylist[audioHandler.player.currentIndex! - 1];
-                    } else {
-                      musicController.playingSong.value = userDataController.currentPlaylist[userDataController.currentPlaylist.length - 1];
-                    }
-                  }
-                }
-              },
-              onSkipNext: () {
-                if (musicController.isShuffle.value) {
-                  musicController.playingSong.value =
-                      userDataController.currentPlaylist[musicController.indexList[musicController.indexIndexList.value]];
-                } else {
-                  if (audioHandler.player.currentIndex != null) {
-                    if (audioHandler.player.currentIndex! + 1 < userDataController.currentPlaylist.length) {
-                      musicController.playingSong.value = userDataController.currentPlaylist[audioHandler.player.currentIndex! + 1];
-                      audioHandler.skipToQueueItem(audioHandler.player.currentIndex! + 1);
-                    } else {
-                      musicController.playingSong.value = userDataController.currentPlaylist[0];
-                      audioHandler.skipToQueueItem(0);
-                    }
-                  }
-                }
-              },
             ),
           ),
         ],

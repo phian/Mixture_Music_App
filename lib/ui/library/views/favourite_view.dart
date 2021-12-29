@@ -41,9 +41,12 @@ class _FavouriteViewState extends State<FavouriteView> {
           ),
         ),
         AnimatedCrossFade(
-          firstChild: _LibraryListView(musicController: _musicController, userDataController: _userDataController),
-          secondChild: _LibraryGridView(musicController: _musicController, userDataController: _userDataController),
-          crossFadeState: _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          firstChild: _LibraryListView(
+              musicController: _musicController, userDataController: _userDataController),
+          secondChild: _LibraryGridView(
+              musicController: _musicController, userDataController: _userDataController),
+          crossFadeState:
+              _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 300),
         ),
       ],
@@ -86,7 +89,10 @@ class _LibraryListViewState extends State<_LibraryListView> {
                     const SizedBox(height: 16.0),
                     Text(
                       'You have no favorite songs',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -96,24 +102,34 @@ class _LibraryListViewState extends State<_LibraryListView> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: widget.userDataController.favorites.length,
                 itemBuilder: (context, index) {
-                  return SongTile(
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 8,
-                      horizontal: 32,
-                    ),
-                    songModel: widget.userDataController.favorites[index],
-                    isPlaying: widget.musicController.playingSong.value != null
-                        ? widget.musicController.playingSong.value!.id == widget.userDataController.favorites[index].id
-                            ? true
-                            : false
-                        : false,
-                    onTap: () async {
-                      widget.userDataController.setCurrentPlaylistType('favourite');
-                      _initAudioSource(index: index);
-                      _updatePlayingItem(index);
-                    },
-                    isFavorite: widget.userDataController.favorites.contains(
-                      widget.userDataController.favorites[index],
+                  return Obx(
+                    () => SongTile(
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 8,
+                        horizontal: 32,
+                      ),
+                      songModel: widget.userDataController.favorites[index],
+                      isPlaying: widget.musicController.playingSong.value != null
+                          ? widget.musicController.playingSong.value!.id ==
+                                  widget.userDataController.favorites[index].id
+                              ? true
+                              : false
+                          : false,
+                      onTap: () async {
+                        widget.userDataController.setCurrentPlaylistType('favourite');
+                        if (widget.musicController.indexList.isEmpty) {
+                          for (int i = 0;
+                              i < widget.userDataController.currentPlaylist.length;
+                              i++) {
+                            widget.musicController.indexList.add(i);
+                          }
+                        }
+                        _initAudioSource(index: index);
+                        _updatePlayingItem(index);
+                      },
+                      isFavorite: widget.userDataController.favorites.contains(
+                        widget.userDataController.favorites[index],
+                      ),
                     ),
                   );
                 },
@@ -127,16 +143,18 @@ class _LibraryListViewState extends State<_LibraryListView> {
   }
 
   void _updatePlayingItem(int index) async {
-    if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
+    if (widget.musicController.playingSong.value?.id !=
+        widget.userDataController.favorites[index].id) {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
+
+      widget.musicController.indexIndexList.value = index;
 
       widget.musicController.setSong(
         widget.userDataController.favorites[index],
       );
-      widget.userDataController.getAllUserRecents();
 
-      widget.musicController.playingSong.value = widget.userDataController.favorites[index];
+      widget.userDataController.getAllUserRecents();
     } else {
       _checkPlayerState();
     }
@@ -145,7 +163,8 @@ class _LibraryListViewState extends State<_LibraryListView> {
   void _initAudioSource({int? index}) {
     audioHandler.initAudioSource(widget.userDataController.favorites, index: index);
     widget.userDataController.currentPlaylistType.value = 'favourite';
-    widget.userDataController.currentPlaylist.value = List.from(widget.userDataController.favorites);
+    widget.userDataController.currentPlaylist.value =
+        List.from(widget.userDataController.favorites);
   }
 
   void _checkPlayerState() {
@@ -192,7 +211,10 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                     const SizedBox(height: 16.0),
                     Text(
                       'You have no favorite songs',
-                      style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                      style: Theme.of(context)
+                          .textTheme
+                          .headline5
+                          ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -216,7 +238,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                             },
                             imageRadius: BorderRadius.circular(16.0),
                             isPlaying: widget.musicController.playingSong.value != null
-                                ? widget.musicController.playingSong.value!.id == widget.userDataController.favorites[index].id
+                                ? widget.musicController.playingSong.value!.id ==
+                                        widget.userDataController.favorites[index].id
                                     ? true
                                     : false
                                 : false,
@@ -232,7 +255,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
   }
 
   void _updatePlayingItem(int index) async {
-    if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
+    if (widget.musicController.playingSong.value?.id !=
+        widget.userDataController.favorites[index].id) {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
@@ -240,7 +264,6 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
         widget.userDataController.favorites[index],
       );
       widget.userDataController.getAllUserRecents();
-
 
       widget.musicController.playingSong.value = widget.userDataController.favorites[index];
     } else {
@@ -251,7 +274,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
   void _initAudioSource({int? index}) {
     audioHandler.initAudioSource(widget.userDataController.favorites, index: index);
     widget.userDataController.currentPlaylistType.value = 'favourite';
-    widget.userDataController.currentPlaylist.value = List.from(widget.userDataController.favorites);
+    widget.userDataController.currentPlaylist.value =
+        List.from(widget.userDataController.favorites);
   }
 
   void _checkPlayerState() {

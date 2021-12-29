@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/model/position_data.dart';
@@ -20,14 +21,10 @@ class MiniMusicPlayer extends StatefulWidget {
     Key? key,
     required this.song,
     required this.onTap,
-    required this.onSkipNext,
-    required this.onSkipPrevious,
   }) : super(key: key);
 
   final SongModel? song;
   final Function() onTap;
-  final void Function()? onSkipPrevious;
-  final void Function()? onSkipNext;
 
   @override
   State<MiniMusicPlayer> createState() => _MiniMusicPlayerState();
@@ -35,6 +32,7 @@ class MiniMusicPlayer extends StatefulWidget {
 
 class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
   final musicController = Get.find<MusicPlayerController>();
+  final _userDataController = Get.find<UserDataController>();
 
   @override
   Widget build(BuildContext context) {
@@ -137,21 +135,19 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
 
                           return IconButton(
                             onPressed: () {
-                              if (musicController.isShuffle.value) {
-                                if (musicController.indexIndexList > 0) {
-                                  musicController.indexIndexList--;
-                                  audioHandler.skipToPrevious();
-                                } else {
-                                  musicController.indexIndexList.value =
-                                      musicController.indexList.length - 1;
-                                  audioHandler.skipToQueueItem(musicController.indexIndexList.value);
-                                }
-                              } else {
-                                audioHandler.skipToPrevious();
+                              if (musicController.indexIndexList.value > 0) {
                                 musicController.indexIndexList--;
-                              }
+                                audioHandler.skipToPrevious();
+                              } else {
+                                musicController.indexIndexList.value =
+                                    musicController.indexList.length - 1;
 
-                              widget.onSkipPrevious?.call();
+                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
+                              }
+                              musicController.playingSong.value = _userDataController
+                                      .currentPlaylist[
+                                  musicController.indexList[musicController.indexIndexList.value]];
+
                               setState(() {});
                             },
                             icon: Icon(
@@ -201,20 +197,17 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final queueState = snapshot.data ?? QueueState.empty;
                           return IconButton(
                             onPressed: () {
-                              if (musicController.isShuffle.value) {
-                                if (musicController.indexIndexList + 1 <
-                                    musicController.indexList.length) {
-                                  musicController.indexIndexList++;
-                                  audioHandler.skipToNext();
-                                } else {
-                                  musicController.indexIndexList.value = 0;
-                                  audioHandler.skipToQueueItem(0);
-                                }
-                              } else {
-                                audioHandler.skipToNext();
+                              if (musicController.indexIndexList.value + 1 <
+                                  musicController.indexList.length) {
                                 musicController.indexIndexList++;
+                                audioHandler.skipToNext();
+                              } else {
+                                musicController.indexIndexList.value = 0;
+                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
                               }
-                              widget.onSkipNext?.call();
+                              musicController.playingSong.value = _userDataController
+                                      .currentPlaylist[
+                                  musicController.indexList[musicController.indexIndexList.value]];
                               setState(() {});
                             },
                             icon: Icon(

@@ -235,6 +235,11 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                             : false,
                         onTap: () {
                           _initAudioSource(index: index);
+                          if (_musicPlayerController.indexList.isEmpty) {
+                            for (int i = 0; i < _userDataController.currentPlaylist.length; i++) {
+                              _musicPlayerController.indexList.add(i);
+                            }
+                          }
                           _updatePlayingItem(index);
                         },
                         isFavorite: _userDataController.favorites.contains(_playlist.songs[index]),

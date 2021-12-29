@@ -32,14 +32,13 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   @override
   void initState() {
     super.initState();
+    //_listenToPositionStream();
   }
 
   void _listenToPositionStream() {
     audioHandler.player.positionStream.listen((position) {
-      if (audioHandler.player.duration != null && position == audioHandler.player.duration!) {
-        _onSongCompleted();
-        print('aaa');
-      }
+      _onSongCompleted(position);
+      //print('aaa');
     });
   }
 
@@ -49,7 +48,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _listenToPositionStream();
+    // _listenToPositionStream();
     final theme = Theme.of(context);
     return Obx(
       () => Stack(
@@ -182,6 +181,9 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           position: positionData.position,
                           onChangeEnd: (newPosition) {
                             audioHandler.seek(newPosition);
+                            if (newPosition == audioHandler.player.duration) {
+                              _onSongCompleted(newPosition);
+                            }
                           },
                         );
                       },
@@ -202,54 +204,57 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     );
   }
 
-  void _onSongCompleted() {
-    if (controller.isShuffle.value) {
-      switch (audioHandler.player.loopMode) {
-        case LoopMode.all:
-        case LoopMode.off:
-          if (controller.indexIndexList.value + 1 < controller.indexList.length) {
-            controller.indexIndexList++;
-            audioHandler.skipToNext();
-          } else {
-            controller.indexIndexList.value = 0;
-            audioHandler.skipToQueueItem(controller.indexIndexList.value);
-          }
-          controller.playingSong.value = _userDataController
-              .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
-          print(controller.indexIndexList);
-          setState(() {});
-          break;
-
-        case LoopMode.one:
-          break;
-      }
-    } else {
-      switch (audioHandler.player.loopMode) {
-        case LoopMode.off:
-        case LoopMode.all:
-          if (controller.indexIndexList + 1 < _userDataController.currentPlaylist.length) {
-            controller.indexIndexList++;
-
-            print('index 1: ${controller.indexIndexList}');
-            audioHandler.skipToNext();
-            controller.playingSong.value =
-                _userDataController.currentPlaylist[controller.indexIndexList.value];
-            setState(() {});
-          } else {
-            controller.indexIndexList.value = 0;
-            audioHandler.skipToQueueItem(0);
-            controller.playingSong.value = _userDataController.currentPlaylist[0];
-            setState(() {});
-            if (audioHandler.player.loopMode == LoopMode.all) {
-              audioHandler.play();
+  void _onSongCompleted(Duration position) {
+    if (position >= audioHandler.player.duration!) {
+      if (controller.isShuffle.value) {
+        switch (audioHandler.player.loopMode) {
+          case LoopMode.all:
+          case LoopMode.off:
+            if (controller.indexIndexList.value + 1 < controller.indexList.length) {
+              controller.indexIndexList++;
+              audioHandler.skipToNext();
             } else {
-              audioHandler.stop();
+              controller.indexIndexList.value = 0;
+              audioHandler.skipToQueueItem(controller.indexIndexList.value);
             }
-          }
+            controller.playingSong.value = _userDataController
+                .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
 
-          break;
-        case LoopMode.one:
-          break;
+            print(controller.indexIndexList);
+            setState(() {});
+            break;
+
+          case LoopMode.one:
+            break;
+        }
+      } else {
+        switch (audioHandler.player.loopMode) {
+          case LoopMode.off:
+          case LoopMode.all:
+            if (controller.indexIndexList + 1 < _userDataController.currentPlaylist.length) {
+              controller.indexIndexList++;
+
+              print('index: ${controller.indexIndexList}');
+              audioHandler.skipToNext();
+              controller.playingSong.value =
+                  _userDataController.currentPlaylist[controller.indexIndexList.value];
+              setState(() {});
+            } else {
+              controller.indexIndexList.value = 0;
+              audioHandler.skipToQueueItem(0);
+              controller.playingSong.value = _userDataController.currentPlaylist[0];
+              setState(() {});
+              if (audioHandler.player.loopMode == LoopMode.all) {
+                audioHandler.play();
+              } else {
+                audioHandler.stop();
+              }
+            }
+
+            break;
+          case LoopMode.one:
+            break;
+        }
       }
     }
   }
