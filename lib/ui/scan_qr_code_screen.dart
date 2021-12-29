@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:mixture_music_app/constants/app_colors.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -113,13 +114,17 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen> {
                       ),
                       Expanded(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _controller?.resumeCamera();
+                          },
                           icon: const Icon(Icons.play_arrow, size: 30.0, color: AppColors.white),
                         ),
                       ),
                       Expanded(
                         child: IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            _controller?.pauseCamera();
+                          },
                           icon: const Icon(Icons.pause, size: 30.0, color: AppColors.white),
                         ),
                       ),
@@ -143,6 +148,10 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen> {
       setState(() {
         _result = scanData;
       });
+      if (_result != null) {
+        Fluttertoast.showToast(msg: 'Playlist ${_result!.code} received', fontSize: 18.0, backgroundColor: Theme.of(context).primaryColor);
+        Get.back();
+      }
     });
   }
 
