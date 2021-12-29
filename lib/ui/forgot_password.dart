@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -39,7 +41,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             child: RoundedInkWellWrapper(
               onTap: () => Get.back(),
               child: Container(
-                child: const Icon(Icons.arrow_back_ios, color: AppColors.black),
+                child: Icon(Platform.isAndroid ? Icons.arrow_back : Icons.arrow_back_ios, color: AppColors.black),
                 padding: const EdgeInsets.only(left: 8.0),
                 alignment: Alignment.center,
               ),
@@ -58,8 +60,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   Text(
                     'Forgot Password?',
                     style: Theme.of(context).textTheme.headline4!.copyWith(
-                          fontSize: 30,
-                        ),
+                      fontSize: 30,
+                    ),
                   ),
                   const SizedBox(height: 32.0),
                   Text(
