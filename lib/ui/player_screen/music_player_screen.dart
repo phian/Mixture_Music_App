@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -31,15 +32,13 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   @override
   void initState() {
     super.initState();
-    _listenToPositionStream();
   }
 
   void _listenToPositionStream() {
     audioHandler.player.positionStream.listen((position) {
-      if (audioHandler.player.duration != null && audioHandler.player.duration != Duration.zero) {
-        if (position == audioHandler.player.duration!) {
-          _onSongCompleted();
-        }
+      if (audioHandler.player.duration != null && position == audioHandler.player.duration!) {
+        _onSongCompleted();
+        print('aaa');
       }
     });
   }
@@ -50,61 +49,72 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _listenToPositionStream();
     final theme = Theme.of(context);
     return Obx(
       () => Stack(
         children: [
-              Scaffold(
-                appBar: AppBar(
-                  title: Text(
-                    'Now playing',
-                    style: theme.textTheme.headline6,
-                  ),
-                  centerTitle: true,
-                  leading: CupertinoButton(
-                    onPressed: Get.back,
-                    child: Icon(
-                      Icons.keyboard_arrow_down,
-                      color: Theme.of(context).colorScheme.onBackground,
-                    ),
-                  ),
-                  actions: [
-                    CupertinoButton(
-                      onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return AddToPlaylistSheet(
-                              song: controller.playingSong.value!,
-                            );
-                          },
+          Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'Now playing',
+                style: theme.textTheme.headline6,
+              ),
+              centerTitle: true,
+              leading: CupertinoButton(
+                onPressed: Get.back,
+                child: Icon(
+                  Icons.keyboard_arrow_down,
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+              ),
+              actions: [
+                CupertinoButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) {
+                        return AddToPlaylistSheet(
+                          song: controller.playingSong.value!,
                         );
                       },
-                      child: Icon(
-                        Icons.playlist_add_rounded,
-                        color: Theme.of(context).colorScheme.onBackground,
-                      ),
-                    ),
-                  ],
-                  backgroundColor: Colors.transparent,
-                  elevation: 0,
+                    );
+                  },
+                  child: Icon(
+                    Icons.playlist_add_rounded,
+                    color: Theme.of(context).colorScheme.onBackground,
+                  ),
                 ),
-                body: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Hero(
-                            tag: 'Artwork',
-                            child: controller.playingSong.value != null
-                                ? Obx(
-                                  () => Image.network(
-                                controller.playingSong.value!.data.imgURL,
+              ],
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+            ),
+            body: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Hero(
+                        tag: 'Artwork',
+                        child: controller.playingSong.value != null
+                            ? Obx(
+                                () => Image.network(
+                                  controller.playingSong.value!.data.imgURL,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder: (_, child, chunkEvent) {
+                                    if (chunkEvent == null) return child;
+
+                                    return const LoadingContainer(width: 45.0, height: 45.0);
+                                  },
+                                ),
+                              )
+                            : Image.network(
+                                defaultImgURL,
                                 fit: BoxFit.cover,
                                 loadingBuilder: (_, child, chunkEvent) {
                                   if (chunkEvent == null) return child;
@@ -112,70 +122,62 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                                   return const LoadingContainer(width: 45.0, height: 45.0);
                                 },
                               ),
-                            )
-                                : Image.network(
-                              defaultImgURL,
-                              fit: BoxFit.cover,
-                              loadingBuilder: (_, child, chunkEvent) {
-                                if (chunkEvent == null) return child;
-
-                                return const LoadingContainer(width: 45.0, height: 45.0);
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Obx(
-                                    () => MarqueeText(
-                                  controller.playingSong.value?.data.title ?? "Song's name",
-                                  style: Theme.of(context).textTheme.headline6!.copyWith(
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Obx(
+                            () => MarqueeText(
+                              controller.playingSong.value?.data.title ?? "Song's name",
+                              style: Theme.of(context).textTheme.headline6!.copyWith(
                                     fontSize: 26,
                                   ),
-                                  horizontalPadding: 10,
-                                ),
-                              ),
+                              horizontalPadding: 10,
                             ),
-                            CupertinoButton(
-                              onPressed: () async {
-                                if (isFavorite()) {
-                                  _userDataController.favorites.remove(
-                                    controller.playingSong.value!,
-                                  );
-                                  await controller.removeSongFromFav();
-                                } else {
-                                  _userDataController.favorites.add(
-                                    controller.playingSong.value!,
-                                  );
-                                  await controller.addSongToFav();
-                                }
-                                await _userDataController.getAllUserFavSongs();
-                              },
-                              child: Icon(
-                                isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                                color: isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Obx(
-                              () => MarqueeText(
-                            controller.playingSong.value?.data.artist ?? "Artist's name",
-                            style: theme.textTheme.caption!.copyWith(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            horizontalPadding: 10,
                           ),
                         ),
-                        const SizedBox(height: 16),
-                        StreamBuilder<PositionData>(
-                          stream: _positionDataStream,
-                          builder: (context, snapshot) {
-                            final positionData = snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
-                            return SeekBar(
+                        CupertinoButton(
+                          onPressed: () async {
+                            if (isFavorite()) {
+                              _userDataController.favorites.remove(
+                                controller.playingSong.value!,
+                              );
+                              await controller.removeSongFromFav();
+                            } else {
+                              _userDataController.favorites.add(
+                                controller.playingSong.value!,
+                              );
+                              await controller.addSongToFav();
+                            }
+                            await _userDataController.getAllUserFavSongs();
+                          },
+                          child: Icon(
+                            isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                            color:
+                                isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Obx(
+                      () => MarqueeText(
+                        controller.playingSong.value?.data.artist ?? "Artist's name",
+                        style: theme.textTheme.caption!.copyWith(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        horizontalPadding: 10,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    StreamBuilder<PositionData>(
+                      stream: _positionDataStream,
+                      builder: (context, snapshot) {
+                        final positionData = snapshot.data ??
+                            PositionData(Duration.zero, Duration.zero, Duration.zero);
+                        return SeekBar(
                           duration: positionData.duration,
                           position: positionData.position,
                           onChangeEnd: (newPosition) {
@@ -205,26 +207,19 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
       switch (audioHandler.player.loopMode) {
         case LoopMode.all:
         case LoopMode.off:
-          if (controller.currentIndex.value + 1 < _userDataController.currentPlaylist.length) {
-            controller.currentIndex.value += 1;
-            audioHandler.initAudioSource(_userDataController.currentPlaylist, index: controller.currentIndex.value);
-            audioHandler.play();
-            var index = controller.shuffleList[controller.currentIndex.value];
-            controller.playingSong.value = _userDataController.currentPlaylist[index];
-            return;
+          if (controller.indexIndexList.value + 1 < controller.indexList.length) {
+            controller.indexIndexList++;
+            audioHandler.skipToNext();
           } else {
-            controller.currentIndex.value = 0;
-            var index = controller.shuffleList[0];
-            controller.playingSong.value = _userDataController.currentPlaylist[index];
-            audioHandler.initAudioSource(_userDataController.currentPlaylist, index: 0);
-
-            if (audioHandler.player.loopMode == LoopMode.all) {
-              audioHandler.play();
-            } else {
-              audioHandler.stop();
-            }
-            return;
+            controller.indexIndexList.value = 0;
+            audioHandler.skipToQueueItem(controller.indexIndexList.value);
           }
+          controller.playingSong.value = _userDataController
+              .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
+          print(controller.indexIndexList);
+          setState(() {});
+          break;
+
         case LoopMode.one:
           break;
       }
@@ -232,25 +227,26 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
       switch (audioHandler.player.loopMode) {
         case LoopMode.off:
         case LoopMode.all:
-          if (audioHandler.player.currentIndex != null) {
-            if (audioHandler.player.currentIndex! + 1 < _userDataController.currentPlaylist.length) {
-              controller.currentIndex.value = audioHandler.player.currentIndex! + 1;
-              print('index 1: ${controller.currentIndex.value}');
-              audioHandler.initAudioSource(_userDataController.currentPlaylist, index: controller.currentIndex.value);
-              audioHandler.play();
-              controller.playingSong.value = _userDataController.currentPlaylist[controller.currentIndex.value];
-            } else {
-              controller.currentIndex.value = 0;
-              audioHandler.initAudioSource(_userDataController.currentPlaylist, index: 0);
-              controller.playingSong.value = _userDataController.currentPlaylist[0];
+          if (controller.indexIndexList + 1 < _userDataController.currentPlaylist.length) {
+            controller.indexIndexList++;
 
-              if (audioHandler.player.loopMode == LoopMode.all) {
-                audioHandler.play();
-              } else {
-                audioHandler.stop();
-              }
+            print('index 1: ${controller.indexIndexList}');
+            audioHandler.skipToNext();
+            controller.playingSong.value =
+                _userDataController.currentPlaylist[controller.indexIndexList.value];
+            setState(() {});
+          } else {
+            controller.indexIndexList.value = 0;
+            audioHandler.skipToQueueItem(0);
+            controller.playingSong.value = _userDataController.currentPlaylist[0];
+            setState(() {});
+            if (audioHandler.player.loopMode == LoopMode.all) {
+              audioHandler.play();
+            } else {
+              audioHandler.stop();
             }
           }
+
           break;
         case LoopMode.one:
           break;
@@ -258,10 +254,12 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     }
   }
 
-  Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+  Stream<PositionData> get _positionDataStream =>
+      rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         audioHandler.player.positionStream,
         audioHandler.player.bufferedPositionStream,
         audioHandler.player.durationStream,
-        (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero),
+        (position, bufferedPosition, duration) =>
+            PositionData(position, bufferedPosition, duration ?? Duration.zero),
       );
 }

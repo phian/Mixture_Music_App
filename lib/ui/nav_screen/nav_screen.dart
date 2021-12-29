@@ -60,7 +60,7 @@ class _NavScreenState extends State<NavScreen> {
               onSkipPrevious: () {
                 if (musicController.isShuffle.value) {
                   musicController.playingSong.value =
-                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentIndex.value]];
+                      userDataController.currentPlaylist[musicController.indexList[musicController.indexIndexList.value]];
                 } else {
                   if (audioHandler.player.currentIndex != null) {
                     if (audioHandler.player.currentIndex! - 1 >= 0) {
@@ -74,7 +74,7 @@ class _NavScreenState extends State<NavScreen> {
               onSkipNext: () {
                 if (musicController.isShuffle.value) {
                   musicController.playingSong.value =
-                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentIndex.value]];
+                      userDataController.currentPlaylist[musicController.indexList[musicController.indexIndexList.value]];
                 } else {
                   if (audioHandler.player.currentIndex != null) {
                     if (audioHandler.player.currentIndex! + 1 < userDataController.currentPlaylist.length) {

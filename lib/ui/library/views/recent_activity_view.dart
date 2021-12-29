@@ -85,8 +85,8 @@ class _RecentActivityViewState extends State<RecentActivityView> {
       );
       _userDataController.getAllUserRecents();
 
-      _musicController.currentIndex.value = index;
-      _musicController.playingSong.value = _userDataController.currentPlaylist[index];
+
+      _musicController.playingSong.value = _userDataController.recents[index];
     } else {
       _checkPlayerState();
     }

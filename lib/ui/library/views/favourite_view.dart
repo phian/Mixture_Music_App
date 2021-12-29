@@ -136,7 +136,6 @@ class _LibraryListViewState extends State<_LibraryListView> {
       );
       widget.userDataController.getAllUserRecents();
 
-      widget.musicController.currentIndex.value = index;
       widget.musicController.playingSong.value = widget.userDataController.favorites[index];
     } else {
       _checkPlayerState();
@@ -242,8 +241,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
       );
       widget.userDataController.getAllUserRecents();
 
-      widget.musicController.currentIndex.value = index;
-      widget.musicController.playingSong.value = widget.userDataController.currentPlaylist[index];
+
+      widget.musicController.playingSong.value = widget.userDataController.favorites[index];
     } else {
       _checkPlayerState();
     }

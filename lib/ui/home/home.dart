@@ -151,9 +151,8 @@ class _HomeState extends State<Home> {
       );
       _userDataController.getAllUserRecents();
 
-      musicController.currentIndex.value = index;
       musicController.playingSong.value = _userDataController.currentPlaylist[index];
-      print('index: ${musicController.currentIndex.value}');
+
     } else {
       _checkPlayerState();
     }

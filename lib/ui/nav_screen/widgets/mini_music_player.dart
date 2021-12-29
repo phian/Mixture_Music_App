@@ -53,12 +53,15 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
               StreamBuilder<PositionData>(
                 stream: _positionDataStream,
                 builder: (context, snapshot) {
-                  final positionData = snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
+                  final positionData =
+                      snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
                   return LinearProgressIndicator(
-                    value: (positionData.position.inSeconds / positionData.duration.inSeconds).isNaN ||
-                            (positionData.position.inSeconds / positionData.duration.inSeconds).isInfinite
-                        ? 0.0
-                        : positionData.position.inSeconds / positionData.duration.inSeconds,
+                    value:
+                        (positionData.position.inSeconds / positionData.duration.inSeconds).isNaN ||
+                                (positionData.position.inSeconds / positionData.duration.inSeconds)
+                                    .isInfinite
+                            ? 0.0
+                            : positionData.position.inSeconds / positionData.duration.inSeconds,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       theme.primaryColor,
                     ),
@@ -135,22 +138,21 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           return IconButton(
                             onPressed: () {
                               if (musicController.isShuffle.value) {
-                                if (listEquals(musicController.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                                  musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                                }
-
-                                if (musicController.currentIndex.value - 1 >= 0) {
-                                  musicController.currentIndex.value = musicController.currentIndex.value - 1;
-                                  audioHandler.skipToQueueItem(musicController.currentIndex.value);
+                                if (musicController.indexIndexList > 0) {
+                                  musicController.indexIndexList--;
+                                  audioHandler.skipToPrevious();
                                 } else {
-                                  musicController.currentIndex.value = musicController.shuffleList.length - 1;
-                                  audioHandler.skipToQueueItem(musicController.currentIndex.value);
+                                  musicController.indexIndexList.value =
+                                      musicController.indexList.length - 1;
+                                  audioHandler.skipToQueueItem(musicController.indexIndexList.value);
                                 }
                               } else {
                                 audioHandler.skipToPrevious();
+                                musicController.indexIndexList--;
                               }
 
                               widget.onSkipPrevious?.call();
+                              setState(() {});
                             },
                             icon: Icon(
                               Icons.skip_previous,
@@ -166,7 +168,8 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final processingState = playbackState?.processingState;
                           final playing = playbackState?.playing;
 
-                          if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
+                          if (processingState == AudioProcessingState.loading ||
+                              processingState == AudioProcessingState.buffering) {
                             return Container(
                               margin: const EdgeInsets.all(12.0),
                               width: 24.0,
@@ -199,22 +202,20 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           return IconButton(
                             onPressed: () {
                               if (musicController.isShuffle.value) {
-                                if (listEquals(musicController.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                                  musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                                }
-
-                                if (musicController.currentIndex.value + 1 < musicController.shuffleList.length) {
-                                  musicController.currentIndex.value = musicController.currentIndex.value + 1;
-                                  audioHandler.skipToQueueItem(musicController.currentIndex.value);
+                                if (musicController.indexIndexList + 1 <
+                                    musicController.indexList.length) {
+                                  musicController.indexIndexList++;
+                                  audioHandler.skipToNext();
                                 } else {
-                                  musicController.currentIndex.value = 0;
+                                  musicController.indexIndexList.value = 0;
                                   audioHandler.skipToQueueItem(0);
                                 }
                               } else {
                                 audioHandler.skipToNext();
+                                musicController.indexIndexList++;
                               }
-
                               widget.onSkipNext?.call();
+                              setState(() {});
                             },
                             icon: Icon(
                               Icons.skip_next,
@@ -234,13 +235,17 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
     );
   }
 
-  Stream<Duration> get _bufferedPositionStream => audioHandler.playbackState.map((state) => state.bufferedPosition).distinct();
+  Stream<Duration> get _bufferedPositionStream =>
+      audioHandler.playbackState.map((state) => state.bufferedPosition).distinct();
 
-  Stream<Duration?> get _durationStream => audioHandler.mediaItem.map((item) => item?.duration).distinct();
+  Stream<Duration?> get _durationStream =>
+      audioHandler.mediaItem.map((item) => item?.duration).distinct();
 
-  Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-      AudioService.position,
-      _bufferedPositionStream,
-      _durationStream,
-      (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero));
+  Stream<PositionData> get _positionDataStream =>
+      rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+          AudioService.position,
+          _bufferedPositionStream,
+          _durationStream,
+          (position, bufferedPosition, duration) =>
+              PositionData(position, bufferedPosition, duration ?? Duration.zero));
 }
