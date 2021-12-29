@@ -9,6 +9,7 @@ class SeekBar extends StatefulWidget {
   final Duration bufferedPosition;
   final ValueChanged<Duration>? onChanged;
   final ValueChanged<Duration>? onChangeEnd;
+  final void Function()? onCompleted;
 
   const SeekBar({
     Key? key,
@@ -17,6 +18,7 @@ class SeekBar extends StatefulWidget {
     this.bufferedPosition = Duration.zero,
     this.onChanged,
     this.onChangeEnd,
+    this.onCompleted,
   }) : super(key: key);
 
   @override
@@ -46,6 +48,10 @@ class _SeekBarState extends State<SeekBar> {
     if (_dragValue != null && !_dragging) {
       _dragValue = null;
     }
+    if (widget.duration != Duration.zero && widget.position >= widget.duration) {
+      widget.onCompleted?.call();
+    }
+
     return Stack(
       children: [
         SliderTheme(
@@ -98,7 +104,7 @@ class _SeekBarState extends State<SeekBar> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$').firstMatch('${widget.position}')?.group(1) ?? '00:00'),
-                Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$').firstMatch('$_remaining')?.group(1) ?? '$_remaining'),
+                Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$').firstMatch('${widget.duration}')?.group(1) ?? '00:00'),
               ],
             ),
           ),

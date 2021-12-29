@@ -60,10 +60,25 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     // Listen to current song process
     _player.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) {
-        _player.stop();
-        _player.seekToNext();
+        //   if (_player.loopMode == LoopMode.off) {
+        // print('player indices: ${_player.shuffleIndices}');
+        // stop();
+        // mediaItem.add(_items[_player.shuffleModeEnabled ? _player.shuffleIndices![0] : 0]);
+        // skipToQueueItem(0);
+        // stop();
+        // _broadcastState(_player.playbackEvent);
+        // _player.seek(Duration.zero, index: 0);
+        // } else if (_player.loopMode == LoopMode.all) {
+        // play();
+        // print('player indices: ${_player.shuffleIndices}');
+        // mediaItem.add(_items[_player.shuffleModeEnabled ? _player.shuffleIndices![0] : 0]);
+        // skipToQueueItem(0);
+        // play();
+        // _broadcastState(_player.playbackEvent);
+        // _player.seek(Duration.zero, index: 0);
+        // }
+        // _player.seek(Duration.zero, index: 0);
       }
-      _broadcastState(_player.playbackEvent);
     });
   }
 

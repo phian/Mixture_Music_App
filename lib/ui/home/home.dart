@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
                   height: 1,
                 ),
                 Obx(
-                      () => ListView.separated(
+                  () => ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -117,6 +117,7 @@ class _HomeState extends State<Home> {
                                   : false
                               : false,
                           onTap: () async {
+                            print('current index: ${audioHandler.player.currentIndex}');
                             _initAudioSource(index: index);
                             _updatePlayingItem(index);
                           },
@@ -150,10 +151,9 @@ class _HomeState extends State<Home> {
       );
       _userDataController.getAllUserRecents();
 
-      if (audioHandler.player.shuffleModeEnabled) {
-        musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
-        musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-      }
+      musicController.currentIndex.value = index;
+      musicController.playingSong.value = _userDataController.currentPlaylist[index];
+      print('index: ${musicController.currentIndex.value}');
     } else {
       _checkPlayerState();
     }

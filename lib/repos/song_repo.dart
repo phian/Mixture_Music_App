@@ -4,7 +4,7 @@ import 'package:mixture_music_app/services/share_preference_service.dart';
 import 'package:mixture_music_app/services/song_service.dart';
 
 class SongRepo {
-  final _sharePrefService = const SharePrefService();
+  final _sharePrefService = SharePrefService();
   final _songService = SongService();
 
   Future<List<SongModel>> getSuggestedSongs(String weatherType) async {

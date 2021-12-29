@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/model/queue_state.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
@@ -10,14 +12,11 @@ import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_hand
 class MusicControlButton extends StatefulWidget {
   const MusicControlButton({
     Key? key,
-    required this.onSkipNext,
-    required this.onSkipPrevious,
     required this.controller,
+    required this.userDataController,
   }) : super(key: key);
-
-  final void Function() onSkipPrevious;
-  final void Function() onSkipNext;
   final MusicPlayerController controller;
+  final UserDataController userDataController;
 
   @override
   State<MusicControlButton> createState() => _MusicControlButtonState();
@@ -27,6 +26,7 @@ class _MusicControlButtonState extends State<MusicControlButton> {
   bool isPlaying = false;
   bool isShuffle = false;
   bool isLoop = false;
+  final PlaylistController _playlistController = PlaylistController();
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +49,15 @@ class _MusicControlButtonState extends State<MusicControlButton> {
 
                 if (enable) {
                   widget.controller.isShuffle.value = true;
-                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                    print('shuffled list: ${audioHandler.player.shuffleIndices}');
-                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                  }
+                  print('shuffled list: ${audioHandler.player.shuffleIndices}');
+                  await _playlistController.saveLocalShuffleList(audioHandler.player.shuffleIndices!);
+                  widget.controller.shuffleList.value = (await _playlistController.getLocalShuffleList())!;
+                  widget.controller.currentIndex.value =
+                      widget.userDataController.currentPlaylist.indexWhere((element) => element.id == widget.controller.playingSong.value?.id);
                 } else {
                   widget.controller.isShuffle.value = false;
                   widget.controller.shuffleList.value = [];
+                  await _playlistController.clearLocalShuffleList();
                 }
               },
             );
@@ -75,22 +77,34 @@ class _MusicControlButtonState extends State<MusicControlButton> {
               ),
               onPressed: () {
                 if (widget.controller.isShuffle.value) {
-                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                  }
-
-                  if (widget.controller.currentShuffleIndex.value - 1 >= 0) {
-                    audioHandler.skipToQueueItem(widget.controller.currentShuffleIndex.value - 1);
-                    widget.controller.currentShuffleIndex.value = widget.controller.currentShuffleIndex.value - 1;
+                  if (widget.controller.currentIndex.value - 1 >= 0) {
+                    widget.controller.currentIndex.value = widget.controller.currentIndex.value - 1;
+                    audioHandler.initAudioSource(widget.userDataController.currentPlaylist);
+                    audioHandler.skipToQueueItem(widget.controller.currentIndex.value);
+                    widget.controller.playingSong.value =
+                        widget.userDataController.currentPlaylist[widget.controller.shuffleList[widget.controller.currentIndex.value]];
                   } else {
-                    audioHandler.skipToQueueItem(widget.controller.shuffleList.length - 1);
-                    widget.controller.currentShuffleIndex.value = widget.controller.shuffleList.length - 1;
+                    widget.controller.currentIndex.value = widget.controller.shuffleList.length - 1;
+                    audioHandler.initAudioSource(widget.userDataController.currentPlaylist);
+                    audioHandler.skipToQueueItem(widget.controller.currentIndex.value);
+                    widget.controller.playingSong.value =
+                        widget.userDataController.currentPlaylist[widget.controller.shuffleList[widget.controller.currentIndex.value]];
                   }
                 } else {
                   audioHandler.skipToPrevious();
-                }
 
-                widget.onSkipPrevious.call();
+                  if (audioHandler.player.currentIndex != null) {
+                    if (audioHandler.player.currentIndex! - 1 >= 0) {
+                      widget.controller.currentIndex.value = audioHandler.player.currentIndex! - 1;
+                      widget.controller.playingSong.value = widget.userDataController.currentPlaylist[widget.controller.currentIndex.value];
+                      audioHandler.skipToQueueItem(audioHandler.player.currentIndex! - 1);
+                    } else {
+                      widget.controller.currentIndex.value = widget.userDataController.currentPlaylist.length - 1;
+                      widget.controller.playingSong.value = widget.userDataController.currentPlaylist[widget.controller.currentIndex.value];
+                      audioHandler.skipToQueueItem(widget.controller.currentIndex.value);
+                    }
+                  }
+                }
               },
             );
           },
@@ -149,22 +163,33 @@ class _MusicControlButtonState extends State<MusicControlButton> {
               ),
               onPressed: () {
                 if (widget.controller.isShuffle.value) {
-                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                  }
-
-                  if (widget.controller.currentShuffleIndex.value + 1 < widget.controller.shuffleList.length) {
-                    audioHandler.skipToQueueItem(widget.controller.currentShuffleIndex.value + 1);
-                    widget.controller.currentShuffleIndex.value = widget.controller.currentShuffleIndex.value + 1;
+                  if (widget.controller.currentIndex.value + 1 < widget.controller.shuffleList.length) {
+                    widget.controller.currentIndex.value = widget.controller.currentIndex.value + 1;
+                    audioHandler.initAudioSource(widget.userDataController.currentPlaylist);
+                    audioHandler.skipToQueueItem(widget.controller.currentIndex.value);
+                    widget.controller.playingSong.value =
+                        widget.userDataController.currentPlaylist[widget.controller.shuffleList[widget.controller.currentIndex.value]];
                   } else {
-                    audioHandler.skipToQueueItem(0);
-                    widget.controller.currentShuffleIndex.value = 0;
+                    widget.controller.currentIndex.value = 0;
+                    audioHandler.initAudioSource(widget.userDataController.currentPlaylist);
+                    audioHandler.skipToQueueItem(widget.controller.currentIndex.value);
+                    widget.controller.playingSong.value = widget.userDataController.currentPlaylist[widget.controller.shuffleList[0]];
                   }
                 } else {
                   audioHandler.skipToNext();
-                }
 
-                widget.onSkipNext.call();
+                  if (audioHandler.player.currentIndex != null) {
+                    if (audioHandler.player.currentIndex! + 1 < widget.userDataController.currentPlaylist.length) {
+                      widget.controller.currentIndex.value = audioHandler.player.currentIndex! + 1;
+                      widget.controller.playingSong.value = widget.userDataController.currentPlaylist[widget.controller.currentIndex.value];
+                      audioHandler.skipToQueueItem(audioHandler.player.currentIndex! + 1);
+                    } else {
+                      widget.controller.currentIndex.value = 0;
+                      widget.controller.playingSong.value = widget.userDataController.currentPlaylist[0];
+                      audioHandler.skipToQueueItem(0);
+                    }
+                  }
+                }
               },
             );
           },

@@ -60,7 +60,7 @@ class _NavScreenState extends State<NavScreen> {
               onSkipPrevious: () {
                 if (musicController.isShuffle.value) {
                   musicController.playingSong.value =
-                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentShuffleIndex.value]];
+                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentIndex.value]];
                 } else {
                   if (audioHandler.player.currentIndex != null) {
                     if (audioHandler.player.currentIndex! - 1 >= 0) {
@@ -74,13 +74,15 @@ class _NavScreenState extends State<NavScreen> {
               onSkipNext: () {
                 if (musicController.isShuffle.value) {
                   musicController.playingSong.value =
-                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentShuffleIndex.value]];
+                      userDataController.currentPlaylist[musicController.shuffleList[musicController.currentIndex.value]];
                 } else {
                   if (audioHandler.player.currentIndex != null) {
                     if (audioHandler.player.currentIndex! + 1 < userDataController.currentPlaylist.length) {
                       musicController.playingSong.value = userDataController.currentPlaylist[audioHandler.player.currentIndex! + 1];
+                      audioHandler.skipToQueueItem(audioHandler.player.currentIndex! + 1);
                     } else {
                       musicController.playingSong.value = userDataController.currentPlaylist[0];
+                      audioHandler.skipToQueueItem(0);
                     }
                   }
                 }

@@ -7,7 +7,7 @@ class MusicPlayerController extends GetxController {
   var playingSong = Rxn<SongModel>();
   final _songController = SongController();
   RxList<int> shuffleList = <int>[].obs;
-  RxInt currentShuffleIndex = 0.obs;
+  RxInt currentIndex = 0.obs;
   RxBool isShuffle = false.obs;
 
   Future<void> setSong(SongModel songModel) async {

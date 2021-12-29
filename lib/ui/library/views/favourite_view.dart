@@ -136,10 +136,8 @@ class _LibraryListViewState extends State<_LibraryListView> {
       );
       widget.userDataController.getAllUserRecents();
 
-      if (audioHandler.player.shuffleModeEnabled) {
-        widget.musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
-        widget.musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-      }
+      widget.musicController.currentIndex.value = index;
+      widget.musicController.playingSong.value = widget.userDataController.favorites[index];
     } else {
       _checkPlayerState();
     }
@@ -244,10 +242,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
       );
       widget.userDataController.getAllUserRecents();
 
-      if (audioHandler.player.shuffleModeEnabled) {
-        widget.musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
-        widget.musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-      }
+      widget.musicController.currentIndex.value = index;
+      widget.musicController.playingSong.value = widget.userDataController.currentPlaylist[index];
     } else {
       _checkPlayerState();
     }

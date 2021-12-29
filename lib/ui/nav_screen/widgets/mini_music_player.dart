@@ -139,12 +139,12 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                                   musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
                                 }
 
-                                if (musicController.currentShuffleIndex.value - 1 >= 0) {
-                                  audioHandler.skipToQueueItem(musicController.currentShuffleIndex.value - 1);
-                                  musicController.currentShuffleIndex.value = musicController.currentShuffleIndex.value - 1;
+                                if (musicController.currentIndex.value - 1 >= 0) {
+                                  musicController.currentIndex.value = musicController.currentIndex.value - 1;
+                                  audioHandler.skipToQueueItem(musicController.currentIndex.value);
                                 } else {
-                                  audioHandler.skipToQueueItem(musicController.shuffleList.length - 1);
-                                  musicController.currentShuffleIndex.value = musicController.shuffleList.length - 1;
+                                  musicController.currentIndex.value = musicController.shuffleList.length - 1;
+                                  audioHandler.skipToQueueItem(musicController.currentIndex.value);
                                 }
                               } else {
                                 audioHandler.skipToPrevious();
@@ -203,12 +203,12 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                                   musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
                                 }
 
-                                if (musicController.currentShuffleIndex.value + 1 < musicController.shuffleList.length) {
-                                  audioHandler.skipToQueueItem(musicController.currentShuffleIndex.value + 1);
-                                  musicController.currentShuffleIndex.value = musicController.currentShuffleIndex.value + 1;
+                                if (musicController.currentIndex.value + 1 < musicController.shuffleList.length) {
+                                  musicController.currentIndex.value = musicController.currentIndex.value + 1;
+                                  audioHandler.skipToQueueItem(musicController.currentIndex.value);
                                 } else {
+                                  musicController.currentIndex.value = 0;
                                   audioHandler.skipToQueueItem(0);
-                                  musicController.currentShuffleIndex.value = 0;
                                 }
                               } else {
                                 audioHandler.skipToNext();
@@ -234,10 +234,13 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
     );
   }
 
+  Stream<Duration> get _bufferedPositionStream => audioHandler.playbackState.map((state) => state.bufferedPosition).distinct();
+
+  Stream<Duration?> get _durationStream => audioHandler.mediaItem.map((item) => item?.duration).distinct();
+
   Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-        audioHandler.player.positionStream,
-        audioHandler.player.bufferedPositionStream,
-        audioHandler.player.durationStream,
-        (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero),
-      );
+      AudioService.position,
+      _bufferedPositionStream,
+      _durationStream,
+      (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero));
 }

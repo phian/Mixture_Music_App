@@ -323,7 +323,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
       _userDataController.getAllUserRecents();
 
       if (audioHandler.player.shuffleModeEnabled) {
-        _musicPlayerController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
+        _musicPlayerController.currentIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
         _musicPlayerController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
       }
     } else {

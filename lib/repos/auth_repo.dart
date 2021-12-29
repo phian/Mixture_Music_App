@@ -12,7 +12,7 @@ import '../services/auth_service.dart';
 class AuthRepo {
   final AuthService _authService = AuthService();
   final FirebaseService _firebaseService = const FirebaseService();
-  final SharePrefService _sharePrefService = const SharePrefService();
+  final SharePrefService _sharePrefService = SharePrefService();
 
   User? get googleUser => _authService.googleUser;
 

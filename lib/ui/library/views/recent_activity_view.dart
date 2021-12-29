@@ -85,10 +85,8 @@ class _RecentActivityViewState extends State<RecentActivityView> {
       );
       _userDataController.getAllUserRecents();
 
-      if (audioHandler.player.shuffleModeEnabled) {
-        _musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
-        _musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-      }
+      _musicController.currentIndex.value = index;
+      _musicController.playingSong.value = _userDataController.currentPlaylist[index];
     } else {
       _checkPlayerState();
     }

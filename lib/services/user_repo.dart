@@ -6,7 +6,7 @@ import 'package:mixture_music_app/services/share_preference_service.dart';
 
 class UserRepo {
   final FirebaseService _firebaseService = const FirebaseService();
-  final SharePrefService _sharePrefService = const SharePrefService();
+  final SharePrefService _sharePrefService = SharePrefService();
 
   Future<AuthUserModel?> getUserByID(String userUID) async {
     var result = await _firebaseService.getUserByUserID(userUID);
