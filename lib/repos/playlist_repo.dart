@@ -1,8 +1,10 @@
 import 'package:mixture_music_app/models/playlist/playlist.dart';
 import 'package:mixture_music_app/services/playlist_service.dart';
+import 'package:mixture_music_app/services/share_preference_service.dart';
 
 class PlaylistRepo {
   final _playlistService = PlaylistService();
+  final _sharePrefService = SharePrefService();
 
   Future<List<Playlist>> getAllUserPlayList(String uid) async {
     var playlists = <Playlist>[];
@@ -24,5 +26,17 @@ class PlaylistRepo {
 
   Future<void> deletePlaylist(Playlist playlist) async {
     await _playlistService.deletePlaylist(playlist);
+  }
+
+  Future<void> saveLocalShuffleList(List<int> shuffleList) async {
+    return await _sharePrefService.saveShuffleList(shuffleList);
+  }
+
+  Future<List<int>?> getLocalShuffleList() async {
+    return await _sharePrefService.getShuffleList();
+  }
+
+  Future<int> clearLocalShuffleList() async {
+    return await _sharePrefService.clearShuffleList();
   }
 }

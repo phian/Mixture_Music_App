@@ -47,8 +47,10 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   void init() {
     // Broadcast media item changes.
     Rx.combineLatest4<int?, List<MediaItem>, bool, List<int>?, MediaItem?>(
-        _player.currentIndexStream, queue, _player.shuffleModeEnabledStream, _player.shuffleIndicesStream,
-        (index, queue, shuffleModeEnabled, shuffleIndices) {
+        _player.currentIndexStream,
+        queue,
+        _player.shuffleModeEnabledStream,
+        _player.shuffleIndicesStream, (index, queue, shuffleModeEnabled, shuffleIndices) {
       final queueIndex = getQueueIndex(index, shuffleModeEnabled, shuffleIndices);
       return (queueIndex != null && queueIndex < queue.length) ? queue[queueIndex] : null;
     }).whereType<MediaItem>().distinct().listen(mediaItem.add);
@@ -60,21 +62,39 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     // Listen to current song process
     _player.processingStateStream.listen((state) {
       if (state == ProcessingState.completed) {
-        _player.stop();
-        _player.seekToNext();
+        //   if (_player.loopMode == LoopMode.off) {
+        // print('player indices: ${_player.shuffleIndices}');
+        // stop();
+        // mediaItem.add(_items[_player.shuffleModeEnabled ? _player.shuffleIndices![0] : 0]);
+        // skipToQueueItem(0);
+        // stop();
+        // _broadcastState(_player.playbackEvent);
+        // _player.seek(Duration.zero, index: 0);
+        // } else if (_player.loopMode == LoopMode.all) {
+        // play();
+        // print('player indices: ${_player.shuffleIndices}');
+        // mediaItem.add(_items[_player.shuffleModeEnabled ? _player.shuffleIndices![0] : 0]);
+        // skipToQueueItem(0);
+        // play();
+        // _broadcastState(_player.playbackEvent);
+        // _player.seek(Duration.zero, index: 0);
+        // }
+        // _player.seek(Duration.zero, index: 0);
       }
-      _broadcastState(_player.playbackEvent);
     });
   }
 
   void initAudioSource(List<SongModel> songs, {int? index}) async {
     if (songs.isNotEmpty) {
       _items = List.from(songs.convertToMediaItemList());
-      mediaItem.add(index != null ? _items[_player.shuffleModeEnabled ? _player.shuffleIndices![index] : index] : _items[0]);
+      mediaItem.add(index != null
+          ? _items[_player.shuffleModeEnabled ? _player.shuffleIndices![index] : index]
+          : _items[0]);
       // Load the player.
-      _player.setAudioSource(
+      await _player.setAudioSource(
         ConcatenatingAudioSource(
-          children: List.generate(_items.length, (index) => AudioSource.uri(Uri.parse(_items[index].id))),
+          children:
+              List.generate(_items.length, (index) => AudioSource.uri(Uri.parse(_items[index].id))),
         ),
         initialIndex: index ?? 0,
       );
@@ -86,7 +106,8 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     if (index < 0 || index >= _items.length) return;
     // This jumps to the beginning of the queue item at [index].
     mediaItem.add(_items[_player.shuffleModeEnabled ? _player.shuffleIndices![index] : index]);
-    _player.seek(Duration.zero, index: _player.shuffleModeEnabled ? _player.shuffleIndices![index] : index);
+    _player.seek(Duration.zero,
+        index: _player.shuffleModeEnabled ? _player.shuffleIndices![index] : index);
   }
 
   @override
@@ -162,12 +183,15 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
     for (var i = 0; i < effectiveIndices.length; i++) {
       shuffleIndicesInv[effectiveIndices[i]] = i;
     }
-    return (shuffleModeEnabled && ((currentIndex ?? 0) < shuffleIndicesInv.length)) ? shuffleIndicesInv[currentIndex ?? 0] : currentIndex;
+    return (shuffleModeEnabled && ((currentIndex ?? 0) < shuffleIndicesInv.length))
+        ? shuffleIndicesInv[currentIndex ?? 0]
+        : currentIndex;
   }
 
   /// A stream reporting the combined state of the current queue and the current
   /// media item within that queue.
-  Stream<QueueState> get queueState => Rx.combineLatest3<List<MediaItem>, PlaybackState, List<int>, QueueState>(
+  Stream<QueueState> get queueState =>
+      Rx.combineLatest3<List<MediaItem>, PlaybackState, List<int>, QueueState>(
         queue,
         playbackState,
         _player.shuffleIndicesStream.whereType<List<int>>(),
@@ -177,12 +201,14 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
           playbackState.shuffleMode == AudioServiceShuffleMode.all ? shuffleIndices : null,
           playbackState.repeatMode,
         ),
-      ).where((state) => state.shuffleIndices == null || state.queue.length == state.shuffleIndices!.length);
+      ).where((state) =>
+          state.shuffleIndices == null || state.queue.length == state.shuffleIndices!.length);
 
   /// A stream of the current effective sequence from just_audio.
   Stream<List<IndexedAudioSource>> get _effectiveSequence =>
       Rx.combineLatest3<List<IndexedAudioSource>?, List<int>?, bool, List<IndexedAudioSource>?>(
-          _player.sequenceStream, _player.shuffleIndicesStream, _player.shuffleModeEnabledStream, (sequence, shuffleIndices, shuffleModeEnabled) {
+          _player.sequenceStream, _player.shuffleIndicesStream, _player.shuffleModeEnabledStream,
+          (sequence, shuffleIndices, shuffleModeEnabled) {
         if (sequence == null) return [];
         if (!shuffleModeEnabled) return sequence;
         if (shuffleIndices == null) return null;
@@ -229,7 +255,8 @@ class AudioPlayerHandler extends BaseAudioHandler with SeekHandler {
   /// Broadcasts the current state to all clients.
   void _broadcastState(PlaybackEvent event) {
     final playing = _player.playing;
-    final queueIndex = getQueueIndex(event.currentIndex, _player.shuffleModeEnabled, _player.shuffleIndices);
+    final queueIndex =
+        getQueueIndex(event.currentIndex, _player.shuffleModeEnabled, _player.shuffleIndices);
     playbackState.add(playbackState.value.copyWith(
       controls: [
         MediaControl.skipToPrevious,

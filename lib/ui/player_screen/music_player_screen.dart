@@ -1,6 +1,10 @@
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:mixture_music_app/constants/app_constants.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/add_to_playlist/add_to_playlist_screen.dart';
@@ -25,12 +29,26 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   final controller = Get.put(MusicPlayerController());
   final _userDataController = Get.put(UserDataController());
 
+  @override
+  void initState() {
+    super.initState();
+    //_listenToPositionStream();
+  }
+
+  void _listenToPositionStream() {
+    audioHandler.player.positionStream.listen((position) {
+      _onSongCompleted(position);
+      //print('aaa');
+    });
+  }
+
   bool isFavorite() {
     return _userDataController.favorites.contains(controller.playingSong.value);
   }
 
   @override
   Widget build(BuildContext context) {
+    // _listenToPositionStream();
     final theme = Theme.of(context);
     return Obx(
       () => Stack(
@@ -136,7 +154,8 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           },
                           child: Icon(
                             isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            color: isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
+                            color:
+                                isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
                           ),
                         ),
                       ],
@@ -155,47 +174,24 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                     StreamBuilder<PositionData>(
                       stream: _positionDataStream,
                       builder: (context, snapshot) {
-                        final positionData = snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
+                        final positionData = snapshot.data ??
+                            PositionData(Duration.zero, Duration.zero, Duration.zero);
                         return SeekBar(
                           duration: positionData.duration,
                           position: positionData.position,
                           onChangeEnd: (newPosition) {
                             audioHandler.seek(newPosition);
+                            if (newPosition == audioHandler.player.duration) {
+                              _onSongCompleted(newPosition);
+                            }
                           },
                         );
                       },
                     ),
                     const Expanded(child: SizedBox()),
                     MusicControlButton(
-                      onSkipPrevious: () {
-                        if (controller.isShuffle.value) {
-                          controller.playingSong.value =
-                              _userDataController.currentPlaylist[controller.shuffleList[controller.currentShuffleIndex.value]];
-                        } else {
-                          if (audioHandler.player.currentIndex != null) {
-                            if (audioHandler.player.currentIndex! - 1 >= 0) {
-                              controller.playingSong.value = _userDataController.currentPlaylist[audioHandler.player.currentIndex! - 1];
-                            } else {
-                              controller.playingSong.value = _userDataController.currentPlaylist[_userDataController.currentPlaylist.length - 1];
-                            }
-                          }
-                        }
-                      },
-                      onSkipNext: () {
-                        if (controller.isShuffle.value) {
-                          controller.playingSong.value =
-                              _userDataController.currentPlaylist[controller.shuffleList[controller.currentShuffleIndex.value]];
-                        } else {
-                          if (audioHandler.player.currentIndex != null) {
-                            if (audioHandler.player.currentIndex! + 1 < _userDataController.currentPlaylist.length) {
-                              controller.playingSong.value = _userDataController.currentPlaylist[audioHandler.player.currentIndex! + 1];
-                            } else {
-                              controller.playingSong.value = _userDataController.currentPlaylist[0];
-                            }
-                          }
-                        }
-                      },
                       controller: controller,
+                      userDataController: _userDataController,
                     ),
                     const Spacer(),
                   ],
@@ -208,10 +204,67 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     );
   }
 
-  Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+  void _onSongCompleted(Duration position) {
+    if (position >= audioHandler.player.duration!) {
+      if (controller.isShuffle.value) {
+        switch (audioHandler.player.loopMode) {
+          case LoopMode.all:
+          case LoopMode.off:
+            if (controller.indexIndexList.value + 1 < controller.indexList.length) {
+              controller.indexIndexList++;
+              audioHandler.skipToNext();
+            } else {
+              controller.indexIndexList.value = 0;
+              audioHandler.skipToQueueItem(controller.indexIndexList.value);
+            }
+            controller.playingSong.value = _userDataController
+                .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
+
+            print(controller.indexIndexList);
+            setState(() {});
+            break;
+
+          case LoopMode.one:
+            break;
+        }
+      } else {
+        switch (audioHandler.player.loopMode) {
+          case LoopMode.off:
+          case LoopMode.all:
+            if (controller.indexIndexList + 1 < _userDataController.currentPlaylist.length) {
+              controller.indexIndexList++;
+
+              print('index: ${controller.indexIndexList}');
+              audioHandler.skipToNext();
+              controller.playingSong.value =
+                  _userDataController.currentPlaylist[controller.indexIndexList.value];
+              setState(() {});
+            } else {
+              controller.indexIndexList.value = 0;
+              audioHandler.skipToQueueItem(0);
+              controller.playingSong.value = _userDataController.currentPlaylist[0];
+              setState(() {});
+              if (audioHandler.player.loopMode == LoopMode.all) {
+                audioHandler.play();
+              } else {
+                audioHandler.stop();
+              }
+            }
+
+            break;
+          case LoopMode.one:
+            break;
+        }
+      }
+    }
+  }
+
+  Stream<PositionData> get _positionDataStream =>
+      rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         audioHandler.player.positionStream,
         audioHandler.player.bufferedPositionStream,
         audioHandler.player.durationStream,
-        (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero),
+        (position, bufferedPosition, duration) =>
+            PositionData(position, bufferedPosition, duration ?? Duration.zero),
       );
 }

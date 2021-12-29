@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mixture_music_app/controllers/playlist_controller.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/model/queue_state.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
@@ -10,14 +12,11 @@ import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_hand
 class MusicControlButton extends StatefulWidget {
   const MusicControlButton({
     Key? key,
-    required this.onSkipNext,
-    required this.onSkipPrevious,
     required this.controller,
+    required this.userDataController,
   }) : super(key: key);
-
-  final void Function() onSkipPrevious;
-  final void Function() onSkipNext;
   final MusicPlayerController controller;
+  final UserDataController userDataController;
 
   @override
   State<MusicControlButton> createState() => _MusicControlButtonState();
@@ -27,6 +26,7 @@ class _MusicControlButtonState extends State<MusicControlButton> {
   bool isPlaying = false;
   bool isShuffle = false;
   bool isLoop = false;
+  final PlaylistController _playlistController = PlaylistController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +34,9 @@ class _MusicControlButtonState extends State<MusicControlButton> {
     return Row(
       children: [
         StreamBuilder<bool>(
-          stream: audioHandler.playbackState.map((state) => state.shuffleMode == AudioServiceShuffleMode.all).distinct(),
+          stream: audioHandler.playbackState
+              .map((state) => state.shuffleMode == AudioServiceShuffleMode.all)
+              .distinct(),
           builder: (context, snapshot) {
             final shuffleModeEnabled = snapshot.data ?? false;
 
@@ -45,17 +47,25 @@ class _MusicControlButtonState extends State<MusicControlButton> {
               ),
               onPressed: () async {
                 final enable = !shuffleModeEnabled;
-                await audioHandler.setShuffleMode(enable ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none);
+                await audioHandler.setShuffleMode(
+                    enable ? AudioServiceShuffleMode.all : AudioServiceShuffleMode.none);
 
                 if (enable) {
                   widget.controller.isShuffle.value = true;
-                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                    print('shuffled list: ${audioHandler.player.shuffleIndices}');
-                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                  }
+                  print('shuffled list: ${audioHandler.player.shuffleIndices}');
+
+                  widget.controller.indexList.value = audioHandler.player.shuffleIndices!;
+
+                  widget.controller.indexIndexList.value = 0;
                 } else {
                   widget.controller.isShuffle.value = false;
-                  widget.controller.shuffleList.value = [];
+
+                  widget.controller.indexIndexList.value =
+                      widget.controller.indexList[widget.controller.indexIndexList.value];
+                  widget.controller.indexList.clear();
+                  for (int i = 0; i < widget.userDataController.currentPlaylist.length; i++) {
+                    widget.controller.indexList.add(i);
+                  }
                 }
               },
             );
@@ -74,23 +84,16 @@ class _MusicControlButtonState extends State<MusicControlButton> {
                 color: theme.primaryColor,
               ),
               onPressed: () {
-                if (widget.controller.isShuffle.value) {
-                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                  }
-
-                  if (widget.controller.currentShuffleIndex.value - 1 >= 0) {
-                    audioHandler.skipToQueueItem(widget.controller.currentShuffleIndex.value - 1);
-                    widget.controller.currentShuffleIndex.value = widget.controller.currentShuffleIndex.value - 1;
-                  } else {
-                    audioHandler.skipToQueueItem(widget.controller.shuffleList.length - 1);
-                    widget.controller.currentShuffleIndex.value = widget.controller.shuffleList.length - 1;
-                  }
-                } else {
+                if (widget.controller.indexIndexList.value > 0) {
+                  widget.controller.indexIndexList--;
                   audioHandler.skipToPrevious();
-                }
+                } else {
+                  widget.controller.indexIndexList.value = widget.controller.indexList.length - 1;
 
-                widget.onSkipPrevious.call();
+                  audioHandler.skipToQueueItem(widget.controller.indexIndexList.value);
+                }
+                widget.controller.playingSong.value = widget.userDataController
+                    .currentPlaylist[widget.controller.indexList[widget.controller.indexIndexList.value]];
               },
             );
           },
@@ -102,7 +105,8 @@ class _MusicControlButtonState extends State<MusicControlButton> {
             final processingState = playbackState?.processingState;
             final playing = playbackState?.playing;
 
-            if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
+            if (processingState == AudioProcessingState.loading ||
+                processingState == AudioProcessingState.buffering) {
               return Container(
                 margin: const EdgeInsets.all(8.0),
                 width: 61.0,
@@ -148,23 +152,15 @@ class _MusicControlButtonState extends State<MusicControlButton> {
                 color: theme.primaryColor,
               ),
               onPressed: () {
-                if (widget.controller.isShuffle.value) {
-                  if (listEquals(widget.controller.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                    widget.controller.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                  }
-
-                  if (widget.controller.currentShuffleIndex.value + 1 < widget.controller.shuffleList.length) {
-                    audioHandler.skipToQueueItem(widget.controller.currentShuffleIndex.value + 1);
-                    widget.controller.currentShuffleIndex.value = widget.controller.currentShuffleIndex.value + 1;
-                  } else {
-                    audioHandler.skipToQueueItem(0);
-                    widget.controller.currentShuffleIndex.value = 0;
-                  }
-                } else {
+                if (widget.controller.indexIndexList.value + 1 < widget.controller.indexList.length) {
+                  widget.controller.indexIndexList++;
                   audioHandler.skipToNext();
+                } else {
+                  widget.controller.indexIndexList.value = 0;
+                  audioHandler.skipToQueueItem(widget.controller.indexIndexList.value);
                 }
-
-                widget.onSkipNext.call();
+                widget.controller.playingSong.value = widget.userDataController
+                    .currentPlaylist[widget.controller.indexList[widget.controller.indexIndexList.value]];
               },
             );
           },
@@ -189,7 +185,9 @@ class _MusicControlButtonState extends State<MusicControlButton> {
             return CupertinoButton(
               child: Icon(
                 icons[index],
-                color: repeatMode == AudioServiceRepeatMode.none ? theme.disabledColor : theme.colorScheme.onBackground,
+                color: repeatMode == AudioServiceRepeatMode.none
+                    ? theme.disabledColor
+                    : theme.colorScheme.onBackground,
               ),
               onPressed: () {
                 audioHandler.setRepeatMode(

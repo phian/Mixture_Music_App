@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/models/song/song_model.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/test_audio_screen/model/position_data.dart';
@@ -20,14 +21,10 @@ class MiniMusicPlayer extends StatefulWidget {
     Key? key,
     required this.song,
     required this.onTap,
-    required this.onSkipNext,
-    required this.onSkipPrevious,
   }) : super(key: key);
 
   final SongModel? song;
   final Function() onTap;
-  final void Function()? onSkipPrevious;
-  final void Function()? onSkipNext;
 
   @override
   State<MiniMusicPlayer> createState() => _MiniMusicPlayerState();
@@ -35,6 +32,7 @@ class MiniMusicPlayer extends StatefulWidget {
 
 class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
   final musicController = Get.find<MusicPlayerController>();
+  final _userDataController = Get.find<UserDataController>();
 
   @override
   Widget build(BuildContext context) {
@@ -53,12 +51,15 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
               StreamBuilder<PositionData>(
                 stream: _positionDataStream,
                 builder: (context, snapshot) {
-                  final positionData = snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
+                  final positionData =
+                      snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
                   return LinearProgressIndicator(
-                    value: (positionData.position.inSeconds / positionData.duration.inSeconds).isNaN ||
-                            (positionData.position.inSeconds / positionData.duration.inSeconds).isInfinite
-                        ? 0.0
-                        : positionData.position.inSeconds / positionData.duration.inSeconds,
+                    value:
+                        (positionData.position.inSeconds / positionData.duration.inSeconds).isNaN ||
+                                (positionData.position.inSeconds / positionData.duration.inSeconds)
+                                    .isInfinite
+                            ? 0.0
+                            : positionData.position.inSeconds / positionData.duration.inSeconds,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       theme.primaryColor,
                     ),
@@ -134,23 +135,20 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
 
                           return IconButton(
                             onPressed: () {
-                              if (musicController.isShuffle.value) {
-                                if (listEquals(musicController.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                                  musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                                }
-
-                                if (musicController.currentShuffleIndex.value - 1 >= 0) {
-                                  audioHandler.skipToQueueItem(musicController.currentShuffleIndex.value - 1);
-                                  musicController.currentShuffleIndex.value = musicController.currentShuffleIndex.value - 1;
-                                } else {
-                                  audioHandler.skipToQueueItem(musicController.shuffleList.length - 1);
-                                  musicController.currentShuffleIndex.value = musicController.shuffleList.length - 1;
-                                }
-                              } else {
+                              if (musicController.indexIndexList.value > 0) {
+                                musicController.indexIndexList--;
                                 audioHandler.skipToPrevious();
-                              }
+                              } else {
+                                musicController.indexIndexList.value =
+                                    musicController.indexList.length - 1;
 
-                              widget.onSkipPrevious?.call();
+                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
+                              }
+                              musicController.playingSong.value = _userDataController
+                                      .currentPlaylist[
+                                  musicController.indexList[musicController.indexIndexList.value]];
+
+                              setState(() {});
                             },
                             icon: Icon(
                               Icons.skip_previous,
@@ -166,7 +164,8 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final processingState = playbackState?.processingState;
                           final playing = playbackState?.playing;
 
-                          if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
+                          if (processingState == AudioProcessingState.loading ||
+                              processingState == AudioProcessingState.buffering) {
                             return Container(
                               margin: const EdgeInsets.all(12.0),
                               width: 24.0,
@@ -198,23 +197,18 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final queueState = snapshot.data ?? QueueState.empty;
                           return IconButton(
                             onPressed: () {
-                              if (musicController.isShuffle.value) {
-                                if (listEquals(musicController.shuffleList, audioHandler.player.shuffleIndices) == false) {
-                                  musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-                                }
-
-                                if (musicController.currentShuffleIndex.value + 1 < musicController.shuffleList.length) {
-                                  audioHandler.skipToQueueItem(musicController.currentShuffleIndex.value + 1);
-                                  musicController.currentShuffleIndex.value = musicController.currentShuffleIndex.value + 1;
-                                } else {
-                                  audioHandler.skipToQueueItem(0);
-                                  musicController.currentShuffleIndex.value = 0;
-                                }
-                              } else {
+                              if (musicController.indexIndexList.value + 1 <
+                                  musicController.indexList.length) {
+                                musicController.indexIndexList++;
                                 audioHandler.skipToNext();
+                              } else {
+                                musicController.indexIndexList.value = 0;
+                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
                               }
-
-                              widget.onSkipNext?.call();
+                              musicController.playingSong.value = _userDataController
+                                      .currentPlaylist[
+                                  musicController.indexList[musicController.indexIndexList.value]];
+                              setState(() {});
                             },
                             icon: Icon(
                               Icons.skip_next,
@@ -234,10 +228,17 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
     );
   }
 
-  Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
-        audioHandler.player.positionStream,
-        audioHandler.player.bufferedPositionStream,
-        audioHandler.player.durationStream,
-        (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero),
-      );
+  Stream<Duration> get _bufferedPositionStream =>
+      audioHandler.playbackState.map((state) => state.bufferedPosition).distinct();
+
+  Stream<Duration?> get _durationStream =>
+      audioHandler.mediaItem.map((item) => item?.duration).distinct();
+
+  Stream<PositionData> get _positionDataStream =>
+      rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+          AudioService.position,
+          _bufferedPositionStream,
+          _durationStream,
+          (position, bufferedPosition, duration) =>
+              PositionData(position, bufferedPosition, duration ?? Duration.zero));
 }

@@ -15,8 +15,20 @@ class PlaylistController {
   Future<void> updatePlaylist(Playlist playlist) async {
     await _playlistRepo.updatePlaylist(playlist);
   }
-  
+
   Future<void> deletePlaylist(Playlist playlist) async {
     await _playlistRepo.deletePlaylist(playlist);
+  }
+
+  Future<void> saveLocalShuffleList(List<int> shuffleList) async {
+    return await _playlistRepo.saveLocalShuffleList(shuffleList);
+  }
+
+  Future<List<int>?> getLocalShuffleList() async {
+    return await _playlistRepo.getLocalShuffleList();
+  }
+
+  Future<int> clearLocalShuffleList() async {
+    return await _playlistRepo.clearLocalShuffleList();
   }
 }

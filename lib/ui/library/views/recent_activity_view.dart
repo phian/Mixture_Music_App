@@ -34,12 +34,18 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                     ),
                     songModel: _userDataController.recents[index],
                     isPlaying: _musicController.playingSong.value != null
-                        ? _musicController.playingSong.value!.id == _userDataController.recents[index].id
+                        ? _musicController.playingSong.value!.id ==
+                                _userDataController.recents[index].id
                             ? true
                             : false
                         : false,
                     onTap: () async {
                       _initAudioSource(index: index);
+                      if (_musicController.indexList.isEmpty) {
+                        for (int i = 0; i < _userDataController.currentPlaylist.length; i++) {
+                          _musicController.indexList.add(i);
+                        }
+                      }
                       _updatePlayingItem(index);
                     },
                     isFavorite: _userDataController.favorites.contains(
@@ -67,7 +73,10 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                   const SizedBox(height: 16.0),
                   Text(
                     'Your recent activity is empty',
-                    style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),
@@ -80,15 +89,12 @@ class _RecentActivityViewState extends State<RecentActivityView> {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
+      _musicController.indexIndexList.value = index;
+
       _musicController.setSong(
         _userDataController.recents[index],
       );
-      _userDataController.getAllUserRecents();
-
-      if (audioHandler.player.shuffleModeEnabled) {
-        _musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
-        _musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-      }
+      _musicController.playingSong.value = _userDataController.recents[index];
     } else {
       _checkPlayerState();
     }

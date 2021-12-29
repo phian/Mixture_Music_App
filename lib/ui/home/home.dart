@@ -47,7 +47,6 @@ class _HomeState extends State<Home> {
             setState(() {
               _isRefreshed = true;
             });
-            _initAudioSource();
           },
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(
@@ -87,7 +86,6 @@ class _HomeState extends State<Home> {
                       setState(() {
                         _isRefreshed = true;
                       });
-                      _initAudioSource();
                     },
                   );
                 }),
@@ -98,7 +96,7 @@ class _HomeState extends State<Home> {
                   height: 1,
                 ),
                 Obx(
-                      () => ListView.separated(
+                  () => ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
@@ -112,12 +110,20 @@ class _HomeState extends State<Home> {
                           ),
                           songModel: controller.suggestedSongs[index],
                           isPlaying: musicController.playingSong.value != null
-                              ? musicController.playingSong.value!.id == controller.suggestedSongs[index].id
+                              ? musicController.playingSong.value!.id ==
+                                      controller.suggestedSongs[index].id
                                   ? true
                                   : false
                               : false,
                           onTap: () async {
+                            print('current index: ${audioHandler.player.currentIndex}');
                             _initAudioSource(index: index);
+
+                            if (musicController.indexList.isEmpty) {
+                              for (int i = 0; i < _userDataController.currentPlaylist.length; i++) {
+                                musicController.indexList.add(i);
+                              }
+                            }
                             _updatePlayingItem(index);
                           },
                           isFavorite: _userDataController.favorites.contains(
@@ -145,15 +151,14 @@ class _HomeState extends State<Home> {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
+      musicController.indexIndexList.value = index;
+
       musicController.setSong(
         controller.suggestedSongs[index],
       );
       _userDataController.getAllUserRecents();
 
-      if (audioHandler.player.shuffleModeEnabled) {
-        musicController.currentShuffleIndex.value = audioHandler.player.shuffleIndices!.indexWhere((element) => element == index);
-        musicController.shuffleList.value = List.from(audioHandler.player.shuffleIndices ?? []);
-      }
+      musicController.playingSong.value = _userDataController.currentPlaylist[index];
     } else {
       _checkPlayerState();
     }

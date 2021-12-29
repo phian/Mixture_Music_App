@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:mixture_music_app/controllers/user_data_controller.dart';
 import 'package:mixture_music_app/ui/player_screen/controller/music_player_controller.dart';
 import 'package:mixture_music_app/ui/search_screen/controller/search_controller.dart';
+import 'package:mixture_music_app/ui/test_audio_screen/service/audio_player_handler.dart';
 import 'package:mixture_music_app/widgets/song_tile.dart';
 
 class RealSearchScreen extends StatefulWidget {
@@ -118,6 +119,15 @@ class _RealSearchScreenState extends State<RealSearchScreen> {
                                   ? controller.songs[index]
                                   : controller.searchSongs[index],
                             );
+                            audioHandler
+                                .initAudioSource([musicPlayerController.playingSong.value!]);
+                            audioHandler.play();
+                            musicPlayerController.indexList.clear();
+                            _userData.currentPlaylist.clear();
+
+                            _userData.currentPlaylist.add(musicPlayerController.playingSong.value!);
+                            musicPlayerController.indexList.add(0);
+                            musicPlayerController.indexIndexList.value = 0;
                             Get.back();
                           },
                           isFavorite: _userData.favorites.contains(
