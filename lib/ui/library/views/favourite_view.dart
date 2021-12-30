@@ -1,5 +1,6 @@
-import 'package:audio_service/audio_service.dart';
 import 'dart:math';
+
+import 'package:audio_service/audio_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,32 +35,28 @@ class _FavouriteViewState extends State<FavouriteView> {
           child: Obx(
             () => ShuffleAndSwapView(
               onShuffleTap: () async {
-                if (listEquals(
-                        _userDataController.favorites, _userDataController.currentPlaylist) ==
-                    false) {
+                if (listEquals(_userDataController.favorites, _userDataController.currentPlaylist) == false) {
                   audioHandler.initAudioSource(_userDataController.favorites);
                   _userDataController.currentPlaylistType.value = 'favourite';
-                  _userDataController.currentPlaylist.value =
-                      List.from(_userDataController.favorites);
+                  _userDataController.currentPlaylist.value = List.from(_userDataController.favorites);
                 }
 
                 await audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
                 _musicPlayerController.isShuffle.value = true;
-                if (listEquals(
-                        _musicPlayerController.indexList, audioHandler.player.shuffleIndices) ==
-                    false) {
-                  _musicPlayerController.indexList.value =
-                      List.from(audioHandler.player.shuffleIndices ?? []);
+                if (listEquals(_musicPlayerController.indexList, audioHandler.player.shuffleIndices) == false) {
+                  _musicPlayerController.indexList.value = List.from(audioHandler.player.shuffleIndices ?? []);
                 }
 
                 Random rand = Random();
-                var index = rand.nextInt(_musicPlayerController.indexList.length - 1);
+                int index = 0;
+                if (_musicPlayerController.indexList.length > 1) {
+                  index = rand.nextInt(_musicPlayerController.indexList.length - 1);
+                }
                 _musicPlayerController.indexIndexList.value = index;
                 await audioHandler.skipToQueueItem(index);
                 audioHandler.play();
 
-                _musicPlayerController.playingSong.value =
-                    _userDataController.favorites[_musicPlayerController.indexList[index]];
+                _musicPlayerController.playingSong.value = _userDataController.favorites[_musicPlayerController.indexList[index]];
               },
               onSwapViewTap: _userDataController.favorites.isEmpty
                   ? null
@@ -73,12 +70,9 @@ class _FavouriteViewState extends State<FavouriteView> {
           ),
         ),
         AnimatedCrossFade(
-          firstChild: _LibraryListView(
-              musicController: _musicPlayerController, userDataController: _userDataController),
-          secondChild: _LibraryGridView(
-              musicController: _musicPlayerController, userDataController: _userDataController),
-          crossFadeState:
-              _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+          firstChild: _LibraryListView(musicController: _musicPlayerController, userDataController: _userDataController),
+          secondChild: _LibraryGridView(musicController: _musicPlayerController, userDataController: _userDataController),
+          crossFadeState: _viewType == ViewType.list ? CrossFadeState.showFirst : CrossFadeState.showSecond,
           duration: const Duration(milliseconds: 300),
         ),
       ],
@@ -121,10 +115,7 @@ class _LibraryListViewState extends State<_LibraryListView> {
                     const SizedBox(height: 16.0),
                     Text(
                       'You have no favorite songs',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                      style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -142,8 +133,7 @@ class _LibraryListViewState extends State<_LibraryListView> {
                       ),
                       songModel: widget.userDataController.favorites[index],
                       isPlaying: widget.musicController.playingSong.value != null
-                          ? widget.musicController.playingSong.value!.id ==
-                                  widget.userDataController.favorites[index].id
+                          ? widget.musicController.playingSong.value!.id == widget.userDataController.favorites[index].id
                               ? true
                               : false
                           : false,
@@ -151,9 +141,7 @@ class _LibraryListViewState extends State<_LibraryListView> {
                         widget.userDataController.setCurrentPlaylistType('favourite');
                         _initAudioSource(index: index);
                         if (widget.musicController.indexList.isEmpty) {
-                          for (int i = 0;
-                              i < widget.userDataController.currentPlaylist.length;
-                              i++) {
+                          for (int i = 0; i < widget.userDataController.currentPlaylist.length; i++) {
                             widget.musicController.indexList.add(i);
                           }
                         }
@@ -175,8 +163,7 @@ class _LibraryListViewState extends State<_LibraryListView> {
   }
 
   void _updatePlayingItem(int index) async {
-    if (widget.musicController.playingSong.value?.id !=
-        widget.userDataController.favorites[index].id) {
+    if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
@@ -195,8 +182,7 @@ class _LibraryListViewState extends State<_LibraryListView> {
   void _initAudioSource({int? index}) {
     audioHandler.initAudioSource(widget.userDataController.favorites, index: index);
     widget.userDataController.currentPlaylistType.value = 'favourite';
-    widget.userDataController.currentPlaylist.value =
-        List.from(widget.userDataController.favorites);
+    widget.userDataController.currentPlaylist.value = List.from(widget.userDataController.favorites);
   }
 
   void _checkPlayerState() {
@@ -243,10 +229,7 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                     const SizedBox(height: 16.0),
                     Text(
                       'You have no favorite songs',
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline5
-                          ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                      style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                     ),
                   ],
                 ),
@@ -268,9 +251,7 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                               _initAudioSource(index: index);
                               widget.userDataController.setCurrentPlaylistType('favourite');
                               if (widget.musicController.indexList.isEmpty) {
-                                for (int i = 0;
-                                    i < widget.userDataController.currentPlaylist.length;
-                                    i++) {
+                                for (int i = 0; i < widget.userDataController.currentPlaylist.length; i++) {
                                   widget.musicController.indexList.add(i);
                                 }
                               }
@@ -278,8 +259,7 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                             },
                             imageRadius: BorderRadius.circular(16.0),
                             isPlaying: widget.musicController.playingSong.value != null
-                                ? widget.musicController.playingSong.value!.id ==
-                                        widget.userDataController.favorites[index].id
+                                ? widget.musicController.playingSong.value!.id == widget.userDataController.favorites[index].id
                                     ? true
                                     : false
                                 : false,
@@ -295,8 +275,7 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
   }
 
   void _updatePlayingItem(int index) async {
-    if (widget.musicController.playingSong.value?.id !=
-        widget.userDataController.favorites[index].id) {
+    if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
@@ -316,8 +295,7 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
   void _initAudioSource({int? index}) {
     audioHandler.initAudioSource(widget.userDataController.favorites, index: index);
     widget.userDataController.currentPlaylistType.value = 'favourite';
-    widget.userDataController.currentPlaylist.value =
-        List.from(widget.userDataController.favorites);
+    widget.userDataController.currentPlaylist.value = List.from(widget.userDataController.favorites);
   }
 
   void _checkPlayerState() {
