@@ -194,69 +194,86 @@ class _CustomDropdownState<T> extends State<CustomDropdown<T>> with TickerProvid
               left: offset.dx,
               top: topOffset,
               width: widget.dropdownStyle.dropdownWidth ?? size.width,
-              child: CompositedTransformFollower(
-                offset: () {
-                  if (widget.dropdownStyle.offset != null) {
-                    return widget.dropdownStyle.offset!;
-                  } else {
-                    if (_isFirstOpened == false) {
-                      return Offset(
-                        0,
-                        size.height + 5,
-                      );
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.5),
+                      spreadRadius: 1,
+                      blurRadius: 0.5,
+                      offset: const Offset(0, 0), // changes position of shadow
+                    ),
+                  ],
+                ),
+                child: CompositedTransformFollower(
+                  offset: () {
+                    if (widget.dropdownStyle.offset != null) {
+                      return widget.dropdownStyle.offset!;
                     } else {
-                      if (_selectedValue == null) {
-                        return Offset(
-                          0,
-                          size.height - _getFontSizeHeight() + 5,
-                        );
-                      } else {
+                      if (_isFirstOpened == false) {
                         return Offset(
                           0,
                           size.height + 5,
                         );
+                      } else {
+                        if (_selectedValue == null) {
+                          return Offset(
+                            0,
+                            size.height - _getFontSizeHeight() + 5,
+                          );
+                        } else {
+                          return Offset(
+                            0,
+                            size.height + 5,
+                          );
+                        }
                       }
                     }
-                  }
-                }(),
-                link: _layerLink,
-                showWhenUnlinked: false,
-                child: Material(
-                  elevation: widget.dropdownStyle.elevation ?? 0,
-                  borderRadius: widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
-                  color: widget.dropdownStyle.dropdownColor ?? Colors.white,
-                  child: SizeTransition(
-                    axisAlignment: 1,
-                    sizeFactor: _expandAnimation,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-                      constraints: widget.dropdownStyle.constraints,
-                      height: widget.dropdownStyle.dropdownHeight,
-                      child: ListView(
-                        padding: widget.dropdownStyle.padding ?? EdgeInsets.zero,
-                        shrinkWrap: true,
-                        children: widget.items.asMap().entries.map((item) {
-                          return InkWellWrapper(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(8.0),
-                            onTap: () {
-                              setState(() => _currentIndex = item.key);
-                              widget.onChanged?.call(item.value.value, item.key);
-                              _toggleDropdown();
+                  }(),
+                  link: _layerLink,
+                  showWhenUnlinked: false,
+                  child: Material(
+                    elevation: widget.dropdownStyle.elevation ?? 0,
+                    borderRadius: widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
+                    color: Colors.transparent,
+                    child: SizeTransition(
+                      axisAlignment: 1,
+                      sizeFactor: _expandAnimation,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                        constraints: widget.dropdownStyle.constraints,
+                        height: widget.dropdownStyle.dropdownHeight,
+                        decoration: BoxDecoration(
+                          borderRadius: widget.dropdownStyle.borderRadius ?? BorderRadius.zero,
+                          color: widget.dropdownStyle.dropdownColor ?? Colors.white,
+                        ),
+                        child: ListView(
+                          padding: widget.dropdownStyle.padding ?? EdgeInsets.zero,
+                          shrinkWrap: true,
+                          children: widget.items.asMap().entries.map((item) {
+                            return InkWellWrapper(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(8.0),
+                              onTap: () {
+                                setState(() => _currentIndex = item.key);
+                                widget.onChanged?.call(item.value.value, item.key);
+                                _toggleDropdown();
 
-                              setState(() {
-                                _selectedValue = item;
-                              });
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16.0,
-                                vertical: 8.0,
+                                setState(() {
+                                  _selectedValue = item;
+                                });
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16.0,
+                                  vertical: 8.0,
+                                ),
+                                child: item.value,
                               ),
-                              child: item.value,
-                            ),
-                          );
-                        }).toList(),
+                            );
+                          }).toList(),
+                        ),
                       ),
                     ),
                   ),

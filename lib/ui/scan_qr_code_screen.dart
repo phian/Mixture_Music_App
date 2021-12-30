@@ -149,8 +149,8 @@ class _ScanQrCodeScreenState extends State<ScanQrCodeScreen> {
         _result = scanData;
       });
       if (_result != null) {
-        Fluttertoast.showToast(msg: 'Playlist ${_result!.code} received', fontSize: 18.0, backgroundColor: Theme.of(context).primaryColor);
         Get.back();
+        Fluttertoast.showToast(msg: 'Playlist ${_result!.code} received', fontSize: 18.0, backgroundColor: Theme.of(context).primaryColor);
       }
     });
   }

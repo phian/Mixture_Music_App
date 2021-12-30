@@ -106,7 +106,7 @@ class _FeedbackAndReportScreenState extends State<FeedbackAndReportScreen> {
                         ),
                         onChanged: (value, index) {},
                         dropdownStyle: const DropdownStyle(
-                          dropdownColor: Colors.black12,
+                          dropdownColor: Colors.white,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(8.0),
                             bottomRight: Radius.circular(8.0),
@@ -114,7 +114,7 @@ class _FeedbackAndReportScreenState extends State<FeedbackAndReportScreen> {
                         ),
                         dropdownButtonStyle: const DropdownButtonStyle(
                           buttonHeight: 50.0,
-                        ),
+                            shadowColor: Colors.black),
                         items: [
                           ...List.generate(
                             FeedbackType.values.length,
