@@ -31,14 +31,66 @@ class MiniMusicPlayer extends StatefulWidget {
 }
 
 class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
-  final musicController = Get.find<MusicPlayerController>();
+  final controller = Get.find<MusicPlayerController>();
   final _userDataController = Get.find<UserDataController>();
+
+  bool flag = true;
+
+  void _listenToPositionStream() {
+    audioHandler.player.positionStream.listen((position) {
+      if (audioHandler.player.duration != null || audioHandler.player.duration! != Duration.zero) {
+        if (position.inMilliseconds ~/ 250 == audioHandler.player.duration!.inMilliseconds ~/ 250 &&
+            flag &&
+            position.inSeconds != 0) {
+          flag = false;
+          _onSongCompleted();
+        }
+      }
+    });
+  }
+
+  void _onSongCompleted() {
+    if (!flag) {
+      switch (audioHandler.player.loopMode) {
+        case LoopMode.all:
+        case LoopMode.off:
+          if (controller.indexIndexList.value + 1 < controller.indexList.length) {
+            controller.indexIndexList++;
+            audioHandler.skipToQueueItem(controller.indexIndexList.value);
+          } else {
+            controller.indexIndexList.value = 0;
+            audioHandler.skipToQueueItem(0);
+
+            // if (audioHandler.player.loopMode == LoopMode.all) {
+            //   audioHandler.play();
+            // } else {
+            //   audioHandler.stop();
+            // }
+          }
+          controller.playingSong.value = _userDataController
+              .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
+          print(controller.indexIndexList);
+          break;
+        case LoopMode.one:
+          break;
+      }
+      print('completed');
+      flag = true;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _listenToPositionStream();
+  }
 
   @override
   Widget build(BuildContext context) {
     if (widget.song == null) {
       return const SizedBox.shrink();
     }
+
     final theme = Theme.of(context);
     return GestureDetector(
       onTap: widget.onTap,
@@ -77,10 +129,10 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                       Obx(
                         () => Hero(
                           tag: 'Artwork',
-                          child: musicController.playingSong.value != null
+                          child: controller.playingSong.value != null
                               ? Obx(
                                   () => Image.network(
-                                    musicController.playingSong.value!.data.imgURL,
+                                    controller.playingSong.value!.data.imgURL,
                                     width: 45,
                                     height: 45,
                                     fit: BoxFit.cover,
@@ -112,13 +164,13 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           children: [
                             Obx(
                               () => MarqueeText(
-                                musicController.playingSong.value?.data.title ?? "Song's name",
+                                controller.playingSong.value?.data.title ?? "Song's name",
                                 style: theme.textTheme.headline6!.copyWith(fontSize: 16),
                               ),
                             ),
                             Obx(
                               () => MarqueeText(
-                                musicController.playingSong.value?.data.artist ?? "Artist's name",
+                                controller.playingSong.value?.data.artist ?? "Artist's name",
                                 //overflow: TextOverflow.ellipsis,
                                 style: theme.textTheme.caption!.copyWith(
                                   fontSize: 14,
@@ -135,15 +187,15 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
 
                           return IconButton(
                             onPressed: () {
-                              if (musicController.indexIndexList.value > 0) {
-                                musicController.indexIndexList--;
-                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
+                              if (controller.indexIndexList.value > 0) {
+                                controller.indexIndexList--;
+                                audioHandler.skipToQueueItem(controller.indexIndexList.value);
                               } else {
-                                musicController.indexIndexList.value = musicController.indexList.length - 1;
-                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
+                                controller.indexIndexList.value = controller.indexList.length - 1;
+                                audioHandler.skipToQueueItem(controller.indexIndexList.value);
                               }
-                              musicController.playingSong.value =
-                                  _userDataController.currentPlaylist[musicController.indexList[musicController.indexIndexList.value]];
+                              controller.playingSong.value = _userDataController.currentPlaylist[
+                                  controller.indexList[controller.indexIndexList.value]];
 
                               setState(() {});
                             },
@@ -161,7 +213,8 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final processingState = playbackState?.processingState;
                           final playing = playbackState?.playing;
 
-                          if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
+                          if (processingState == AudioProcessingState.loading ||
+                              processingState == AudioProcessingState.buffering) {
                             return Container(
                               margin: const EdgeInsets.all(12.0),
                               width: 24.0,
@@ -193,16 +246,16 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final queueState = snapshot.data ?? QueueState.empty;
                           return IconButton(
                             onPressed: () {
-                              if (musicController.indexIndexList.value + 1 < musicController.indexList.length) {
-                                musicController.indexIndexList++;
-                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
+                              if (controller.indexIndexList.value + 1 <
+                                  controller.indexList.length) {
+                                controller.indexIndexList++;
+                                audioHandler.skipToQueueItem(controller.indexIndexList.value);
                               } else {
-                                musicController.indexIndexList.value = 0;
-                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
+                                controller.indexIndexList.value = 0;
+                                audioHandler.skipToQueueItem(controller.indexIndexList.value);
                               }
-                              musicController.playingSong.value = _userDataController
-                                      .currentPlaylist[
-                                  musicController.indexList[musicController.indexIndexList.value]];
+                              controller.playingSong.value = _userDataController.currentPlaylist[
+                                  controller.indexList[controller.indexIndexList.value]];
                               setState(() {});
                             },
                             icon: Icon(

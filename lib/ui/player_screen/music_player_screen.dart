@@ -27,25 +27,14 @@ class MusicPlayerScreen extends StatefulWidget {
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   final controller = Get.find<MusicPlayerController>();
   final _userDataController = Get.put(UserDataController());
-  bool flag = true;
+
 
   @override
   void initState() {
     super.initState();
   }
 
-  void _listenToPositionStream() {
-    audioHandler.player.positionStream.listen((position) {
-      if (audioHandler.player.duration != null || audioHandler.player.duration! != Duration.zero) {
-        if (position.inMilliseconds ~/ 250 == audioHandler.player.duration!.inMilliseconds ~/ 250 &&
-            flag &&
-            position.inSeconds != 0) {
-          flag = false;
-          _onSongCompleted();
-        }
-      }
-    });
-  }
+
 
   bool isFavorite() {
     return _userDataController.favorites.contains(controller.playingSong.value);
@@ -53,7 +42,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _listenToPositionStream();
+
     final theme = Theme.of(context);
     return Obx(
       () => Stack(
@@ -206,35 +195,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     );
   }
 
-  void _onSongCompleted() {
-    if (!flag) {
-      switch (audioHandler.player.loopMode) {
-        case LoopMode.all:
-        case LoopMode.off:
-          if (controller.indexIndexList.value + 1 < controller.indexList.length) {
-            controller.indexIndexList++;
-            audioHandler.skipToQueueItem(controller.indexIndexList.value);
-          } else {
-            controller.indexIndexList.value = 0;
-            audioHandler.skipToQueueItem(0);
-
-            // if (audioHandler.player.loopMode == LoopMode.all) {
-            //   audioHandler.play();
-            // } else {
-            //   audioHandler.stop();
-            // }
-          }
-          controller.playingSong.value = _userDataController
-              .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
-          print(controller.indexIndexList);
-          break;
-        case LoopMode.one:
-          break;
-      }
-      print('completed');
-      flag = true;
-    }
-  }
+  
 
   Stream<PositionData> get _positionDataStream =>
       rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
