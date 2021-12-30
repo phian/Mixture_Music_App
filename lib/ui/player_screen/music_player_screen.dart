@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class MusicPlayerScreen extends StatefulWidget {
 }
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
-  final controller = Get.put(MusicPlayerController());
+  final controller = Get.find<MusicPlayerController>();
   final _userDataController = Get.put(UserDataController());
 
   @override
@@ -154,8 +153,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           },
                           child: Icon(
                             isFavorite() ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-                            color:
-                                isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
+                            color: isFavorite() ? theme.primaryColor : theme.colorScheme.onBackground,
                           ),
                         ),
                       ],
@@ -174,16 +172,12 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                     StreamBuilder<PositionData>(
                       stream: _positionDataStream,
                       builder: (context, snapshot) {
-                        final positionData = snapshot.data ??
-                            PositionData(Duration.zero, Duration.zero, Duration.zero);
+                        final positionData = snapshot.data ?? PositionData(Duration.zero, Duration.zero, Duration.zero);
                         return SeekBar(
                           duration: positionData.duration,
                           position: positionData.position,
                           onChangeEnd: (newPosition) {
                             audioHandler.seek(newPosition);
-                            if (newPosition == audioHandler.player.duration) {
-                              _onSongCompleted(newPosition);
-                            }
                           },
                         );
                       },
@@ -210,18 +204,16 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
         switch (audioHandler.player.loopMode) {
           case LoopMode.all:
           case LoopMode.off:
-            if (controller.indexIndexList.value + 1 < controller.indexList.length) {
+          if (controller.indexIndexList.value + 1 < controller.indexList.length) {
               controller.indexIndexList++;
-              audioHandler.skipToNext();
+              audioHandler.skipToQueueItem(controller.indexIndexList.value);
             } else {
               controller.indexIndexList.value = 0;
               audioHandler.skipToQueueItem(controller.indexIndexList.value);
             }
-            controller.playingSong.value = _userDataController
-                .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
+            controller.playingSong.value = _userDataController.currentPlaylist[controller.indexList[controller.indexIndexList.value]];
 
             print(controller.indexIndexList);
-            setState(() {});
             break;
 
           case LoopMode.one:
@@ -235,15 +227,13 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
               controller.indexIndexList++;
 
               print('index: ${controller.indexIndexList}');
-              audioHandler.skipToNext();
-              controller.playingSong.value =
-                  _userDataController.currentPlaylist[controller.indexIndexList.value];
+              audioHandler.skipToQueueItem(controller.indexIndexList.value);
+              controller.playingSong.value = _userDataController.currentPlaylist[controller.indexIndexList.value];
               setState(() {});
             } else {
               controller.indexIndexList.value = 0;
               audioHandler.skipToQueueItem(0);
               controller.playingSong.value = _userDataController.currentPlaylist[0];
-              setState(() {});
               if (audioHandler.player.loopMode == LoopMode.all) {
                 audioHandler.play();
               } else {
@@ -259,12 +249,10 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     }
   }
 
-  Stream<PositionData> get _positionDataStream =>
-      rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
+  Stream<PositionData> get _positionDataStream => rxdart.Rx.combineLatest3<Duration, Duration, Duration?, PositionData>(
         audioHandler.player.positionStream,
         audioHandler.player.bufferedPositionStream,
         audioHandler.player.durationStream,
-        (position, bufferedPosition, duration) =>
-            PositionData(position, bufferedPosition, duration ?? Duration.zero),
+        (position, bufferedPosition, duration) => PositionData(position, bufferedPosition, duration ?? Duration.zero),
       );
 }

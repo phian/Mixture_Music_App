@@ -34,8 +34,7 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                     ),
                     songModel: _userDataController.recents[index],
                     isPlaying: _musicController.playingSong.value != null
-                        ? _musicController.playingSong.value!.id ==
-                                _userDataController.recents[index].id
+                        ? _musicController.playingSong.value!.id == _userDataController.recents[index].id
                             ? true
                             : false
                         : false,
@@ -73,10 +72,7 @@ class _RecentActivityViewState extends State<RecentActivityView> {
                   const SizedBox(height: 16.0),
                   Text(
                     'Your recent activity is empty',
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline5
-                        ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
+                    style: Theme.of(context).textTheme.headline5?.copyWith(fontSize: 18.0, fontWeight: FontWeight.w400),
                   ),
                 ],
               ),

@@ -137,16 +137,13 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                             onPressed: () {
                               if (musicController.indexIndexList.value > 0) {
                                 musicController.indexIndexList--;
-                                audioHandler.skipToPrevious();
+                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
                               } else {
-                                musicController.indexIndexList.value =
-                                    musicController.indexList.length - 1;
-
+                                musicController.indexIndexList.value = musicController.indexList.length - 1;
                                 audioHandler.skipToQueueItem(musicController.indexIndexList.value);
                               }
-                              musicController.playingSong.value = _userDataController
-                                      .currentPlaylist[
-                                  musicController.indexList[musicController.indexIndexList.value]];
+                              musicController.playingSong.value =
+                                  _userDataController.currentPlaylist[musicController.indexList[musicController.indexIndexList.value]];
 
                               setState(() {});
                             },
@@ -164,8 +161,7 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final processingState = playbackState?.processingState;
                           final playing = playbackState?.playing;
 
-                          if (processingState == AudioProcessingState.loading ||
-                              processingState == AudioProcessingState.buffering) {
+                          if (processingState == AudioProcessingState.loading || processingState == AudioProcessingState.buffering) {
                             return Container(
                               margin: const EdgeInsets.all(12.0),
                               width: 24.0,
@@ -197,10 +193,9 @@ class _MiniMusicPlayerState extends State<MiniMusicPlayer> {
                           final queueState = snapshot.data ?? QueueState.empty;
                           return IconButton(
                             onPressed: () {
-                              if (musicController.indexIndexList.value + 1 <
-                                  musicController.indexList.length) {
+                              if (musicController.indexIndexList.value + 1 < musicController.indexList.length) {
                                 musicController.indexIndexList++;
-                                audioHandler.skipToNext();
+                                audioHandler.skipToQueueItem(musicController.indexIndexList.value);
                               } else {
                                 musicController.indexIndexList.value = 0;
                                 audioHandler.skipToQueueItem(musicController.indexIndexList.value);
