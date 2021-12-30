@@ -28,17 +28,24 @@ class MusicPlayerScreen extends StatefulWidget {
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   final controller = Get.put(MusicPlayerController());
   final _userDataController = Get.put(UserDataController());
+  bool flag = true;
 
   @override
   void initState() {
     super.initState();
-    //_listenToPositionStream();
   }
 
   void _listenToPositionStream() {
     audioHandler.player.positionStream.listen((position) {
-      _onSongCompleted(position);
-      //print('aaa');
+      if (audioHandler.player.duration != null || audioHandler.player.duration! != Duration.zero) {
+
+        if (position.inMilliseconds ~/ 250 == audioHandler.player.duration!.inMilliseconds ~/ 250 &&
+            flag &&
+            position.inSeconds != 0) {
+          flag = false;
+          _onSongCompleted();
+        }
+      }
     });
   }
 
@@ -48,7 +55,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // _listenToPositionStream();
+    _listenToPositionStream();
     final theme = Theme.of(context);
     return Obx(
       () => Stack(
@@ -181,9 +188,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
                           position: positionData.position,
                           onChangeEnd: (newPosition) {
                             audioHandler.seek(newPosition);
-                            if (newPosition == audioHandler.player.duration) {
-                              _onSongCompleted(newPosition);
-                            }
                           },
                         );
                       },
@@ -204,58 +208,33 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
     );
   }
 
-  void _onSongCompleted(Duration position) {
-    if (position >= audioHandler.player.duration!) {
-      if (controller.isShuffle.value) {
-        switch (audioHandler.player.loopMode) {
-          case LoopMode.all:
-          case LoopMode.off:
-            if (controller.indexIndexList.value + 1 < controller.indexList.length) {
-              controller.indexIndexList++;
-              audioHandler.skipToNext();
-            } else {
-              controller.indexIndexList.value = 0;
-              audioHandler.skipToQueueItem(controller.indexIndexList.value);
-            }
-            controller.playingSong.value = _userDataController
-                .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
+  void _onSongCompleted() {
+    if (!flag) {
+      switch (audioHandler.player.loopMode) {
+        case LoopMode.all:
+        case LoopMode.off:
+          if (controller.indexIndexList.value + 1 < controller.indexList.length) {
+            controller.indexIndexList++;
+            audioHandler.skipToNext();
+          } else {
+            controller.indexIndexList.value = 0;
+            audioHandler.skipToQueueItem(0);
 
-            print(controller.indexIndexList);
-            setState(() {});
-            break;
-
-          case LoopMode.one:
-            break;
-        }
-      } else {
-        switch (audioHandler.player.loopMode) {
-          case LoopMode.off:
-          case LoopMode.all:
-            if (controller.indexIndexList + 1 < _userDataController.currentPlaylist.length) {
-              controller.indexIndexList++;
-
-              print('index: ${controller.indexIndexList}');
-              audioHandler.skipToNext();
-              controller.playingSong.value =
-                  _userDataController.currentPlaylist[controller.indexIndexList.value];
-              setState(() {});
-            } else {
-              controller.indexIndexList.value = 0;
-              audioHandler.skipToQueueItem(0);
-              controller.playingSong.value = _userDataController.currentPlaylist[0];
-              setState(() {});
-              if (audioHandler.player.loopMode == LoopMode.all) {
-                audioHandler.play();
-              } else {
-                audioHandler.stop();
-              }
-            }
-
-            break;
-          case LoopMode.one:
-            break;
-        }
+            // if (audioHandler.player.loopMode == LoopMode.all) {
+            //   audioHandler.play();
+            // } else {
+            //   audioHandler.stop();
+            // }
+          }
+          controller.playingSong.value = _userDataController
+              .currentPlaylist[controller.indexList[controller.indexIndexList.value]];
+          print(controller.indexIndexList);
+          break;
+        case LoopMode.one:
+          break;
       }
+      print('completed');
+      flag = true;
     }
   }
 

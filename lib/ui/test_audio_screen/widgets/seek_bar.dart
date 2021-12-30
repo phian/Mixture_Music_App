@@ -48,8 +48,11 @@ class _SeekBarState extends State<SeekBar> {
     if (_dragValue != null && !_dragging) {
       _dragValue = null;
     }
-    if (widget.duration != Duration.zero && widget.position >= widget.duration) {
-      widget.onCompleted?.call();
+    if (widget.duration != Duration.zero) {
+      
+      if (widget.position.inSeconds >= widget.duration.inSeconds) {
+        widget.onCompleted?.call();
+      }
     }
 
     return Stack(
@@ -64,7 +67,8 @@ class _SeekBarState extends State<SeekBar> {
             child: Slider(
               min: 0.0,
               max: widget.duration.inMilliseconds.toDouble(),
-              value: min(widget.bufferedPosition.inMilliseconds.toDouble(), widget.duration.inMilliseconds.toDouble()),
+              value: min(widget.bufferedPosition.inMilliseconds.toDouble(),
+                  widget.duration.inMilliseconds.toDouble()),
               onChanged: (value) {},
             ),
           ),
@@ -103,8 +107,14 @@ class _SeekBarState extends State<SeekBar> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$').firstMatch('${widget.position}')?.group(1) ?? '00:00'),
-                Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$').firstMatch('${widget.duration}')?.group(1) ?? '00:00'),
+                Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                        .firstMatch('${widget.position}')
+                        ?.group(1) ??
+                    '00:00'),
+                Text(RegExp(r'((^0*[1-9]\d*:)?\d{2}:\d{2})\.\d+$')
+                        .firstMatch('${widget.duration}')
+                        ?.group(1) ??
+                    '00:00'),
               ],
             ),
           ),
