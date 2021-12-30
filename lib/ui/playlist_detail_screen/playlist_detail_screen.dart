@@ -30,12 +30,7 @@ class PlayListDetailScreen extends StatefulWidget {
 
 class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
   final List<IconData> _actionIcons = [Icons.add, Icons.edit, Icons.share, Icons.delete];
-  final List<String> _menuTexts = [
-    'Add tracks',
-    'Edit playlist',
-    'Share playlist',
-    'Delete playlist'
-  ];
+  final List<String> _menuTexts = ['Add tracks', 'Edit playlist', 'Share playlist', 'Delete playlist'];
   late Playlist _playlist;
 
   final DateFormat formatter = DateFormat('MMM dd, yyyy');
@@ -90,12 +85,9 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                               decoration: BoxDecoration(
                                 border: index == 0
                                     ? Border.symmetric(
-                                        horizontal: BorderSide(
-                                            color: Theme.of(context).dividerColor, width: 1.5),
+                                        horizontal: BorderSide(color: Theme.of(context).dividerColor, width: 1.5),
                                       )
-                                    : Border(
-                                        bottom: BorderSide(
-                                            color: Theme.of(context).dividerColor, width: 1.5)),
+                                    : Border(bottom: BorderSide(color: Theme.of(context).dividerColor, width: 1.5)),
                               ),
                               child: Text(
                                 _menuTexts[index],
@@ -109,8 +101,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                         )
                       ],
                       dividerThickness: 0.0,
-                      bottomSheetRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
+                      bottomSheetRadius: const BorderRadius.only(topLeft: Radius.circular(10.0), topRight: Radius.circular(10.0)),
                     );
                   });
             },
@@ -148,13 +139,8 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
               ),
               const SizedBox(height: 16.0),
               Text(
-                'Created ' +
-                    formatter.format(_playlist.createdTime.toDate()) +
-                    ' - ${_playlist.songs.length} tracks',
-                style: Theme.of(context)
-                    .textTheme
-                    .subtitle1
-                    ?.copyWith(fontSize: 20.0, color: AppColors.c7A7C81),
+                'Created ' + formatter.format(_playlist.createdTime.toDate()) + ' - ${_playlist.songs.length} tracks',
+                style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: 20.0, color: AppColors.c7A7C81),
               ),
               const SizedBox(height: 16.0),
               Row(
@@ -171,8 +157,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                       color: Theme.of(context).primaryColor.withOpacity(0.15),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
-                        child: Icon(_actionIcons[index],
-                            size: 25.0, color: Theme.of(context).primaryColor),
+                        child: Icon(_actionIcons[index], size: 25.0, color: Theme.of(context).primaryColor),
                       ),
                     ),
                   ),
@@ -188,20 +173,17 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
 
                     await audioHandler.setShuffleMode(AudioServiceShuffleMode.all);
                     _musicPlayerController.isShuffle.value = true;
-                    if (listEquals(
-                            _musicPlayerController.indexList, audioHandler.player.shuffleIndices) ==
-                        false) {
-                      _musicPlayerController.indexList.value =
-                          List.from(audioHandler.player.shuffleIndices ?? []);
+                    if (listEquals(_musicPlayerController.indexList, audioHandler.player.shuffleIndices) == false) {
+                      _musicPlayerController.indexList.value = List.from(audioHandler.player.shuffleIndices ?? []);
                     }
 
                     Random rand = Random();
                     var index = rand.nextInt(_musicPlayerController.indexList.length - 1);
+                    _musicPlayerController.indexIndexList.value = index;
                     await audioHandler.skipToQueueItem(index);
                     audioHandler.play();
 
-                    _musicPlayerController.playingSong.value =
-                        _playlist.songs[_musicPlayerController.indexList[index]];
+                    _musicPlayerController.playingSong.value = _playlist.songs[_musicPlayerController.indexList[index]];
                   },
                   borderRadius: BorderRadius.circular(4.0),
                   child: Padding(
@@ -228,8 +210,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
                         songModel: _playlist.songs[index],
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                         isPlaying: _musicPlayerController.playingSong.value != null
-                            ? _musicPlayerController.playingSong.value!.id ==
-                                    _playlist.songs[index].id
+                            ? _musicPlayerController.playingSong.value!.id == _playlist.songs[index].id
                                 ? true
                                 : false
                             : false,
@@ -267,8 +248,7 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
               return AddSongSheet(
                 playlist: _playlist,
                 sheetHeight: MediaQuery.of(context).size.height * 0.9,
-                sheetRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
+                sheetRadius: const BorderRadius.only(topLeft: Radius.circular(20.0), topRight: Radius.circular(20.0)),
                 onAddingSongs: (song) {
                   setState(() {
                     _playlist.songs.add(song);
@@ -343,21 +323,22 @@ class _PlayListDetailScreenState extends State<PlayListDetailScreen> {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
 
+      _musicPlayerController.indexIndexList.value = index;
+
       _musicPlayerController.setSong(
         _playlist.songs[index],
       );
       _userDataController.getAllUserRecents();
 
       if (audioHandler.player.shuffleModeEnabled) {
-        _musicPlayerController.indexIndexList.value =
-            _musicPlayerController.indexList.indexWhere((element) => element == index);
+        _musicPlayerController.indexIndexList.value = _musicPlayerController.indexList.indexWhere((element) => element == index);
 
-        _musicPlayerController.playingSong.value = _userDataController.currentPlaylist[
-            _musicPlayerController.indexList[_musicPlayerController.indexIndexList.value]];
+        _musicPlayerController.playingSong.value =
+            _userDataController.currentPlaylist[_musicPlayerController.indexList[_musicPlayerController.indexIndexList.value]];
       } else {
         _musicPlayerController.indexIndexList.value = index;
-        _musicPlayerController.playingSong.value = _userDataController.currentPlaylist[
-            _musicPlayerController.indexList[_musicPlayerController.indexIndexList.value]];
+        _musicPlayerController.playingSong.value =
+            _userDataController.currentPlaylist[_musicPlayerController.indexList[_musicPlayerController.indexIndexList.value]];
       }
     } else {
       _checkPlayerState();

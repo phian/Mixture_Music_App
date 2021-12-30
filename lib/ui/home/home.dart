@@ -110,8 +110,7 @@ class _HomeState extends State<Home> {
                           ),
                           songModel: controller.suggestedSongs[index],
                           isPlaying: musicController.playingSong.value != null
-                              ? musicController.playingSong.value!.id ==
-                                      controller.suggestedSongs[index].id
+                              ? musicController.playingSong.value!.id == controller.suggestedSongs[index].id
                                   ? true
                                   : false
                               : false,

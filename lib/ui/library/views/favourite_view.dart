@@ -112,12 +112,12 @@ class _LibraryListViewState extends State<_LibraryListView> {
                           : false,
                       onTap: () async {
                         widget.userDataController.setCurrentPlaylistType('favourite');
+                        _initAudioSource(index: index);
                         if (widget.musicController.indexList.isEmpty) {
                           for (int i = 0; i < widget.userDataController.currentPlaylist.length; i++) {
                             widget.musicController.indexList.add(i);
                           }
                         }
-                        _initAudioSource(index: index);
                         _updatePlayingItem(index);
                       },
                       isFavorite: widget.userDataController.favorites.contains(
@@ -222,6 +222,12 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
                             songModel: widget.userDataController.favorites[index],
                             onTap: () {
                               _initAudioSource(index: index);
+                              widget.userDataController.setCurrentPlaylistType('favourite');
+                              if (widget.musicController.indexList.isEmpty) {
+                                for (int i = 0; i < widget.userDataController.currentPlaylist.length; i++) {
+                                  widget.musicController.indexList.add(i);
+                                }
+                              }
                               _updatePlayingItem(index);
                             },
                             imageRadius: BorderRadius.circular(16.0),
@@ -245,6 +251,8 @@ class _LibraryGridViewState extends State<_LibraryGridView> {
     if (widget.musicController.playingSong.value?.id != widget.userDataController.favorites[index].id) {
       audioHandler.skipToQueueItem(index);
       audioHandler.play();
+
+      widget.musicController.indexIndexList.value = index;
 
       widget.musicController.setSong(
         widget.userDataController.favorites[index],

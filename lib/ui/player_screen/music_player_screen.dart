@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class MusicPlayerScreen extends StatefulWidget {
 }
 
 class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
-  final controller = Get.put(MusicPlayerController());
+  final controller = Get.find<MusicPlayerController>();
   final _userDataController = Get.put(UserDataController());
   bool flag = true;
 
@@ -38,7 +37,6 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
   void _listenToPositionStream() {
     audioHandler.player.positionStream.listen((position) {
       if (audioHandler.player.duration != null || audioHandler.player.duration! != Duration.zero) {
-
         if (position.inMilliseconds ~/ 250 == audioHandler.player.duration!.inMilliseconds ~/ 250 &&
             flag &&
             position.inSeconds != 0) {
@@ -215,7 +213,7 @@ class _MusicPlayerScreenState extends State<MusicPlayerScreen> {
         case LoopMode.off:
           if (controller.indexIndexList.value + 1 < controller.indexList.length) {
             controller.indexIndexList++;
-            audioHandler.skipToNext();
+            audioHandler.skipToQueueItem(controller.indexIndexList.value);
           } else {
             controller.indexIndexList.value = 0;
             audioHandler.skipToQueueItem(0);
